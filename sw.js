@@ -1,4 +1,4 @@
-const CACHE = 'ios-rebuilt-v2';
+const CACHE = 'ios-rebuilt-v3';
 const ASSETS = ['./', './index.html', './manifest.json', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', e => {

@@ -34,7 +34,7 @@ button { font-family: var(--font); cursor: pointer; }
 .status { position: absolute; top: 0; left: 0; right: 0; padding: calc(var(--sat) + 12px) 28px 0; display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; z-index: 80; pointer-events: none; transition: color .2s; }
 .status.darktext { color: #000; }
 .status .icons { display: flex; gap: 6px; align-items: center; }
-.batt { width: 25px; height: 12px; border: 1.5px solid currentColor; border-radius: 4px; padding: 1px; opacity: .9; }
+.batt { width: 25px; height: 12px; position: relative; border: 1.5px solid currentColor; border-radius: 4px; padding: 1px; opacity: .9; }
 .batt i { display: block; height: 100%; width: 80%; background: currentColor; border-radius: 2px; }
 .island { position: absolute; top: calc(var(--sat) + 8px); left: 50%; transform: translateX(-50%); width: 120px; height: 34px; background: #000; border-radius: 20px; z-index: 90; transition: width .4s cubic-bezier(.2,.9,.25,1), height .4s; display: flex; align-items: center; justify-content: center; font-size: 13px; overflow: hidden; }
 .island.wide { width: 220px; }
@@ -73,7 +73,8 @@ button { font-family: var(--font); cursor: pointer; }
 .widget { grid-column: span 2; grid-row: span 2; border-radius: 22px; padding: 14px; background: rgba(255,255,255,.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); margin-bottom: 12px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; }
 .widget .big { font-size: 40px; font-weight: 300; }
 .app { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; position: relative; }
-.icon { width: 62px; height: 62px; border-radius: 15px; display: grid; place-items: center; font-size: 32px; box-shadow: 0 4px 12px rgba(0,0,0,.25); transition: transform .15s; position: relative; }
+.icon > svg, .icon > div:not(.badge) { border-radius: 15px; }
+.icon { width: 62px; height: 62px; border-radius: 15px; overflow: visible; color:#fff; display: grid; place-items: center; font-size: 32px; box-shadow: 0 4px 12px rgba(0,0,0,.25); transition: transform .15s; position: relative; }
 .app:active .icon { transform: scale(.88); filter: brightness(.8); }
 .app span.n { font-size: 11.5px; text-shadow: 0 1px 3px rgba(0,0,0,.5); white-space: nowrap; }
 .badge { position: absolute; top: -6px; right: -6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: #ff3b30; font-size: 13px; font-weight: 600; display: grid; place-items: center; }
@@ -90,9 +91,9 @@ button { font-family: var(--font); cursor: pointer; }
 .home-bar { position: absolute; bottom: calc(var(--sab) + 4px); left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.6); }
 
 /* Windows */
-.window { position: absolute; inset: 0; z-index: 50; background: var(--bg); color: var(--text); display: flex; flex-direction: column; transform: scale(.2); opacity: 0; transition: transform .35s cubic-bezier(.2,.9,.25,1), opacity .25s, border-radius .35s; border-radius: 40px; overflow: hidden; }
+.window { position: absolute; inset: 0; z-index: 50; background: var(--bg); color: var(--text); display: flex; flex-direction: column; transform: scale(.08); opacity: 0; transition: transform .35s cubic-bezier(.2,.9,.25,1), opacity .25s, border-radius .35s; border-radius: 40px; overflow: hidden; }
 .window.open { transform: scale(1); opacity: 1; border-radius: 0; }
-.window.closing { transform: scale(.2); opacity: 0; border-radius: 40px; }
+.window.closing { transform: scale(.08); opacity: 0; border-radius: 40px; }
 .window.darkwin { --bg: #000; --card: #1c1c1e; --text: #fff; --sep: #38383a; }
 .nav { padding: calc(var(--sat) + 50px) 16px 6px; display: flex; justify-content: space-between; align-items: center; min-height: 40px; }
 .nav h1 { font-size: 34px; font-weight: 700; }
@@ -100,7 +101,7 @@ button { font-family: var(--font); cursor: pointer; }
 .wbody { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px calc(var(--sab) + 40px); }
 .closer { position: absolute; bottom: 0; left: 0; right: 0; height: calc(var(--sab) + 26px); display: flex; justify-content: center; align-items: flex-end; padding-bottom: calc(var(--sab) + 6px); z-index: 10; cursor: pointer; }
 .closer i { width: 134px; height: 5px; border-radius: 3px; background: var(--text); opacity: .5; }
-.link { background: none; border: 0; color: var(--blue); font-size: 17px; padding: 6px 2px; }
+.link { background: none; border: 0; color: var(--blue); font-size: 17px; padding: 6px 4px; display: inline-flex; align-items: center; gap: 4px; }
 .link.red { color: #ff3b30; }
 .list { background: var(--card); border-radius: 12px; overflow: hidden; margin-bottom: 22px; }
 .cell { padding: 11px 16px; display: flex; gap: 12px; justify-content: space-between; align-items: center; border-bottom: .5px solid var(--sep); font-size: 17px; min-height: 44px; cursor: pointer; }
@@ -146,7 +147,7 @@ button { font-family: var(--font); cursor: pointer; }
 .tog.on.orange { background: #ff9f0a; }
 .slider { background: rgba(255,255,255,.18); border-radius: 22px; height: 150px; position: relative; overflow: hidden; touch-action: none; }
 .slider i { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; height: 60%; }
-.slider span { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-size: 24px; }
+.slider span { position: absolute; bottom: 14px; left: 0; right: 0; display:flex; justify-content:center; color:#8e8e93; }
 .ccmusic { grid-column: span 2; background: rgba(255,255,255,.18); border-radius: 22px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
 .ccmusic button { background: none; border: 0; color: #fff; font-size: 26px; }
 #dim { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 200; }
@@ -154,7 +155,7 @@ button { font-family: var(--font); cursor: pointer; }
 /* Switcher */
 #switcher { position: absolute; inset: 0; z-index: 60; background: rgba(0,0,0,.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; align-items: center; overflow-x: auto; gap: 18px; padding: 0 40px; scroll-snap-type: x mandatory; }
 #switcher.show { display: flex; }
-.card { min-width: 70%; height: 65%; border-radius: 30px; background: #333; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-size: 60px; position: relative; transition: transform .3s, opacity .3s; }
+.card { min-width: 70%; height: 65%; border-radius: 30px; background: #f2f2f7; color:#000; box-shadow:0 20px 50px rgba(0,0,0,.4); scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-size: 60px; position: relative; transition: transform .3s, opacity .3s; }
 .card span { font-size: 16px; }
 .card.gone { transform: translateY(-120%); opacity: 0; }
 
@@ -209,7 +210,7 @@ textarea.note { width: 100%; height: 100%; min-height: 60vh; border: 0; backgrou
 .chk.on { background: #ff9f0a; border-color: #ff9f0a; }
 .chk.on::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #fff; }
 .store-card { background: var(--card); border-radius: 14px; padding: 12px; display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
-.store-card .icon { width: 56px; height: 56px; font-size: 28px; border-radius: 13px; box-shadow: none; }
+.store-card .icon { width: 62px; height: 62px; border-radius: 15px; box-shadow: 0 1px 4px rgba(0,0,0,.15); flex-shrink:0; }
 .getbtn { border: 0; background: var(--sep); color: var(--blue); font-weight: 700; padding: 6px 18px; border-radius: 16px; font-size: 15px; }
 .art { width: 72%; aspect-ratio: 1; margin: 20px auto; border-radius: 14px; display: grid; place-items: center; font-size: 100px; box-shadow: 0 20px 40px rgba(0,0,0,.3); transition: transform .4s; }
 .art.paused { transform: scale(.85); }
@@ -226,14 +227,14 @@ iframe.map { width: 100%; height: 100%; border: 0; }
 </head>
 <body>
 <div id="phone">
-  <div class="status" id="status"><span id="sbTime">9:41</span><span class="icons">▂▄▆█ <span id="wifiIco">📶</span> <span class="batt"><i id="battLvl"></i></span></span></div>
+  <div class="status" id="status"><span id="sbTime">9:41</span><span class="icons"><svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg id="wifiIco" width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3A10.4 10.4 0 0 0 8 .4 10.4 10.4 0 0 0 .8 3.3L2 4.6a8.6 8.6 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.3-1.3A6.6 6.6 0 0 0 8 4a6.6 6.6 0 0 0-4.7 1.8l1.3 1.3c.9-.8 2.1-1.3 3.4-1.3zM8 9.5l2-2a2.8 2.8 0 0 0-4 0z"/></svg><span class="batt"><i id="battLvl"></i></span></span></div>
   <div class="island" id="island"></div>
 
   <div id="home">
     <button class="donebtn" id="doneBtn">Done</button>
     <div id="pages"></div>
     <div class="dots-nav" id="dotsNav"></div>
-    <div class="spot" id="spotBtn" style="display:block">🔍 Search</div>
+    <div class="spot" id="spotBtn" style="display:flex;gap:4px;align-items:center"></div>
     <div class="dock" id="dock"></div>
     <div class="home-bar" id="homeBar"></div>
   </div>
@@ -245,26 +246,26 @@ iframe.map { width: 100%; height: 100%; border: 0; }
     <div class="date" id="lockDate"></div>
     <div class="time" id="lockTime"></div>
     <div class="lnotes" id="lockNotes"></div>
-    <div class="lbtn" style="left:40px" id="lockTorch">🔦</div>
-    <div class="lbtn" style="right:40px" id="lockCam">📷</div>
-    <div class="hint">⌃ Swipe up to open</div>
+    <div class="lbtn" style="left:40px" id="lockTorch"></div>
+    <div class="lbtn" style="right:40px" id="lockCam"></div>
+    <div class="hint">Swipe up to open</div>
     <div class="bar"></div>
   </div>
-  <div id="pass"><div>🔒</div><div style="margin-top:10px">Enter Passcode</div><div class="dots" id="passDots"></div><div class="pad" id="passPad"></div><button class="link" style="color:#fff;margin-top:24px" id="passCancel">Cancel</button></div>
+  <div id="pass"><div id="passLock"></div><div style="margin-top:10px">Enter Passcode</div><div class="dots" id="passDots"></div><div class="pad" id="passPad"></div><button class="link" style="color:#fff;margin-top:24px" id="passCancel">Cancel</button></div>
 
   <div id="cc">
     <div class="tile">
-      <button class="tog orange" data-t="plane">✈️</button><button class="tog on" data-t="cell">📶</button>
-      <button class="tog on" data-t="wifi">🛜</button><button class="tog on" data-t="bt">🔵</button>
+      <button class="tog orange" data-t="plane"></button><button class="tog on" data-t="cell"></button>
+      <button class="tog on" data-t="wifi"></button><button class="tog on" data-t="bt"></button>
     </div>
-    <div class="ccmusic"><div><div style="font-size:13px;opacity:.7">Now Playing</div><div id="ccSong">Not Playing</div></div><div><button id="ccPrev">⏮</button><button id="ccPlay">▶️</button><button id="ccNext">⏭</button></div></div>
+    <div class="ccmusic"><div><div style="font-size:13px;opacity:.7">Now Playing</div><div id="ccSong">Not Playing</div></div><div style="display:flex;gap:14px"><button id="ccPrev"></button><button id="ccPlay"></button><button id="ccNext"></button></div></div>
     <div class="tile">
-      <button class="tog" data-t="rot">🔒</button><button class="tog" data-t="dnd">🌙</button>
-      <button class="tog" id="torch">🔦</button><button class="tog" id="ccDark">🌗</button>
+      <button class="tog" data-t="rot"></button><button class="tog" data-t="dnd"></button>
+      <button class="tog" id="torch"></button><button class="tog" id="ccDark"></button>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="slider" id="bright"><i></i><span>☀️</span></div><div class="slider" id="vol"><i></i><span>🔊</span></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="slider" id="bright"><i></i><span data-i="sun"></span></div><div class="slider" id="vol"><i></i><span data-i="volume-2"></span></div></div>
     <div class="tile" style="grid-column:span 2;grid-template-columns:repeat(4,1fr)">
-      <button class="tog" data-open="clock">⏱️</button><button class="tog" data-open="calc">🧮</button><button class="tog" data-open="camera">📷</button><button class="tog" data-open="voice">🎙️</button>
+      <button class="tog" data-open="clock"></button><button class="tog" data-open="calc"></button><button class="tog" data-open="camera"></button><button class="tog" data-open="voice"></button>
     </div>
   </div>
 
@@ -274,6 +275,46 @@ iframe.map { width: 100%; height: 100%; border: 0; }
 
 <script>
 'use strict';
+const ICONS = {"calendar":"<path d=\"M8 2v4\" /> <path d=\"M16 2v4\" /> <rect width=\"18\" height=\"18\" x=\"3\" y=\"4\" rx=\"2\" /> <path d=\"M3 10h18\" />","phone":"<path d=\"M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z\" />","message-circle":"<path d=\"M7.9 20A9 9 0 1 0 4 16.1L2 22Z\" />","compass":"<path d=\"m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z\" /> <circle cx=\"12\" cy=\"12\" r=\"10\" />","music":"<path d=\"M9 18V5l12-2v13\" /> <circle cx=\"6\" cy=\"18\" r=\"3\" /> <circle cx=\"18\" cy=\"16\" r=\"3\" />","camera":"<path d=\"M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z\" /> <circle cx=\"12\" cy=\"13\" r=\"3\" />","notebook-pen":"<path d=\"M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4\" /> <path d=\"M2 6h4\" /> <path d=\"M2 10h4\" /> <path d=\"M2 14h4\" /> <path d=\"M2 18h4\" /> <path d=\"M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z\" />","list-checks":"<path d=\"m3 17 2 2 4-4\" /> <path d=\"m3 7 2 2 4-4\" /> <path d=\"M13 6h8\" /> <path d=\"M13 12h8\" /> <path d=\"M13 18h8\" />","map":"<path d=\"M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z\" /> <path d=\"M15 5.764v15\" /> <path d=\"M9 3.236v15\" />","calculator":"<rect width=\"16\" height=\"20\" x=\"4\" y=\"2\" rx=\"2\" /> <line x1=\"8\" x2=\"16\" y1=\"6\" y2=\"6\" /> <line x1=\"16\" x2=\"16\" y1=\"14\" y2=\"18\" /> <path d=\"M16 10h.01\" /> <path d=\"M12 10h.01\" /> <path d=\"M8 10h.01\" /> <path d=\"M12 14h.01\" /> <path d=\"M8 14h.01\" /> <path d=\"M12 18h.01\" /> <path d=\"M8 18h.01\" />","user-round":"<circle cx=\"12\" cy=\"8\" r=\"5\" /> <path d=\"M20 21a8 8 0 0 0-16 0\" />","navigation":"<polygon points=\"3 11 22 2 13 21 11 13 3 11\" />","mic":"<path d=\"M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z\" /> <path d=\"M19 10v2a7 7 0 0 1-14 0v-2\" /> <line x1=\"12\" x2=\"12\" y1=\"19\" y2=\"22\" />","folder":"<path d=\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\" />","heart":"<path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\" />","newspaper":"<path d=\"M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2\" /> <path d=\"M18 14h-8\" /> <path d=\"M15 18h-5\" /> <path d=\"M10 6h8v4h-8V6Z\" />","lightbulb":"<path d=\"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5\" /> <path d=\"M9 18h6\" /> <path d=\"M10 22h4\" />","settings":"<path d=\"M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" />","cloud":"<path d=\"M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z\" />","shopping-bag":"<path d=\"M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z\" /> <path d=\"M3 6h18\" /> <path d=\"M16 10a4 4 0 0 1-8 0\" />","plane":"<path d=\"M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z\" />","antenna":"<path d=\"M2 12 7 2\" /> <path d=\"m7 12 5-10\" /> <path d=\"m12 12 5-10\" /> <path d=\"m17 12 5-10\" /> <path d=\"M4.5 7h15\" /> <path d=\"M12 16v6\" />","wifi":"<path d=\"M12 20h.01\" /> <path d=\"M2 8.82a15 15 0 0 1 20 0\" /> <path d=\"M5 12.859a10 10 0 0 1 14 0\" /> <path d=\"M8.5 16.429a5 5 0 0 1 7 0\" />","bluetooth":"<path d=\"m7 7 10 10-5 5V2l5 5L7 17\" />","lock-keyhole":"<circle cx=\"12\" cy=\"16\" r=\"1\" /> <rect x=\"3\" y=\"10\" width=\"18\" height=\"12\" rx=\"2\" /> <path d=\"M7 10V7a5 5 0 0 1 10 0v3\" />","moon":"<path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\" />","flashlight":"<path d=\"M18 6c0 2-2 2-2 4v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V10c0-2-2-2-2-4V2h12z\" /> <line x1=\"6\" x2=\"18\" y1=\"6\" y2=\"6\" /> <line x1=\"12\" x2=\"12\" y1=\"12\" y2=\"12\" />","sun-moon":"<path d=\"M12 8a2.83 2.83 0 0 0 4 4 4 4 0 1 1-4-4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.9 4.9 1.4 1.4\" /> <path d=\"m17.7 17.7 1.4 1.4\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.3 17.7-1.4 1.4\" /> <path d=\"m19.1 4.9-1.4 1.4\" />","timer":"<line x1=\"10\" x2=\"14\" y1=\"2\" y2=\"2\" /> <line x1=\"12\" x2=\"15\" y1=\"14\" y2=\"11\" /> <circle cx=\"12\" cy=\"14\" r=\"8\" />","sun":"<circle cx=\"12\" cy=\"12\" r=\"4\" /> <path d=\"M12 2v2\" /> <path d=\"M12 20v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"m17.66 17.66 1.41 1.41\" /> <path d=\"M2 12h2\" /> <path d=\"M20 12h2\" /> <path d=\"m6.34 17.66-1.41 1.41\" /> <path d=\"m19.07 4.93-1.41 1.41\" />","volume-2":"<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /> <path d=\"M16 9a5 5 0 0 1 0 6\" /> <path d=\"M19.364 18.364a9 9 0 0 0 0-12.728\" />","play":"<polygon points=\"6 3 20 12 6 21 6 3\" />","pause":"<rect x=\"14\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" /> <rect x=\"6\" y=\"4\" width=\"4\" height=\"16\" rx=\"1\" />","skip-back":"<polygon points=\"19 20 9 12 19 4 19 20\" /> <line x1=\"5\" x2=\"5\" y1=\"19\" y2=\"5\" />","skip-forward":"<polygon points=\"5 4 15 12 5 20 5 4\" /> <line x1=\"19\" x2=\"19\" y1=\"5\" y2=\"19\" />","search":"<circle cx=\"11\" cy=\"11\" r=\"8\" /> <path d=\"m21 21-4.3-4.3\" />","bell":"<path d=\"M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9\" /> <path d=\"M10.3 21a1.94 1.94 0 0 0 3.4 0\" />","image":"<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" ry=\"2\" /> <circle cx=\"9\" cy=\"9\" r=\"2\" /> <path d=\"m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21\" />","scan-face":"<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <path d=\"M8 14s1.5 2 4 2 4-2 4-2\" /> <path d=\"M9 9h.01\" /> <path d=\"M15 9h.01\" />","vibrate":"<path d=\"m2 8 2 2-2 2 2 2-2 2\" /> <path d=\"m22 8-2 2 2 2-2 2 2 2\" /> <rect width=\"8\" height=\"14\" x=\"8\" y=\"5\" rx=\"1\" />","info":"<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 16v-4\" /> <path d=\"M12 8h.01\" />","layout-grid":"<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />","hard-drive":"<line x1=\"22\" x2=\"2\" y1=\"12\" y2=\"12\" /> <path d=\"M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z\" /> <line x1=\"6\" x2=\"6.01\" y1=\"16\" y2=\"16\" /> <line x1=\"10\" x2=\"10.01\" y1=\"16\" y2=\"16\" />","upload":"<path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\" /> <polyline points=\"17 8 12 3 7 8\" /> <line x1=\"12\" x2=\"12\" y1=\"3\" y2=\"15\" />","download":"<path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\" /> <polyline points=\"7 10 12 15 17 10\" /> <line x1=\"12\" x2=\"12\" y1=\"15\" y2=\"3\" />","refresh-cw":"<path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\" /> <path d=\"M21 3v5h-5\" /> <path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\" /> <path d=\"M8 16H3v5\" />","star":"<path d=\"M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z\" />","history":"<path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\" /> <path d=\"M3 3v5h5\" /> <path d=\"M12 7v5l4 2\" />","users":"<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <path d=\"M16 3.13a4 4 0 0 1 0 7.75\" />","square-pen":"<path d=\"M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\" /> <path d=\"M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z\" />","pin":"<path d=\"M12 17v5\" /> <path d=\"M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z\" />","share":"<path d=\"M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8\" /> <polyline points=\"16 6 12 2 8 6\" /> <line x1=\"12\" x2=\"12\" y1=\"2\" y2=\"15\" />","trash-2":"<path d=\"M3 6h18\" /> <path d=\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\" /> <path d=\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\" /> <line x1=\"10\" x2=\"10\" y1=\"11\" y2=\"17\" /> <line x1=\"14\" x2=\"14\" y1=\"11\" y2=\"17\" />","plus":"<path d=\"M5 12h14\" /> <path d=\"M12 5v14\" />","chevron-left":"<path d=\"m15 18-6-6 6-6\" />","globe":"<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\" /> <path d=\"M2 12h20\" />","clock-4":"<circle cx=\"12\" cy=\"12\" r=\"10\" /> <polyline points=\"12 6 12 12 16 14\" />","cloud-rain":"<path d=\"M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242\" /> <path d=\"M16 14v6\" /> <path d=\"M8 14v6\" /> <path d=\"M12 16v6\" />","cloud-snow":"<path d=\"M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242\" /> <path d=\"M8 15h.01\" /> <path d=\"M8 19h.01\" /> <path d=\"M12 17h.01\" /> <path d=\"M12 21h.01\" /> <path d=\"M16 15h.01\" /> <path d=\"M16 19h.01\" />","cloud-lightning":"<path d=\"M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973\" /> <path d=\"m13 12-3 5h4l-3 5\" />","cloud-fog":"<path d=\"M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242\" /> <path d=\"M16 17H7\" /> <path d=\"M17 21H9\" />","cloud-drizzle":"<path d=\"M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242\" /> <path d=\"M8 19v1\" /> <path d=\"M8 14v1\" /> <path d=\"M16 19v1\" /> <path d=\"M16 14v1\" /> <path d=\"M12 21v1\" /> <path d=\"M12 16v1\" />","cloudy":"<path d=\"M17.5 21H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z\" /> <path d=\"M22 10a3 3 0 0 0-3-3h-2.207a5.502 5.502 0 0 0-10.702.5\" />","cloud-sun":"<path d=\"M12 2v2\" /> <path d=\"m4.93 4.93 1.41 1.41\" /> <path d=\"M20 12h2\" /> <path d=\"m19.07 4.93-1.41 1.41\" /> <path d=\"M15.947 12.65a4 4 0 0 0-5.925-4.128\" /> <path d=\"M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z\" />","droplets":"<path d=\"M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z\" /> <path d=\"M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97\" />","footprints":"<path d=\"M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z\" /> <path d=\"M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z\" /> <path d=\"M16 17h4\" /> <path d=\"M4 13h4\" />","brain":"<path d=\"M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z\" /> <path d=\"M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z\" /> <path d=\"M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4\" /> <path d=\"M17.599 6.5a3 3 0 0 0 .399-1.375\" /> <path d=\"M6.003 5.125A3 3 0 0 0 6.401 6.5\" /> <path d=\"M3.477 10.896a4 4 0 0 1 .585-.396\" /> <path d=\"M19.938 10.5a4 4 0 0 1 .585.396\" /> <path d=\"M6 18a4 4 0 0 1-1.967-.516\" /> <path d=\"M19.967 17.484A4 4 0 0 1 18 18\" />","mail":"<rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\" /> <path d=\"m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7\" />","keyboard":"<path d=\"M10 8h.01\" /> <path d=\"M12 12h.01\" /> <path d=\"M14 8h.01\" /> <path d=\"M16 12h.01\" /> <path d=\"M18 8h.01\" /> <path d=\"M6 8h.01\" /> <path d=\"M7 16h10\" /> <path d=\"M8 12h.01\" /> <rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\" />","hourglass":"<path d=\"M5 22h14\" /> <path d=\"M5 2h14\" /> <path d=\"M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22\" /> <path d=\"M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2\" />","earth":"<path d=\"M21.54 15H17a2 2 0 0 0-2 2v4.54\" /> <path d=\"M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17\" /> <path d=\"M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05\" /> <circle cx=\"12\" cy=\"12\" r=\"10\" />","rotate-ccw":"<path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\" /> <path d=\"M3 3v5h5\" />","message-square-text":"<path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\" /> <path d=\"M13 8H7\" /> <path d=\"M17 12H7\" />","circle-user":"<circle cx=\"12\" cy=\"12\" r=\"10\" /> <circle cx=\"12\" cy=\"10\" r=\"3\" /> <path d=\"M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662\" />"};
+
+const I = (n, s = 22, sw = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${ICONS[n] || ''}</svg>`;
+/* App icon artwork: a glyph on a gradient tile, or fully custom SVG */
+const G = (n, color = '#fff', sw = 1.9) => `<span style="color:${color};display:grid">${I(n, 36, sw)}</span>`;
+const ART = {
+  calendar: () => { const d = new Date(); return `<div style="display:flex;flex-direction:column;align-items:center;line-height:1;color:#000"><span style="color:#ff3b30;font-size:10px;font-weight:600;letter-spacing:.3px">${d.toLocaleDateString('en', { weekday: 'short' }).toUpperCase()}</span><span style="font-size:32px;font-weight:300;margin-top:1px">${d.getDate()}</span></div>`; },
+  clock: () => { const d = new Date(), hA = (d.getHours() % 12 + d.getMinutes() / 60) * 30, mA = d.getMinutes() * 6, sA = d.getSeconds() * 6; let ticks = ''; for (let i = 0; i < 12; i++) ticks += `<text x="50" y="50" transform="rotate(${i * 30} 50 50) translate(0 -33) rotate(${-i * 30} 50 50)" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#000" font-family="-apple-system,Helvetica">${i || 12}</text>`; return `<svg viewBox="0 0 100 100" width="58" height="58"><circle cx="50" cy="50" r="46" fill="#fff"/>${ticks}<line x1="50" y1="50" x2="50" y2="28" stroke="#000" stroke-width="4" stroke-linecap="round" transform="rotate(${hA} 50 50)"/><line x1="50" y1="50" x2="50" y2="14" stroke="#000" stroke-width="3" stroke-linecap="round" transform="rotate(${mA} 50 50)"/><line x1="50" y1="58" x2="50" y2="12" stroke="#ff9500" stroke-width="1.5" transform="rotate(${sA} 50 50)"/><circle cx="50" cy="50" r="3" fill="#ff9500"/></svg>`; },
+  photos: () => { const c = ['#fbbc05', '#f97b22', '#ea4335', '#c03ec5', '#7a5af8', '#4285f4', '#34c3a6', '#7ccb3e']; return `<svg viewBox="0 0 100 100" width="54" height="54">${c.map((col, i) => `<ellipse cx="50" cy="29" rx="11" ry="20" fill="${col}" opacity=".85" transform="rotate(${i * 45} 50 50)" style="mix-blend-mode:multiply"/>`).join('')}</svg>`; },
+  weather: () => `<svg viewBox="0 0 100 100" width="54" height="54"><circle cx="38" cy="38" r="17" fill="#ffd60a"/><path d="M30 76h42a15 15 0 0 0 0-30 20 20 0 0 0-38 6 12 12 0 0 0-4 24z" fill="#fff"/></svg>`,
+  safari: () => `<svg viewBox="0 0 100 100" width="58" height="58"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#19d7ff"/><stop offset="1" stop-color="#1e64f0"/></linearGradient></defs><circle cx="50" cy="50" r="44" fill="url(#sg)"/>${Array.from({ length: 36 }, (_, i) => `<line x1="50" y1="9" x2="50" y2="${i % 3 ? 13 : 16}" stroke="#fff" stroke-width="1" transform="rotate(${i * 10} 50 50)"/>`).join('')}<polygon points="50,50 70,26 56,56" fill="#ff3b30"/><polygon points="50,50 30,74 44,44" fill="#fff"/></svg>`,
+  settings: () => `<svg viewBox="0 0 24 24" width="50" height="50" fill="none" stroke="#3a3a3c" stroke-width="1.5">${ICONS.settings}</svg>`,
+  reminders: () => `<svg viewBox="0 0 100 100" width="56" height="56">${['#007aff', '#ff3b30', '#ff9500'].map((c, i) => `<circle cx="24" cy="${28 + i * 22}" r="7" fill="${c}"/><rect x="38" y="${26 + i * 22}" width="40" height="4" rx="2" fill="#d1d1d6"/>`).join('')}</svg>`,
+  notes: () => `<div style="width:100%;height:100%;border-radius:inherit;background:linear-gradient(#ffd60a 0 26%,#fff 26%);position:relative;overflow:hidden">${[42, 58, 74].map(y => `<div style="position:absolute;left:8px;right:8px;top:${y}%;height:1.5px;background:#d1d1d6"></div>`).join('')}</div>`,
+};
+const APP_ICON = {
+  phone: [G('phone', '#fff', 2.2), 'linear-gradient(#65f27d,#1ec83f)'],
+  messages: [G('message-circle', '#fff', 2.2), 'linear-gradient(#65f27d,#1ec83f)'],
+  safari: [ART.safari, '#fff'],
+  music: [G('music', '#fff', 2.2), 'linear-gradient(#ff6a7e,#fa233b)'],
+  camera: [G('camera', '#1c1c1e', 1.8), 'linear-gradient(#f2f2f7,#b7b7bd)'],
+  photos: [ART.photos, '#fff'],
+  notes: [ART.notes, '#fff'],
+  reminders: [ART.reminders, '#fff'],
+  calendar: [ART.calendar, '#fff'],
+  clock: [ART.clock, '#000'],
+  weather: [ART.weather, 'linear-gradient(#2c7cf6,#68b5ff)'],
+  maps: [`<svg viewBox="0 0 100 100" width="62" height="62"><rect width="100" height="100" fill="#a5e3a0"/><path d="M0 62 L100 30 L100 48 L0 80Z" fill="#fff"/><path d="M58 0 L72 0 L40 100 L26 100Z" fill="#ffd25e"/><circle cx="62" cy="40" r="11" fill="#007aff" stroke="#fff" stroke-width="4"/></svg>`, '#a5e3a0'],
+  calc: [`<div style="display:grid;grid-template-columns:repeat(2,18px);gap:5px">${['#a5a5a5', '#ff9f0a', '#333', '#ff9f0a'].map(c => `<i style="width:18px;height:18px;border-radius:50%;background:${c};display:block"></i>`).join('')}</div>`, '#1c1c1e'],
+  contacts: [G('circle-user', '#8e8e93', 1.6), 'linear-gradient(#f2f2f7,#d8d8de)'],
+  compass: [G('navigation', '#ff3b30', 2), '#1c1c1e'],
+  voice: [`<svg viewBox="0 0 100 40" width="50" height="22">${[10, 22, 34, 18, 30, 12, 26, 20, 8].map((h, i) => `<rect x="${6 + i * 10}" y="${20 - h / 2}" width="5" height="${h}" rx="2.5" fill="#ff3b30"/>`).join('')}</svg>`, '#1c1c1e'],
+  files: [G('folder', '#1a8cff', 2), '#fff'],
+  health: [G('heart', '#ff2d55', 2.4), '#fff'],
+  news: [G('newspaper', '#fff', 2), 'linear-gradient(#ff5a6e,#fa233b)'],
+  tips: [G('lightbulb', '#fff', 2), 'linear-gradient(#ffd60a,#ff9f0a)'],
+  settings: [ART.settings, 'linear-gradient(#e3e3e8,#9c9ca2)'],
+  cloud: [G('cloud', '#fff', 2), 'linear-gradient(#5ac8fa,#007aff)'],
+  appstore: [`<svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M9 4l7 13M15 4L8 17M5 14h14M17 19l1.5 2"/></svg>`, 'linear-gradient(#18bffb,#1d6ff2)'],
+};
 /* =====================================================================
    CORE HELPERS
    ===================================================================== */
@@ -309,18 +350,18 @@ function notify(appId, title, msg) {
   notifs.unshift({ id: uid(), app: appId, title, msg, t: Date.now() }); notifs = notifs.slice(0, 20); store.set('notifs', notifs);
   renderLockNotes();
   if (settings.dnd) return;
-  $('#bnIco').style.background = a.bg; $('#bnIco').textContent = a.icon;
+  $('#bnIco').style.background = a.bg; $('#bnIco').innerHTML = `<div style="transform:scale(.55)">${a.icon}</div>`;
   $('#bnTitle').textContent = title; $('#bnMsg').textContent = msg;
-  $('#banner').classList.add('show'); buzz(20); island(a.icon + ' ' + title);
+  $('#banner').classList.add('show'); buzz(20); island(title);
   clearTimeout(bannerTimer); bannerTimer = setTimeout(() => $('#banner').classList.remove('show'), 3500);
   $('#banner').onclick = () => { $('#banner').classList.remove('show'); unlockedOpen(appId); };
 }
 function renderLockNotes() {
   const box = $('#lockNotes'); box.innerHTML = '';
-  notifs.slice(0, 3).forEach(n => { const a = APPS[n.app] || { icon: '🔔', bg: '#888' }; box.appendChild(h(`<div class="ncard"><div class="sq" style="background:${a.bg}">${a.icon}</div><div style="flex:1;min-width:0"><b>${esc(n.title)}</b><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(n.msg)}</div></div><small>${fmtTime(n.t)}</small></div>`)); });
+  notifs.slice(0, 3).forEach(n => { const a = APPS[n.app] || { icon: '🔔', bg: '#888' }; box.appendChild(h(`<div class="ncard"><div class="sq" style="background:${a.bg};overflow:hidden"><div style="transform:scale(.55)">${a.icon}</div></div><div style="flex:1;min-width:0"><b>${esc(n.title)}</b><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(n.msg)}</div></div><small>${fmtTime(n.t)}</small></div>`)); });
   if (notifs.length) { const c = h(`<div style="text-align:center;font-size:13px;opacity:.8;cursor:pointer">Clear notifications</div>`); c.onclick = e => { e.stopPropagation(); notifs = []; store.set('notifs', notifs); renderLockNotes(); }; box.appendChild(c); }
 }
-function island(text) { const i = $('#island'); i.textContent = text; i.classList.add('wide'); clearTimeout(i._t); i._t = setTimeout(() => { i.classList.remove('wide'); i.textContent = ''; }, 2500); }
+function island(text) { const i = $('#island'); i.textContent = String(text).replace(/^[^\w]+\s/u, ''); i.classList.add('wide'); clearTimeout(i._t); i._t = setTimeout(() => { i.classList.remove('wide'); i.textContent = ''; }, 2500); }
 
 /* =====================================================================
    APP REGISTRY — add your own app here! Each app gets:
@@ -328,7 +369,7 @@ function island(text) { const i = $('#island'); i.textContent = text; i.classLis
      dark: true → dark window chrome.  external: url → opens a link instead.
    ===================================================================== */
 const APPS = {};
-function defineApp(id, def) { APPS[id] = Object.assign({ id, name: id, icon: '❓', bg: '#888' }, def); }
+function defineApp(id, def) { const a = Object.assign({ id, name: id, icon: '', bg: '#888' }, def); if (APP_ICON[id]) { a.art = APP_ICON[id][0]; a.bg = APP_ICON[id][1]; } a.glyph = a.icon; Object.defineProperty(a, 'icon', { get() { return typeof a.art === 'function' ? a.art() : (a.art || a.glyph); } }); APPS[id] = a; }
 
 /* =====================================================================
    SYSTEM: clock, lock, passcode, appearance
@@ -490,12 +531,13 @@ $('#spotlight').addEventListener('click', e => { if (e.target.id === 'spotlight'
    ===================================================================== */
 const running = []; // app ids, most recent last
 let current = null;
-function openApp(id) {
+function openApp(id, fromEl) {
   const a = APPS[id]; if (!a) return;
   if (a.external) { window.open(a.external, '_blank'); return; }
   $('#switcher').classList.remove('show'); $('#cc').classList.remove('open');
   closeAll(true);
   const win = h(`<div class="window ${a.dark ? 'darkwin' : ''}" data-app="${id}"></div>`);
+  if (fromEl) { const r = fromEl.querySelector('.icon')?.getBoundingClientRect(), pr = $('#phone').getBoundingClientRect(); if (r) win.style.transformOrigin = `${r.left + r.width / 2 - pr.left}px ${r.top + r.height / 2 - pr.top}px`; }
   $('#phone').appendChild(win);
   const body = document.createElement('div'); body.className = 'wbody';
   try { a.render(win, body); } catch (err) { console.error(err); win.innerHTML = `<div class="nav"><h1>${esc(a.name)}</h1></div><div class="wbody"><div class="empty">This app crashed 💥<br><small>${esc(err.message)}</small></div></div>`; }
@@ -527,7 +569,7 @@ function openSwitcher() {
   if (!running.length) { s.appendChild(h('<div style="margin:auto;opacity:.8">No Recent Apps</div>')); }
   [...running].reverse().forEach(id => {
     const a = APPS[id]; if (!a) return;
-    const c = h(`<div class="card" style="background:${a.bg}">${a.icon}<span>${esc(a.name)}</span></div>`);
+    const c = h(`<div class="card" style="background:var(--bg,#f2f2f7)"><div class="icon" style="background:${a.bg};position:absolute;top:-30px;left:0">${a.icon}</div><span style="position:absolute;top:-24px;left:72px;color:#fff;font-weight:600">${esc(a.name)}</span><div style="opacity:.25;transform:scale(2.5)">${a.icon}</div></div>`);
     let y0;
     c.addEventListener('touchstart', e => y0 = e.touches[0].clientY, { passive: true });
     c.addEventListener('touchend', e => { const dy = e.changedTouches[0].clientY - y0; if (dy < -80) { c.classList.add('gone'); running.splice(running.indexOf(id), 1); setTimeout(() => c.remove(), 300); buzz(); } else if (Math.abs(dy) < 10) { s.classList.remove('show'); openApp(id); } });
@@ -556,7 +598,7 @@ function page(win, title, opts = {}) {
 }
 function list(rows) {
   const l = h('<div class="list"></div>');
-  rows.forEach(r => { const c = h(`<div class="cell"><div class="l">${r.icon ? `<div class="sq" style="background:${r.bg || '#888'}">${r.icon}</div>` : ''}${r.left || ''}<div><div>${esc(r.title)}</div>${r.sub ? `<small>${esc(r.sub)}</small>` : ''}</div></div><div class="r">${r.right ?? ''}</div></div>`); if (r.onclick) c.onclick = r.onclick; else c.style.cursor = 'default'; if (r.onEl) r.onEl(c); l.appendChild(c); });
+  rows.forEach(r => { const c = h(`<div class="cell"><div class="l">${r.icon ? `<div class="sq" style="background:${r.bg || '#888'};color:#fff;overflow:hidden">${/^<span|^<svg|^<div/.test(r.icon) && r.icon.length > 200 ? `<div style="transform:scale(.48)">${r.icon}</div>` : (ICONS[r.icon] ? I(r.icon, 18) : r.icon)}</div>` : ''}${r.left || ''}<div><div>${esc(r.title)}</div>${r.sub ? `<small>${esc(r.sub)}</small>` : ''}</div></div><div class="r">${r.right ?? ''}</div></div>`); if (r.onclick) c.onclick = r.onclick; else c.style.cursor = 'default'; if (r.onEl) r.onEl(c); l.appendChild(c); });
   return l;
 }
 function switchEl(on, fn) { const s = h(`<div class="switch ${on ? 'on' : ''}"></div>`); s.onclick = e => { e.stopPropagation(); s.classList.toggle('on'); buzz(); fn(s.classList.contains('on')); }; return s; }
@@ -643,27 +685,27 @@ function importBackup() {
 defineApp('settings', { name: 'Settings', icon: '⚙️', bg: 'linear-gradient(#aeaeb2,#636366)', render(win) {
   const main = () => {
     const b = page(win, 'Settings');
-    b.appendChild(h('<input class="search" placeholder="🔍 Search">'));
+    b.appendChild(h('<input class="search" placeholder="Search">'));
     b.appendChild(list([{ left: `<div class="avatar" style="width:56px;height:56px;font-size:22px">${esc((settings.name || '?')[0].toUpperCase())}</div>`, title: settings.name || 'Sign in to your Cloud', sub: settings.name ? 'Cloud, Backups & Account' : 'Set up Cloud, Backup and more.', right: '›', onclick: () => openApp('cloud') }]));
     b.appendChild(list([
-      { icon: '✈️', bg: '#ff9500', title: 'Airplane Mode', right: '', onEl: c => c.querySelector('.r').appendChild(switchEl($('[data-t=plane]').classList.contains('on'), () => $('[data-t=plane]').click())) },
-      { icon: '🛜', bg: '#007aff', title: 'Wi-Fi', right: navigator.onLine ? 'Connected ›' : 'Off ›' },
-      { icon: '🔵', bg: '#007aff', title: 'Bluetooth', right: 'On ›' },
+      { icon: 'plane', bg: '#ff9500', title: 'Airplane Mode', right: '', onEl: c => c.querySelector('.r').appendChild(switchEl($('[data-t=plane]').classList.contains('on'), () => $('[data-t=plane]').click())) },
+      { icon: 'wifi', bg: '#007aff', title: 'Wi-Fi', right: navigator.onLine ? 'Connected ›' : 'Off ›' },
+      { icon: 'bluetooth', bg: '#007aff', title: 'Bluetooth', right: 'On ›' },
     ]));
     b.appendChild(list([
-      { icon: '🔔', bg: '#ff3b30', title: 'Notifications', right: '›', onclick: notifPage },
-      { icon: '🌙', bg: '#5856d6', title: 'Focus', right: '', onEl: c => c.querySelector('.r').appendChild(switchEl(settings.dnd, v => { settings.dnd = v; saveSettings(); $('[data-t=dnd]').classList.toggle('on', v); })) },
+      { icon: 'bell', bg: '#ff3b30', title: 'Notifications', right: '›', onclick: notifPage },
+      { icon: 'moon', bg: '#5856d6', title: 'Focus', right: '', onEl: c => c.querySelector('.r').appendChild(switchEl(settings.dnd, v => { settings.dnd = v; saveSettings(); $('[data-t=dnd]').classList.toggle('on', v); })) },
     ]));
     b.appendChild(list([
-      { icon: 'Aa', bg: '#007aff', title: 'Display & Brightness', right: '›', onclick: displayPage },
-      { icon: '🖼️', bg: '#34aadc', title: 'Wallpaper', right: '›', onclick: wallPage },
-      { icon: '🔒', bg: '#ff3b30', title: 'Face ID & Passcode', right: settings.passcode ? 'On ›' : 'Off ›', onclick: passPage },
-      { icon: '📳', bg: '#ff2d55', title: 'Sounds & Haptics', right: '', onEl: c => c.querySelector('.r').appendChild(switchEl(settings.haptics, v => { settings.haptics = v; saveSettings(); })) },
+      { icon: 'sun', bg: '#007aff', title: 'Display & Brightness', right: '›', onclick: displayPage },
+      { icon: 'image', bg: '#34aadc', title: 'Wallpaper', right: '›', onclick: wallPage },
+      { icon: 'scan-face', bg: '#34c759', title: 'Face ID & Passcode', right: settings.passcode ? 'On ›' : 'Off ›', onclick: passPage },
+      { icon: 'volume-2', bg: '#ff2d55', title: 'Sounds & Haptics', right: '', onEl: c => c.querySelector('.r').appendChild(switchEl(settings.haptics, v => { settings.haptics = v; saveSettings(); })) },
     ]));
     b.appendChild(list([
-      { icon: 'ⓘ', bg: '#8e8e93', title: 'General', right: '›', onclick: generalPage },
-      { icon: '🔲', bg: '#8e8e93', title: 'Home Screen', right: '›', onclick: () => { closeAll(); setTimeout(() => setWiggle(true), 400); } },
-      { icon: '🛍️', bg: '#007aff', title: 'App Store', right: '›', onclick: () => openApp('appstore') },
+      { icon: 'settings', bg: '#8e8e93', title: 'General', right: '›', onclick: generalPage },
+      { icon: 'layout-grid', bg: '#5856d6', title: 'Home Screen', right: '›', onclick: () => { closeAll(); setTimeout(() => setWiggle(true), 400); } },
+      { icon: 'shopping-bag', bg: '#007aff', title: 'App Store', right: '›', onclick: () => openApp('appstore') },
     ]));
   };
   const back = () => main();
@@ -685,7 +727,7 @@ defineApp('settings', { name: 'Settings', icon: '⚙️', bg: 'linear-gradient(#
   const generalPage = () => {
     const b = page(win, 'General', { back });
     b.appendChild(list([
-      { title: 'About', right: 'iOS Rebuilt 2.0 ›', onclick: () => alert('iOS Rebuilt 2.0\nOpen source (MIT)\n\nApps: ' + Object.keys(APPS).length + '\nStorage used: ' + (store.bytes() / 1024).toFixed(1) + ' KB\n\nNot affiliated with Apple.') },
+      { title: 'About', right: 'iOS Rebuilt 3.0 ›', onclick: () => alert('iOS Rebuilt 3.0\nOpen source (MIT)\n\nApps: ' + Object.keys(APPS).length + '\nStorage used: ' + (store.bytes() / 1024).toFixed(1) + ' KB\n\nNot affiliated with Apple.') },
       { title: 'Software Update', right: '›', onclick: () => { toast('Checking…'); if (navigator.serviceWorker?.controller) navigator.serviceWorker.getRegistration().then(r => r && r.update()); setTimeout(() => alert('iOS Rebuilt is up to date.\n\nNew versions install automatically when you open the app online.'), 900); } },
       { title: 'Storage', right: (store.bytes() / 1024).toFixed(0) + ' KB ›', onclick: () => openApp('cloud') },
     ]));
@@ -718,10 +760,10 @@ defineApp('cloud', { name: 'Cloud', icon: '☁️', bg: 'linear-gradient(#fff,#d
     const last = store.get('lastSync', 0);
     b.appendChild(h('<div class="label">Backup</div>'));
     b.appendChild(list([
-      { icon: '🔄', bg: '#34c759', title: 'Cloud Backup', sub: last ? 'Last backup ' + fmtDate(last) + ' ' + fmtTime(last) : 'Never', onEl: c => c.querySelector('.r').appendChild(switchEl(settings.cloud, v => { settings.cloud = v; saveSettings(); if (v) cloudSync(); })) },
-      { icon: '⬆️', bg: '#007aff', title: 'Back Up Now', onclick: () => { settings.cloud = true; saveSettings(); cloudSync(); setTimeout(() => { toast('Backed up ✓'); draw(); }, 1600); } },
-      { icon: '💾', bg: '#5856d6', title: 'Download Backup File', sub: 'Move your data to another device', onclick: exportBackup },
-      { icon: '📥', bg: '#ff9500', title: 'Restore from Backup File', onclick: importBackup },
+      { icon: 'refresh-cw', bg: '#34c759', title: 'Cloud Backup', sub: last ? 'Last backup ' + fmtDate(last) + ' ' + fmtTime(last) : 'Never', onEl: c => c.querySelector('.r').appendChild(switchEl(settings.cloud, v => { settings.cloud = v; saveSettings(); if (v) cloudSync(); })) },
+      { icon: 'upload', bg: '#007aff', title: 'Back Up Now', onclick: () => { settings.cloud = true; saveSettings(); cloudSync(); setTimeout(() => { toast('Backed up ✓'); draw(); }, 1600); } },
+      { icon: 'hard-drive', bg: '#5856d6', title: 'Download Backup File', sub: 'Move your data to another device', onclick: exportBackup },
+      { icon: 'download', bg: '#ff9500', title: 'Restore from Backup File', onclick: importBackup },
     ]));
     b.appendChild(h('<div class="label">Apps Using Cloud</div>'));
     b.appendChild(list(['notes', 'photos', 'messages', 'reminders', 'contacts', 'calendar'].map(id => ({ icon: APPS[id].icon, bg: APPS[id].bg, title: APPS[id].name, right: '✓' }))));
@@ -738,7 +780,7 @@ defineApp('phone', { name: 'Phone', icon: '📞', bg: 'linear-gradient(#5cf777,#
     win.innerHTML = '';
     const content = h('<div style="flex:1;display:flex;flex-direction:column;overflow:hidden"></div>'); win.appendChild(content);
     const tabs = h('<div class="tabs"></div>');
-    [['⭐', 'Favorites'], ['🕘', 'Recents'], ['👤', 'Contacts'], ['⌨️', 'Keypad']].forEach(([i, n]) => { const t = h(`<button class="${tab === n ? 'on' : ''}"><b>${i}</b>${n}</button>`); t.onclick = () => { tab = n; draw(); }; tabs.appendChild(t); });
+    [['star', 'Favorites'], ['history', 'Recents'], ['users', 'Contacts'], ['keyboard', 'Keypad']].forEach(([i, n]) => { const t = h(`<button class="${tab === n ? 'on' : ''}"><b>${I(i, 24)}</b>${n}</button>`); t.onclick = () => { tab = n; draw(); }; tabs.appendChild(t); });
     win.appendChild(tabs);
     const call = num => { const rec = store.get('calls', []); rec.unshift({ num, t: Date.now() }); store.set('calls', rec.slice(0, 50)); island('📞 Calling ' + num); location.href = 'tel:' + num.replace(/[^\d+*#]/g, ''); };
     if (tab === 'Keypad') {
@@ -746,7 +788,7 @@ defineApp('phone', { name: 'Phone', icon: '📞', bg: 'linear-gradient(#5cf777,#
       const out = h('<div style="font-size:36px;text-align:center;min-height:50px;margin-top:calc(var(--sat) + 70px)"></div>');
       const d = h('<div class="dial"></div>');
       [['1', ''], ['2', 'ABC'], ['3', 'DEF'], ['4', 'GHI'], ['5', 'JKL'], ['6', 'MNO'], ['7', 'PQRS'], ['8', 'TUV'], ['9', 'WXYZ'], ['*', ''], ['0', '+'], ['#', '']].forEach(([n, l]) => { const k = h(`<button>${n}<small>${l}</small></button>`); k.onclick = () => { num += n; out.textContent = num; buzz(); }; d.appendChild(k); });
-      const c = h('<button class="callbtn">📞</button>'); c.onclick = () => num && call(num);
+      const c = h(`<button class="callbtn" style="display:grid;place-items:center">${I('phone', 32)}</button>`); c.onclick = () => num && call(num);
       const del = h('<button class="link" style="display:block;margin:6px auto">⌫</button>'); del.onclick = () => { num = num.slice(0, -1); out.textContent = num; };
       content.append(out, d, c, del);
     } else if (tab === 'Recents') {
@@ -766,8 +808,8 @@ defineApp('phone', { name: 'Phone', icon: '📞', bg: 'linear-gradient(#5cf777,#
 defineApp('contacts', { name: 'Contacts', icon: '👤', bg: 'linear-gradient(#d8d8dc,#a6a6ab)', render(win) {
   const draw = (q = '') => {
     const cs = store.get('contacts', []).sort((a, b) => a.name.localeCompare(b.name));
-    const b = page(win, 'Contacts', { actions: [['＋', edit]] });
-    const s = h(`<input class="search" placeholder="🔍 Search" value="${esc(q)}">`); s.oninput = () => { const v = s.value; draw(v); setTimeout(() => { const n = win.querySelector('.search'); n.focus(); n.setSelectionRange(v.length, v.length); }); }; b.appendChild(s);
+    const b = page(win, 'Contacts', { actions: [[I('plus', 26), edit]] });
+    const s = h(`<input class="search" placeholder="Search" value="${esc(q)}">`); s.oninput = () => { const v = s.value; draw(v); setTimeout(() => { const n = win.querySelector('.search'); n.focus(); n.setSelectionRange(v.length, v.length); }); }; b.appendChild(s);
     if (settings.name) b.appendChild(list([{ left: `<div class="avatar" style="width:56px;height:56px">${esc(settings.name[0])}</div>`, title: settings.name, sub: 'My Card' }]));
     const f = cs.filter(c => c.name.toLowerCase().includes(q.toLowerCase()));
     if (!f.length) b.appendChild(h('<div class="empty">No Contacts</div>'));
@@ -813,7 +855,7 @@ defineApp('messages', { name: 'Messages', icon: '💬', bg: 'linear-gradient(#5c
   const chats = () => { const c = store.get('chats', {}); if (!c[BOT]) { c[BOT] = { msgs: [{ me: false, text: `Hi! I'm ${BOT}. Say hello 👋`, t: Date.now() }], unread: 0 }; store.set('chats', c); } return c; };
   const listView = () => {
     const c = chats();
-    const b = page(win, 'Messages', { actions: [['✏️', () => { const n = ask('To: (name)'); if (n) openChat(n); }]] });
+    const b = page(win, 'Messages', { actions: [[I('square-pen', 24), () => { const n = ask('To: (name)'); if (n) openChat(n); }]] });
     b.appendChild(list(Object.entries(c).sort((a, z) => (z[1].msgs.at(-1)?.t || 0) - (a[1].msgs.at(-1)?.t || 0)).map(([name, ch]) => ({ left: `<div class="avatar">${esc(name[0].toUpperCase())}</div>`, title: name, sub: ch.msgs.at(-1)?.text || '', right: (ch.unread ? '🔵 ' : '') + (ch.msgs.at(-1) ? fmtTime(ch.msgs.at(-1).t) : ''), onclick: () => openChat(name) }))));
   };
   const openChat = name => {
@@ -840,7 +882,7 @@ defineApp('messages', { name: 'Messages', icon: '💬', bg: 'linear-gradient(#5c
 defineApp('safari', { name: 'Safari', icon: '🧭', bg: 'linear-gradient(#fff,#d1e8ff)', render(win) {
   const b = page(win, 'Start Page');
   const go = q => { q = q.trim(); if (!q) return; const url = /^https?:\/\//.test(q) ? q : /^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(q) ? 'https://' + q : 'https://duckduckgo.com/?q=' + encodeURIComponent(q); const hist = store.get('history', []); hist.unshift({ q, url, t: Date.now() }); store.set('history', hist.slice(0, 30)); window.open(url, '_blank'); };
-  const bar = h('<input class="search" placeholder="🔍 Search or enter website name" enterkeyhint="go" style="font-size:17px;padding:12px">'); bar.onkeydown = e => { if (e.key === 'Enter') go(bar.value); }; b.appendChild(bar);
+  const bar = h('<input class="search" placeholder="Search or enter website name" enterkeyhint="go" style="font-size:17px;padding:12px">'); bar.onkeydown = e => { if (e.key === 'Enter') go(bar.value); }; b.appendChild(bar);
   b.appendChild(h('<div class="label">Favorites</div>'));
   const g = h('<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;text-align:center;font-size:12px"></div>');
   [['Wikipedia', '📚', 'wikipedia.org'], ['YouTube', '▶️', 'youtube.com'], ['GitHub', '🐙', 'github.com/mrcodelover1211/IOS-rebuilt-'], ['News', '📰', 'news.google.com'], ['Maps', '🗺️', 'openstreetmap.org'], ['Reddit', '👽', 'reddit.com'], ['Translate', '🌐', 'translate.google.com'], ['Weather', '⛅', 'weather.com']].forEach(([n, i, u]) => { const x = h(`<div style="cursor:pointer"><div style="width:60px;height:60px;border-radius:14px;background:var(--card);display:grid;place-items:center;font-size:28px;margin:0 auto 4px">${i}</div>${n}</div>`); x.onclick = () => go('https://' + u); g.appendChild(x); });
@@ -870,14 +912,14 @@ const Music = (() => {
   function pause() { playing = false; clearTimeout(timer); el && el.pause(); sync(); }
   function next() { pause(); idx = (idx + 1) % songs.length; pos = 0; play(); }
   function prev() { pause(); idx = (idx - 1 + songs.length) % songs.length; pos = 0; play(); }
-  function sync() { $('#ccSong').textContent = playing ? cur().title : 'Not Playing'; $('#ccPlay').textContent = playing ? '⏸' : '▶️'; ui && ui(); }
+  function sync() { $('#ccSong').textContent = playing ? cur().title : 'Not Playing'; $('#ccPlay').innerHTML = I(playing ? 'pause' : 'play', 24); ui && ui(); }
   function addFile() { const i = document.createElement('input'); i.type = 'file'; i.accept = 'audio/*'; i.onchange = () => { const f = i.files[0]; if (!f) return; songs.push({ title: f.name.replace(/\.[^.]+$/, ''), artist: 'My Music', art: '🎧', bg: 'linear-gradient(#a18cd1,#fbc2eb)', file: URL.createObjectURL(f) }); idx = songs.length - 1; pause(); play(); }; i.click(); }
   $('#ccPlay').onclick = () => playing ? pause() : play(); $('#ccNext').onclick = next; $('#ccPrev').onclick = prev;
   return { songs, cur, play, pause, next, prev, addFile, get playing() { return playing; }, set ui(f) { ui = f; }, get idx() { return idx; }, set idx(v) { pause(); idx = v; pos = 0; }, setVol(v) { vol = v; if (gain) gain.gain.value = v; if (el) el.volume = v; }, elapsed: () => playing ? (Date.now() - startT) / 1000 : 0 };
 })();
 defineApp('music', { name: 'Music', icon: '🎵', bg: 'linear-gradient(#fc5c7d,#fa233b)', render(win) {
   const listView = () => {
-    const b = page(win, 'Library', { actions: [['＋ Add', Music.addFile]] });
+    const b = page(win, 'Library', { actions: [[I('plus', 26), Music.addFile]] });
     b.appendChild(list(Music.songs.map((s, i) => ({ left: `<div class="sq" style="width:48px;height:48px;font-size:26px;background:${s.bg}">${s.art}</div>`, title: s.title, sub: s.artist, right: Music.playing && Music.idx === i ? '🔊' : '', onclick: () => { Music.idx = i; Music.play(); player(); } }))));
     b.appendChild(h('<p style="color:var(--sub);font-size:13px;text-align:center">Tap ＋ Add to play songs from your Files.</p>'));
     if (Music.playing) { const np = h('<button class="pbtn">▶ Now Playing</button>'); np.onclick = player; b.appendChild(np); }
@@ -889,7 +931,7 @@ defineApp('music', { name: 'Music', icon: '🎵', bg: 'linear-gradient(#fc5c7d,#
       b.appendChild(h(`<div class="art ${Music.playing ? '' : 'paused'}" style="background:${s.bg}">${s.art}</div>`));
       b.appendChild(h(`<div style="padding:0 6px"><div style="font-size:22px;font-weight:700">${esc(s.title)}</div><div style="color:var(--sub);font-size:18px">${esc(s.artist)}</div></div>`));
       b.appendChild(h('<div class="progress"><i></i></div>'));
-      const c = h(`<div class="mctl"><button>⏮</button><button>${Music.playing ? '⏸' : '▶️'}</button><button>⏭</button></div>`);
+      const c = h(`<div class="mctl"><button>${I('skip-back', 36)}</button><button>${I(Music.playing ? 'pause' : 'play', 48)}</button><button>${I('skip-forward', 36)}</button></div>`);
       c.children[0].onclick = Music.prev; c.children[1].onclick = () => Music.playing ? Music.pause() : Music.play(); c.children[2].onclick = Music.next;
       b.appendChild(c);
     };
@@ -930,7 +972,7 @@ defineApp('camera', { name: 'Camera', icon: '📷', bg: 'linear-gradient(#e5e5ea
 defineApp('photos', { name: 'Photos', icon: '🌸', bg: 'linear-gradient(135deg,#fff,#f0f0f5)', render(win) {
   const draw = () => {
     const ph = store.get('photos', []);
-    const b = page(win, 'Library', { actions: [['＋', async () => { const s = await pickImage(); if (s) { addPhoto(s); draw(); } }]] });
+    const b = page(win, 'Library', { actions: [[I('plus', 26), async () => { const s = await pickImage(); if (s) { addPhoto(s); draw(); } }]] });
     b.appendChild(h(`<div style="color:var(--sub);margin:-4px 0 10px">${ph.length} Photos</div>`));
     if (!ph.length) { b.appendChild(h('<div class="empty">No Photos<br><small>Tap ＋ or use the Camera app</small></div>')); return; }
     const g = h('<div class="pgrid"></div>');
@@ -955,15 +997,15 @@ defineApp('notes', { name: 'Notes', icon: '📝', bg: 'linear-gradient(#fff 30%,
   const save = () => { store.set('notes', notes); cloudSync(); };
   const listView = (q = '') => {
     notes = notes.filter(n => n.text.trim()); save(); notes.sort((a, b) => (b.pin - a.pin) || b.t - a.t);
-    const b = page(win, 'Notes', { actions: [['✏️', () => { const n = { id: uid(), text: '', t: Date.now() }; notes.push(n); edit(n); }]] });
-    const s = h(`<input class="search" placeholder="🔍 Search" value="${esc(q)}">`); s.oninput = () => { const v = s.value; listView(v); const n = win.querySelector('.search'); n.focus(); n.setSelectionRange(v.length, v.length); }; b.appendChild(s);
+    const b = page(win, 'Notes', { actions: [[I('square-pen', 24), () => { const n = { id: uid(), text: '', t: Date.now() }; notes.push(n); edit(n); }]] });
+    const s = h(`<input class="search" placeholder="Search" value="${esc(q)}">`); s.oninput = () => { const v = s.value; listView(v); const n = win.querySelector('.search'); n.focus(); n.setSelectionRange(v.length, v.length); }; b.appendChild(s);
     const f = notes.filter(n => n.text.toLowerCase().includes(q.toLowerCase()));
     if (!f.length) { b.appendChild(h('<div class="empty">No Notes</div>')); return; }
     b.appendChild(list(f.map(n => { const [t, ...r] = n.text.split('\n'); return { title: (n.pin ? '📌 ' : '') + (t || 'New Note'), sub: fmtDate(n.t) + '  ' + (r.join(' ').slice(0, 50) || 'No additional text'), onclick: () => edit(n) }; })));
     b.appendChild(h(`<div style="text-align:center;color:var(--sub);font-size:13px">${notes.length} Notes</div>`));
   };
   const edit = n => {
-    const b = page(win, '', { back: () => listView(), backLabel: 'Notes', actions: [['📌', () => { n.pin = !n.pin; save(); toast(n.pin ? 'Pinned' : 'Unpinned'); }], ['⬆️', () => navigator.share ? navigator.share({ text: n.text }).catch(() => {}) : navigator.clipboard?.writeText(n.text).then(() => toast('Copied'))], ['🗑️', () => { notes = notes.filter(x => x !== n); save(); listView(); }]] });
+    const b = page(win, '', { back: () => listView(), backLabel: 'Notes', actions: [[I('pin', 22), () => { n.pin = !n.pin; save(); toast(n.pin ? 'Pinned' : 'Unpinned'); }], [I('share', 22), () => navigator.share ? navigator.share({ text: n.text }).catch(() => {}) : navigator.clipboard?.writeText(n.text).then(() => toast('Copied'))], [I('trash-2', 22), () => { notes = notes.filter(x => x !== n); save(); listView(); }]] });
     b.previousSibling.querySelector('h1').remove();
     const ta = h('<textarea class="note" placeholder="Start typing…"></textarea>'); ta.value = n.text;
     ta.oninput = () => { n.text = ta.value; n.t = Date.now(); save(); };
@@ -1046,15 +1088,15 @@ defineApp('clock', { name: 'Clock', icon: '⏰', bg: '#000', dark: true, render(
     win.innerHTML = '';
     const content = h('<div style="flex:1;display:flex;flex-direction:column;overflow:hidden"></div>'); win.appendChild(content);
     const tabs = h('<div class="tabs"></div>');
-    [['🌐', 'World Clock'], ['⏰', 'Alarm'], ['⏱️', 'Stopwatch'], ['⏲️', 'Timer']].forEach(([i, n]) => { const t = h(`<button class="${tab === n ? 'on' : ''}" style="${tab === n ? 'color:#ff9f0a' : ''}"><b>${i}</b>${n}</button>`); t.onclick = () => { tab = n; draw(); }; tabs.appendChild(t); });
+    [['earth', 'World Clock'], ['bell', 'Alarm'], ['timer', 'Stopwatch'], ['hourglass', 'Timer']].forEach(([i, n]) => { const t = h(`<button class="${tab === n ? 'on' : ''}" style="${tab === n ? 'color:#ff9f0a' : ''}"><b>${I(i, 24)}</b>${n}</button>`); t.onclick = () => { tab = n; draw(); }; tabs.appendChild(t); });
     win.appendChild(tabs);
     if (tab === 'World Clock') {
       const zones = store.get('zones', ['America/New_York', 'Europe/London', 'Asia/Tokyo', 'Australia/Sydney']);
-      const b = page(content, 'World Clock', { actions: [['＋', () => { const z = ask('Time zone (e.g. Europe/Paris, Asia/Dubai)'); if (!z) return; try { new Intl.DateTimeFormat([], { timeZone: z }); zones.push(z); store.set('zones', zones); draw(); } catch { toast('Unknown time zone'); } }]] });
+      const b = page(content, 'World Clock', { actions: [[I('plus', 26), () => { const z = ask('Time zone (e.g. Europe/Paris, Asia/Dubai)'); if (!z) return; try { new Intl.DateTimeFormat([], { timeZone: z }); zones.push(z); store.set('zones', zones); draw(); } catch { toast('Unknown time zone'); } }]] });
       const l = list(zones.map(z => ({ title: z.split('/').pop().replace(/_/g, ' '), sub: z.split('/')[0], right: `<span style="font-size:36px;font-weight:300;color:var(--text)">${new Date().toLocaleTimeString([], { timeZone: z, hour: 'numeric', minute: '2-digit' })}</span>`, onclick: () => { if (confirm('Remove ' + z + '?')) { store.set('zones', zones.filter(x => x !== z)); draw(); } } })));
       b.appendChild(l);
     } else if (tab === 'Alarm') {
-      const b = page(content, 'Alarm', { actions: [['＋', () => { const t = ask('Alarm time (24h, e.g. 07:30)'); if (!t || !/^\d{1,2}:\d{2}$/.test(t)) return t && toast('Use HH:MM'); const lb = ask('Label', 'Alarm'); alarms.push({ id: uid(), time: t.padStart(5, '0'), label: lb || 'Alarm', on: true }); store.set('alarms', alarms); draw(); }]] });
+      const b = page(content, 'Alarm', { actions: [[I('plus', 26), () => { const t = ask('Alarm time (24h, e.g. 07:30)'); if (!t || !/^\d{1,2}:\d{2}$/.test(t)) return t && toast('Use HH:MM'); const lb = ask('Label', 'Alarm'); alarms.push({ id: uid(), time: t.padStart(5, '0'), label: lb || 'Alarm', on: true }); store.set('alarms', alarms); draw(); }]] });
       if (!alarms.length) b.appendChild(h('<div class="empty">No Alarms</div>'));
       else b.appendChild(list(alarms.map(a => ({ title: '', right: '', onEl: c => { c.querySelector('.l').innerHTML = `<div><div style="font-size:48px;font-weight:300;${a.on ? '' : 'color:var(--sub)'}">${a.time}</div><small>${esc(a.label)}</small></div>`; c.querySelector('.r').appendChild(switchEl(a.on, v => { a.on = v; store.set('alarms', alarms); })); c.onclick = () => { if (confirm('Delete alarm?')) { alarms = alarms.filter(x => x !== a); store.set('alarms', alarms); draw(); } }; } }))));
       b.appendChild(h('<p style="color:var(--sub);font-size:13px">Alarms ring while iOS Rebuilt is open.</p>'));
@@ -1098,10 +1140,12 @@ defineApp('clock', { name: 'Clock', icon: '⏰', bg: '#000', dark: true, render(
 function scheduleTimer() { clearTimeout(TM.t); TM.t = setTimeout(() => { TM.running = false; TM.left = 0; notify('clock', 'Timer', 'Timer done! ⏲️'); beepAlarm(); }, TM.end - Date.now()); }
 
 /* ---------- Weather (Open-Meteo, free, no key) ---------- */
+const WXI = c => ({ 0: ['sun', '#ffd60a'], 1: ['sun', '#ffd60a'], 2: ['cloud-sun', '#fff'], 3: ['cloudy', '#fff'], 45: ['cloud-fog', '#fff'], 48: ['cloud-fog', '#fff'], 51: ['cloud-drizzle', '#fff'], 53: ['cloud-drizzle', '#fff'], 55: ['cloud-drizzle', '#fff'], 61: ['cloud-rain', '#fff'], 63: ['cloud-rain', '#fff'], 65: ['cloud-rain', '#fff'], 71: ['cloud-snow', '#fff'], 73: ['cloud-snow', '#fff'], 75: ['cloud-snow', '#fff'], 80: ['cloud-rain', '#fff'], 81: ['cloud-rain', '#fff'], 82: ['cloud-lightning', '#fff'], 95: ['cloud-lightning', '#fff'], 96: ['cloud-lightning', '#fff'], 99: ['cloud-lightning', '#fff'] })[c] || ['cloud', '#fff'];
+const wxIcon = (c, s = 24) => { const [n, col] = WXI(c); return `<span style="color:${col};display:inline-grid">${I(n, s, 2)}</span>`; };
 const WX = { 0: ['Clear', '☀️'], 1: ['Mostly Clear', '🌤️'], 2: ['Partly Cloudy', '⛅'], 3: ['Cloudy', '☁️'], 45: ['Fog', '🌫️'], 48: ['Fog', '🌫️'], 51: ['Drizzle', '🌦️'], 53: ['Drizzle', '🌦️'], 55: ['Drizzle', '🌦️'], 61: ['Rain', '🌧️'], 63: ['Rain', '🌧️'], 65: ['Heavy Rain', '🌧️'], 71: ['Snow', '🌨️'], 73: ['Snow', '🌨️'], 75: ['Heavy Snow', '❄️'], 80: ['Showers', '🌦️'], 81: ['Showers', '🌧️'], 82: ['Storms', '⛈️'], 95: ['Thunderstorm', '⛈️'], 96: ['Thunderstorm', '⛈️'], 99: ['Thunderstorm', '⛈️'] };
 defineApp('weather', { name: 'Weather', icon: '⛅', bg: 'linear-gradient(#2a6fdb,#7cb4ff)', dark: true, fullbleed: true, render(win) {
   win.style.background = 'linear-gradient(#1d4fa8,#5d9cf0)'; win.style.color = '#fff';
-  const b = h('<div class="wbody" style="text-align:center;padding-top:calc(var(--sat) + 60px)"><div style="font-size:30px" class="c">Loading…</div><div style="font-size:96px;font-weight:200" class="t">--°</div><div style="font-size:20px" class="d"></div><div style="font-size:17px;opacity:.8;margin-top:4px" class="hl"></div><div class="hrs" style="margin-top:24px"></div><div class="days" style="margin-top:14px"></div><input class="search" placeholder="🔍 Search for a city" style="margin-top:20px;background:rgba(255,255,255,.2);color:#fff"></div>');
+  const b = h('<div class="wbody" style="text-align:center;padding-top:calc(var(--sat) + 60px)"><div style="font-size:30px" class="c">Loading…</div><div style="font-size:96px;font-weight:200" class="t">--°</div><div style="font-size:20px" class="d"></div><div style="font-size:17px;opacity:.8;margin-top:4px" class="hl"></div><div class="hrs" style="margin-top:24px"></div><div class="days" style="margin-top:14px"></div><input class="search" placeholder="Search for a city" style="margin-top:20px;background:rgba(255,255,255,.2);color:#fff"></div>');
   win.appendChild(b);
   const unit = settings.c === '°F' ? '&temperature_unit=fahrenheit' : '';
   const load = async (la, lo, city) => {
@@ -1112,9 +1156,9 @@ defineApp('weather', { name: 'Weather', icon: '⛅', bg: 'linear-gradient(#2a6fd
       $('.hl', b).textContent = `H:${Math.round(r.daily.temperature_2m_max[0])}°  L:${Math.round(r.daily.temperature_2m_min[0])}°`;
       store.set('wxcache', { city, temp: r.current.temperature_2m, desc, hi: r.daily.temperature_2m_max[0], lo: r.daily.temperature_2m_min[0] });
       const nowH = new Date().getHours(), start = r.hourly.time.findIndex(t => new Date(t).getHours() === nowH && new Date(t).getDate() === new Date().getDate());
-      const hrs = r.hourly.time.slice(Math.max(0, start), Math.max(0, start) + 12).map((t, i) => `<div style="text-align:center;min-width:48px"><div style="font-size:13px">${i ? new Date(t).getHours() : 'Now'}</div><div style="font-size:22px;margin:6px 0">${(WX[r.hourly.weather_code[start + i]] || ['', '🌡️'])[1]}</div><div>${Math.round(r.hourly.temperature_2m[start + i])}°</div></div>`).join('');
+      const hrs = r.hourly.time.slice(Math.max(0, start), Math.max(0, start) + 12).map((t, i) => `<div style="text-align:center;min-width:48px"><div style="font-size:13px">${i ? new Date(t).getHours() : 'Now'}</div><div style="margin:8px 0">${wxIcon(r.hourly.weather_code[start + i])}</div><div>${Math.round(r.hourly.temperature_2m[start + i])}°</div></div>`).join('');
       $('.hrs', b).innerHTML = `<div style="background:rgba(255,255,255,.15);border-radius:16px;padding:12px;display:flex;overflow-x:auto;gap:4px">${hrs}</div>`;
-      $('.days', b).innerHTML = `<div style="background:rgba(255,255,255,.15);border-radius:16px;padding:6px 14px;text-align:left">${r.daily.time.map((t, i) => `<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:.5px solid rgba(255,255,255,.2)"><span style="width:60px">${i ? new Date(t + 'T12:00').toLocaleDateString([], { weekday: 'short' }) : 'Today'}</span><span>${(WX[r.daily.weather_code[i]] || ['', '🌡️'])[1]}</span><span style="opacity:.7">${Math.round(r.daily.temperature_2m_min[i])}°</span><span>${Math.round(r.daily.temperature_2m_max[i])}°</span></div>`).join('')}</div>`;
+      $('.days', b).innerHTML = `<div style="background:rgba(255,255,255,.15);border-radius:16px;padding:6px 14px;text-align:left">${r.daily.time.map((t, i) => `<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:.5px solid rgba(255,255,255,.2)"><span style="width:60px">${i ? new Date(t + 'T12:00').toLocaleDateString([], { weekday: 'short' }) : 'Today'}</span><span>${wxIcon(r.daily.weather_code[i], 22)}</span><span style="opacity:.7">${Math.round(r.daily.temperature_2m_min[i])}°</span><span>${Math.round(r.daily.temperature_2m_max[i])}°</span></div>`).join('')}</div>`;
       store.set('wxloc', { la, lo, city });
     } catch { $('.c', b).textContent = 'No connection'; }
   };
@@ -1127,7 +1171,7 @@ defineApp('weather', { name: 'Weather', icon: '⛅', bg: 'linear-gradient(#2a6fd
 /* ---------- Maps (OpenStreetMap) ---------- */
 defineApp('maps', { name: 'Maps', icon: '🗺️', bg: 'linear-gradient(#5ac85a,#ffe066)', fullbleed: true, render(win) {
   const f = h('<iframe class="map" title="Map"></iframe>');
-  const bar = h('<div style="position:absolute;bottom:calc(var(--sab) + 30px);left:12px;right:12px;background:var(--card);border-radius:16px;padding:10px;box-shadow:0 4px 20px rgba(0,0,0,.2);display:flex;gap:8px"><input class="search" style="margin:0" placeholder="🔍 Search Maps"><button class="link">📍</button></div>');
+  const bar = h('<div style="position:absolute;bottom:calc(var(--sab) + 30px);left:12px;right:12px;background:var(--card);border-radius:16px;padding:10px;box-shadow:0 4px 20px rgba(0,0,0,.2);display:flex;gap:8px"><input class="search" style="margin:0" placeholder="Search Maps"><button class="link">📍</button></div>');
   const show = (la, lo, z = .02) => f.src = `https://www.openstreetmap.org/export/embed.html?bbox=${lo - z},${la - z},${lo + z},${la + z}&layer=mapnik&marker=${la},${lo}`;
   const me = () => navigator.geolocation?.getCurrentPosition(p => show(p.coords.latitude, p.coords.longitude), () => show(51.505, -0.09, .05));
   bar.querySelector('button').onclick = me;
@@ -1201,14 +1245,14 @@ defineApp('files', { name: 'Files', icon: '📁', bg: 'linear-gradient(#fff,#e3f
   const all = store.all(); const kb = k => ((JSON.stringify(all[k] || '').length) / 1024).toFixed(1) + ' KB';
   b.appendChild(h('<div class="label">Cloud Drive</div>'));
   b.appendChild(list([
-    { icon: '📝', bg: '#ffd60a', title: 'Notes', sub: (all.notes || []).length + ' items · ' + kb('notes'), onclick: () => openApp('notes') },
-    { icon: '🌸', bg: '#ff9f0a', title: 'Photos', sub: (all.photos || []).length + ' items · ' + kb('photos'), onclick: () => openApp('photos') },
-    { icon: '💬', bg: '#34c759', title: 'Messages', sub: Object.keys(all.chats || {}).length + ' chats · ' + kb('chats'), onclick: () => openApp('messages') },
-    { icon: '☑️', bg: '#ff9500', title: 'Reminders', sub: (all.reminders || []).length + ' items', onclick: () => openApp('reminders') },
-    { icon: '📅', bg: '#ff3b30', title: 'Calendar', sub: (all.events || []).length + ' events', onclick: () => openApp('calendar') },
+    { icon: 'notebook-pen', bg: '#ffb800', title: 'Notes', sub: (all.notes || []).length + ' items · ' + kb('notes'), onclick: () => openApp('notes') },
+    { icon: 'image', bg: '#ff9f0a', title: 'Photos', sub: (all.photos || []).length + ' items · ' + kb('photos'), onclick: () => openApp('photos') },
+    { icon: 'message-circle', bg: '#34c759', title: 'Messages', sub: Object.keys(all.chats || {}).length + ' chats · ' + kb('chats'), onclick: () => openApp('messages') },
+    { icon: 'list-checks', bg: '#ff9500', title: 'Reminders', sub: (all.reminders || []).length + ' items', onclick: () => openApp('reminders') },
+    { icon: 'calendar', bg: '#ff3b30', title: 'Calendar', sub: (all.events || []).length + ' events', onclick: () => openApp('calendar') },
   ]));
   b.appendChild(h('<div class="label">Actions</div>'));
-  b.appendChild(list([{ icon: '💾', bg: '#5856d6', title: 'Export Everything', onclick: exportBackup }, { icon: '📥', bg: '#ff9500', title: 'Import Backup', onclick: importBackup }, { icon: '📄', bg: '#007aff', title: 'Export Notes as Text', onclick: () => { const t = store.get('notes', []).map(n => n.text).join('\n\n———\n\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'notes.txt'; a.click(); } }]));
+  b.appendChild(list([{ icon: 'hard-drive', bg: '#5856d6', title: 'Export Everything', onclick: exportBackup }, { icon: 'download', bg: '#ff9500', title: 'Import Backup', onclick: importBackup }, { icon: 'square-pen', bg: '#007aff', title: 'Export Notes as Text', onclick: () => { const t = store.get('notes', []).map(n => n.text).join('\n\n———\n\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'notes.txt'; a.click(); } }]));
 } });
 
 /* ---------- Health (step-ish counter via motion + water tracker) ---------- */
@@ -1259,6 +1303,16 @@ defineApp('appstore', { name: 'App Store', icon: '🛍️', bg: 'linear-gradient
   draw();
 } });
 
+
+/* Fill system chrome with vector glyphs */
+(() => {
+  const map = { '[data-t=plane]': 'plane', '[data-t=cell]': 'antenna', '[data-t=wifi]': 'wifi', '[data-t=bt]': 'bluetooth', '[data-t=rot]': 'rotate-ccw', '[data-t=dnd]': 'moon', '#torch': 'flashlight', '#ccDark': 'sun-moon', '[data-open=clock]': 'timer', '[data-open=calc]': 'calculator', '[data-open=camera]': 'camera', '[data-open=voice]': 'mic', '#ccPrev': 'skip-back', '#ccNext': 'skip-forward', '#ccPlay': 'play', '#lockTorch': 'flashlight', '#lockCam': 'camera' };
+  Object.entries(map).forEach(([sel, n]) => $$(sel).forEach(e => e.innerHTML = I(n, sel.startsWith('#cc') ? 24 : 24, 2)));
+  $$('[data-i]').forEach(e => e.innerHTML = I(e.dataset.i, 26, 2.2));
+  $('#spotBtn').innerHTML = I('search', 13, 2.5) + ' Search';
+  $('#passLock').innerHTML = I('lock-keyhole', 26);
+  $$('.tog,#cc button,.lbtn').forEach(b => { b.style.color = '#fff'; b.style.display = 'grid'; b.style.placeItems = 'center'; });
+})();
 /* =====================================================================
    BOOT
    ===================================================================== */
@@ -1266,6 +1320,7 @@ applyAppearance();
 renderHome();
 renderLockNotes();
 tick(); setInterval(tick, 1000);
+setInterval(() => { if (!current && !wiggling) $$('.app[data-id=clock] .icon, .app[data-id=calendar] .icon').forEach(e => { const b = e.querySelector('.badge'); e.innerHTML = APPS[e.parentElement.dataset.id].icon; if (b) e.appendChild(b); }); }, 1000);
 if (!store.get('welcomed')) { store.set('welcomed', true); setTimeout(() => notify('tips', 'Welcome to iOS Rebuilt', 'Swipe up to unlock. Open Tips to learn the gestures.'), 1200); }
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>

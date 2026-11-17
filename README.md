@@ -27,6 +27,8 @@ One HTML file. No frameworks, no build step, no App Store, and no Mac required.
 | 📁 Files | ❤️ Health | 📰 News | 💡 Tips |
 | ⚙️ Settings | ☁️ Cloud | 🛍️ App Store | |
 
+Original iOS-style vector icons (glyphs from [Lucide](https://lucide.dev), ISC) — live Clock & Calendar icons.
+
 All data stays **on your device** (localStorage). Nothing is sent anywhere except public API calls for weather, maps and news.
 
 ## 🚀 Get it
