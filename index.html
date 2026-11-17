@@ -1,4 +1,8 @@
 <!doctype html>
+<!--
+  iOS Rebuilt — an open-source, iOS-style web OS in a single HTML file.
+  MIT License. Not affiliated with Apple. Want to add an app? Search "APP REGISTRY" below.
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -16,404 +20,325 @@
   --wall: linear-gradient(160deg, #5b4bff 0%, #c14bd8 50%, #ff8a5b 100%);
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --bg: #f2f2f7; --card: #fff; --text: #000; --sub: #8e8e93; --sep: #e5e5ea; --blue: #007aff;
 }
+.dark { --bg: #000; --card: #1c1c1e; --text: #fff; --sub: #8e8e93; --sep: #38383a; --blue: #0a84ff; }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
 html, body { height: 100%; overflow: hidden; background: #000; color: #fff; font-family: var(--font); overscroll-behavior: none; touch-action: manipulation; }
-#phone { position: fixed; inset: 0; background: var(--wall); background-size: cover; background-position: center; }
+input, textarea, select { font: 17px var(--font); user-select: text; -webkit-user-select: text; }
+button { font-family: var(--font); cursor: pointer; }
+#phone { position: fixed; inset: 0; background: var(--wall); background-size: cover; background-position: center; overflow: hidden; }
+@media (min-width: 600px) { #phone { width: 390px; height: 844px; max-height: 96vh; inset: 0; margin: auto; border-radius: 54px; border: 12px solid #111; box-shadow: 0 0 0 2px #444, 0 30px 80px rgba(0,0,0,.6); } body { background: #1a1a1a; } }
 
 /* Status bar */
-.status { position: absolute; top: 0; left: 0; right: 0; height: calc(var(--sat) + 28px); padding: calc(var(--sat) + 6px) 26px 0; display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; z-index: 50; pointer-events: none; }
+.status { position: absolute; top: 0; left: 0; right: 0; padding: calc(var(--sat) + 12px) 28px 0; display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; z-index: 80; pointer-events: none; transition: color .2s; }
+.status.darktext { color: #000; }
 .status .icons { display: flex; gap: 6px; align-items: center; }
 .batt { width: 25px; height: 12px; border: 1.5px solid currentColor; border-radius: 4px; padding: 1px; opacity: .9; }
 .batt i { display: block; height: 100%; width: 80%; background: currentColor; border-radius: 2px; }
+.island { position: absolute; top: calc(var(--sat) + 8px); left: 50%; transform: translateX(-50%); width: 120px; height: 34px; background: #000; border-radius: 20px; z-index: 90; transition: width .4s cubic-bezier(.2,.9,.25,1), height .4s; display: flex; align-items: center; justify-content: center; font-size: 13px; overflow: hidden; }
+.island.wide { width: 220px; }
+@media (max-width: 599px) { .island { display: none; } }
 
 /* Lock screen */
-#lock { position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; background: inherit; background: var(--wall); background-size: cover; background-position: center; transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s; }
+#lock { position: absolute; inset: 0; z-index: 70; display: flex; flex-direction: column; align-items: center; background: var(--wall); background-size: cover; background-position: center; transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s; }
 #lock.hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
-#lock .date { margin-top: calc(var(--sat) + 60px); font-size: 20px; font-weight: 500; opacity: .9; }
+#lock .date { margin-top: calc(var(--sat) + 70px); font-size: 20px; font-weight: 500; opacity: .9; }
 #lock .time { font-size: 92px; font-weight: 600; letter-spacing: -2px; line-height: 1; }
+#lock .lnotes { width: 92%; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
 #lock .hint { position: absolute; bottom: calc(var(--sab) + 40px); font-size: 14px; opacity: .8; animation: bob 2s infinite; }
 #lock .bar { position: absolute; bottom: calc(var(--sab) + 10px); width: 134px; height: 5px; background: #fff; border-radius: 3px; }
+#lock .lbtn { position: absolute; bottom: calc(var(--sab) + 50px); width: 50px; height: 50px; border-radius: 50%; background: rgba(0,0,0,.3); backdrop-filter: blur(10px); display: grid; place-items: center; font-size: 22px; }
 @keyframes bob { 50% { transform: translateY(-6px); opacity: .5; } }
+#pass { position: absolute; inset: 0; z-index: 75; background: rgba(0,0,0,.55); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); display: none; flex-direction: column; align-items: center; padding-top: calc(var(--sat) + 90px); }
+#pass.show { display: flex; }
+#pass .dots { display: flex; gap: 18px; margin: 18px 0 40px; }
+#pass .dots i { width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid #fff; }
+#pass .dots i.f { background: #fff; }
+#pass .pad { display: grid; grid-template-columns: repeat(3, 78px); gap: 16px 26px; }
+#pass .pad button { width: 78px; height: 78px; border-radius: 50%; border: 0; background: rgba(255,255,255,.2); color: #fff; font-size: 34px; }
+#pass .pad button:active { background: rgba(255,255,255,.5); }
+.shake { animation: shake .4s; }
+@keyframes shake { 20%,60% { transform: translateX(-12px); } 40%,80% { transform: translateX(12px); } }
 
 /* Home screen */
-#home { position: absolute; inset: 0; padding: calc(var(--sat) + 44px) 22px 0; transition: transform .3s, filter .3s; }
+#home { position: absolute; inset: 0; transition: transform .3s, filter .3s; }
 #home.behind { transform: scale(.92); filter: blur(6px) brightness(.7); }
-.grid { display: grid; grid-template-columns: repeat(4, 1fr); row-gap: 24px; column-gap: 12px; }
-.app { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
-.icon { width: 62px; height: 62px; border-radius: 15px; display: grid; place-items: center; font-size: 32px; box-shadow: 0 4px 12px rgba(0,0,0,.25); transition: transform .15s; }
+#pages { position: absolute; top: calc(var(--sat) + 56px); left: 0; right: 0; bottom: calc(var(--sab) + 140px); display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+#pages::-webkit-scrollbar { display: none; }
+.page { min-width: 100%; scroll-snap-align: start; padding: 0 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 92px; column-gap: 10px; align-content: start; }
+.dots-nav { position: absolute; bottom: calc(var(--sab) + 118px); left: 0; right: 0; display: flex; justify-content: center; gap: 8px; }
+.dots-nav i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.4); }
+.dots-nav i.on { background: #fff; }
+.widget { grid-column: span 2; grid-row: span 2; border-radius: 22px; padding: 14px; background: rgba(255,255,255,.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); margin-bottom: 12px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; }
+.widget .big { font-size: 40px; font-weight: 300; }
+.app { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; position: relative; }
+.icon { width: 62px; height: 62px; border-radius: 15px; display: grid; place-items: center; font-size: 32px; box-shadow: 0 4px 12px rgba(0,0,0,.25); transition: transform .15s; position: relative; }
 .app:active .icon { transform: scale(.88); filter: brightness(.8); }
-.app span { font-size: 12px; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.app span.n { font-size: 11.5px; text-shadow: 0 1px 3px rgba(0,0,0,.5); white-space: nowrap; }
+.badge { position: absolute; top: -6px; right: -6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: #ff3b30; font-size: 13px; font-weight: 600; display: grid; place-items: center; }
 .wiggle .icon { animation: wig .25s infinite alternate; }
+.wiggle .app .del { display: grid; }
+.del { display: none; position: absolute; top: -6px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: rgba(120,120,120,.9); place-items: center; font-size: 14px; z-index: 2; }
+.app.picked .icon { outline: 3px solid #fff; }
 @keyframes wig { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
 .dock { position: absolute; left: 12px; right: 12px; bottom: calc(var(--sab) + 12px); padding: 14px 16px; border-radius: 32px; background: rgba(255,255,255,.22); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); display: flex; justify-content: space-around; }
-.dock .app span { display: none; }
+.dock .app span.n { display: none; }
+.donebtn { position: absolute; top: calc(var(--sat) + 10px); right: 20px; z-index: 85; background: rgba(255,255,255,.3); border: 0; color: #fff; padding: 6px 14px; border-radius: 14px; font-weight: 600; display: none; }
+.wiggle-on .donebtn { display: block; }
+.spot { position: absolute; bottom: calc(var(--sab) + 108px); left: 50%; transform: translateX(-50%); background: rgba(255,255,255,.25); backdrop-filter: blur(20px); padding: 5px 12px; border-radius: 14px; font-size: 13px; cursor: pointer; display: none; }
 .home-bar { position: absolute; bottom: calc(var(--sab) + 4px); left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.6); }
 
-/* App windows */
-.window { position: absolute; inset: 0; z-index: 30; background: #000; display: flex; flex-direction: column; transform: scale(.2); opacity: 0; pointer-events: none; transition: transform .35s cubic-bezier(.2,.9,.25,1), opacity .25s; border-radius: 40px; overflow: hidden; }
-.window.open { transform: scale(1); opacity: 1; pointer-events: auto; border-radius: 0; }
-.window.light { background: #f2f2f7; color: #000; }
-.window header { padding: calc(var(--sat) + 40px) 20px 10px; font-size: 34px; font-weight: 700; }
-.window .body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px; }
-.closer { position: absolute; bottom: 0; left: 0; right: 0; height: calc(var(--sab) + 30px); display: flex; justify-content: center; align-items: flex-end; padding-bottom: calc(var(--sab) + 6px); z-index: 5; }
-.closer i { width: 134px; height: 5px; border-radius: 3px; background: currentColor; opacity: .6; }
+/* Windows */
+.window { position: absolute; inset: 0; z-index: 50; background: var(--bg); color: var(--text); display: flex; flex-direction: column; transform: scale(.2); opacity: 0; transition: transform .35s cubic-bezier(.2,.9,.25,1), opacity .25s, border-radius .35s; border-radius: 40px; overflow: hidden; }
+.window.open { transform: scale(1); opacity: 1; border-radius: 0; }
+.window.closing { transform: scale(.2); opacity: 0; border-radius: 40px; }
+.window.darkwin { --bg: #000; --card: #1c1c1e; --text: #fff; --sep: #38383a; }
+.nav { padding: calc(var(--sat) + 50px) 16px 6px; display: flex; justify-content: space-between; align-items: center; min-height: 40px; }
+.nav h1 { font-size: 34px; font-weight: 700; }
+.navbar { padding: calc(var(--sat) + 50px) 12px 8px; display: flex; justify-content: space-between; align-items: center; font-size: 17px; font-weight: 600; }
+.wbody { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px calc(var(--sab) + 40px); }
+.closer { position: absolute; bottom: 0; left: 0; right: 0; height: calc(var(--sab) + 26px); display: flex; justify-content: center; align-items: flex-end; padding-bottom: calc(var(--sab) + 6px); z-index: 10; cursor: pointer; }
+.closer i { width: 134px; height: 5px; border-radius: 3px; background: var(--text); opacity: .5; }
+.link { background: none; border: 0; color: var(--blue); font-size: 17px; padding: 6px 2px; }
+.link.red { color: #ff3b30; }
+.list { background: var(--card); border-radius: 12px; overflow: hidden; margin-bottom: 22px; }
+.cell { padding: 11px 16px; display: flex; gap: 12px; justify-content: space-between; align-items: center; border-bottom: .5px solid var(--sep); font-size: 17px; min-height: 44px; cursor: pointer; }
+.cell:last-child { border-bottom: 0; }
+.cell:active { background: var(--sep); }
+.cell .l { display: flex; gap: 12px; align-items: center; flex: 1; min-width: 0; }
+.cell .l > div { min-width: 0; }
+.cell small { color: var(--sub); font-size: 14px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell .r { color: var(--sub); white-space: nowrap; }
+.sq { width: 30px; height: 30px; border-radius: 7px; display: grid; place-items: center; font-size: 17px; flex-shrink: 0; }
+.label { font-size: 13px; color: var(--sub); text-transform: uppercase; margin: 0 16px 6px; }
+.search { width: 100%; padding: 8px 12px; border-radius: 10px; border: 0; background: var(--sep); color: var(--text); margin-bottom: 14px; outline: none; }
+.field { width: 100%; padding: 12px 14px; border: 0; background: var(--card); color: var(--text); border-radius: 10px; outline: none; margin-bottom: 10px; }
+.pbtn { width: 100%; padding: 14px; border: 0; border-radius: 12px; background: var(--blue); color: #fff; font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+.pbtn.gray { background: var(--card); color: var(--blue); }
+.empty { text-align: center; color: var(--sub); padding: 40px 0; }
+.switch { width: 51px; height: 31px; border-radius: 16px; background: #e9e9ea; position: relative; transition: background .2s; flex-shrink: 0; }
+.dark .switch { background: #39393d; }
+.switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); transition: transform .2s; }
+.switch.on { background: #34c759; }
+.switch.on::after { transform: translateX(20px); }
+.seg { display: flex; background: var(--sep); border-radius: 9px; padding: 2px; margin-bottom: 14px; }
+.seg button { flex: 1; border: 0; background: none; padding: 6px; border-radius: 7px; font-size: 13px; font-weight: 600; color: var(--text); }
+.seg button.on { background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+.tabs { display: flex; justify-content: space-around; border-top: .5px solid var(--sep); padding: 6px 0 calc(var(--sab) + 26px); background: var(--card); }
+.tabs button { border: 0; background: none; color: var(--sub); font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.tabs button b { font-size: 22px; font-weight: normal; }
+.tabs button.on { color: var(--blue); }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(#a8adb8, #858994); color: #fff; display: grid; place-items: center; font-weight: 600; flex-shrink: 0; }
 
-/* Calculator */
+/* Banner notifications */
+#banner { position: absolute; top: calc(var(--sat) + 8px); left: 8px; right: 8px; z-index: 95; background: rgba(245,245,245,.85); color: #000; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 20px; padding: 12px 14px; display: flex; gap: 10px; align-items: center; transform: translateY(-150%); transition: transform .4s cubic-bezier(.2,.9,.25,1); box-shadow: 0 8px 30px rgba(0,0,0,.25); }
+#banner.show { transform: none; }
+.ncard { background: rgba(255,255,255,.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 18px; padding: 10px 14px; display: flex; gap: 10px; align-items: center; font-size: 14px; }
+.ncard .sq { width: 36px; height: 36px; }
+
+/* Control Center */
+#cc { position: absolute; inset: 0; z-index: 88; background: rgba(0,0,0,.35); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: calc(var(--sat) + 60px) 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-content: start; transform: translateY(-100%); transition: transform .35s cubic-bezier(.2,.9,.25,1); }
+#cc.open { transform: none; }
+.tile { background: rgba(255,255,255,.18); border-radius: 22px; padding: 16px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; justify-items: center; }
+.tog { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.25); border: 0; font-size: 24px; }
+.tog.on { background: var(--blue); }
+.tog.on.orange { background: #ff9f0a; }
+.slider { background: rgba(255,255,255,.18); border-radius: 22px; height: 150px; position: relative; overflow: hidden; touch-action: none; }
+.slider i { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; height: 60%; }
+.slider span { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-size: 24px; }
+.ccmusic { grid-column: span 2; background: rgba(255,255,255,.18); border-radius: 22px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
+.ccmusic button { background: none; border: 0; color: #fff; font-size: 26px; }
+#dim { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 200; }
+
+/* Switcher */
+#switcher { position: absolute; inset: 0; z-index: 60; background: rgba(0,0,0,.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; align-items: center; overflow-x: auto; gap: 18px; padding: 0 40px; scroll-snap-type: x mandatory; }
+#switcher.show { display: flex; }
+.card { min-width: 70%; height: 65%; border-radius: 30px; background: #333; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-size: 60px; position: relative; transition: transform .3s, opacity .3s; }
+.card span { font-size: 16px; }
+.card.gone { transform: translateY(-120%); opacity: 0; }
+
+/* Spotlight */
+#spotlight { position: absolute; inset: 0; z-index: 65; background: rgba(0,0,0,.45); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: calc(var(--sat) + 60px) 16px; display: none; flex-direction: column; }
+#spotlight.show { display: flex; }
+#spotlight input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 0; background: rgba(255,255,255,.2); color: #fff; outline: none; }
+#spotlight input::placeholder { color: rgba(255,255,255,.6); }
+#spotRes { display: grid; grid-template-columns: repeat(4, 1fr); row-gap: 18px; margin-top: 20px; }
+
+/* App-specific */
 .calc { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding: 0 16px calc(var(--sab) + 36px); }
 .calc .out { font-size: 80px; font-weight: 300; text-align: right; padding: 0 12px 10px; overflow: hidden; white-space: nowrap; }
 .keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.keys button { aspect-ratio: 1; border: 0; border-radius: 50%; font-size: 32px; font-family: var(--font); background: #333; color: #fff; }
+.keys button { aspect-ratio: 1; border: 0; border-radius: 50%; font-size: 32px; background: #333; color: #fff; }
 .keys button:active { filter: brightness(1.6); }
 .keys .fn { background: #a5a5a5; color: #000; }
 .keys .op { background: #ff9f0a; }
 .keys .op.on { background: #fff; color: #ff9f0a; }
 .keys .zero { grid-column: span 2; aspect-ratio: auto; border-radius: 40px; text-align: left; padding-left: 30px; }
-
-/* Notes */
-.note-list { background: #fff; border-radius: 12px; overflow: hidden; }
-.note-item { padding: 12px 16px; border-bottom: 1px solid #e5e5ea; }
-.note-item b { display: block; font-size: 17px; }
-.note-item small { color: #8e8e93; }
-.btn { background: none; border: 0; color: #e0a800; font-size: 17px; font-family: var(--font); padding: 8px 0; }
-textarea { width: 100%; height: 60vh; border: 0; background: transparent; font: 17px var(--font); resize: none; outline: none; user-select: text; -webkit-user-select: text; color: inherit; }
-.toolbar { display: flex; justify-content: space-between; padding: calc(var(--sat) + 8px) 16px 0; }
-
-/* Clock */
-.big { font-size: 76px; font-weight: 200; text-align: center; margin: 40px 0; font-variant-numeric: tabular-nums; }
+textarea.note { width: 100%; height: 100%; min-height: 60vh; border: 0; background: transparent; resize: none; outline: none; color: var(--text); }
+.bigclock { font-size: 76px; font-weight: 200; text-align: center; margin: 30px 0; font-variant-numeric: tabular-nums; }
 .row { display: flex; justify-content: space-between; padding: 0 10px; }
-.circle { width: 84px; height: 84px; border-radius: 50%; border: 3px solid #000; outline: 2px solid #333; font-size: 17px; font-family: var(--font); color: #fff; background: #333; }
+.circle { width: 84px; height: 84px; border-radius: 50%; border: 3px solid var(--bg); outline: 2px solid #333; font-size: 17px; color: #fff; background: #333; }
 .circle.go { background: #0a3a17; color: #30d158; outline-color: #0a3a17; }
 .circle.stop { background: #3a0f0d; color: #ff453a; outline-color: #3a0f0d; }
-.laps div { display: flex; justify-content: space-between; padding: 12px 6px; border-bottom: 1px solid #222; font-variant-numeric: tabular-nums; }
-
-/* Settings */
-.group { background: #fff; border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
-.group .cell { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e5ea; font-size: 17px; }
-.label { font-size: 13px; color: #6d6d72; text-transform: uppercase; margin: 0 16px 6px; }
-.walls { display: flex; gap: 10px; padding: 12px; overflow-x: auto; }
-.walls div { min-width: 56px; height: 100px; border-radius: 10px; border: 3px solid transparent; }
-.walls div.sel { border-color: #007aff; }
-
-/* Control Center */
-#cc { position: absolute; inset: 0; z-index: 45; background: rgba(0,0,0,.35); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: calc(var(--sat) + 60px) 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-content: start; transform: translateY(-100%); transition: transform .35s cubic-bezier(.2,.9,.25,1); }
-#cc.open { transform: none; }
-.tile { background: rgba(255,255,255,.18); border-radius: 22px; padding: 16px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.tog { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.25); border: 0; font-size: 24px; }
-.tog.on { background: #007aff; }
-.tog.on.orange { background: #ff9f0a; }
-.slider { background: rgba(255,255,255,.18); border-radius: 22px; height: 150px; position: relative; overflow: hidden; }
-.slider i { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; height: 60%; }
-.slider span { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-size: 24px; mix-blend-mode: difference; }
-#dim { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 100; }
+.circle.pause { background: #3a2a0a; color: #ff9f0a; outline-color: #3a2a0a; }
+.laps div { display: flex; justify-content: space-between; padding: 12px 6px; border-bottom: .5px solid var(--sep); font-variant-numeric: tabular-nums; }
+.dial { display: grid; grid-template-columns: repeat(3, 78px); gap: 16px 26px; justify-content: center; margin-top: 10px; }
+.dial button { width: 78px; height: 78px; border-radius: 50%; border: 0; background: var(--sep); color: var(--text); font-size: 32px; line-height: 1; }
+.dial button small { display: block; font-size: 10px; letter-spacing: 2px; }
+.callbtn { width: 78px; height: 78px; border-radius: 50%; border: 0; background: #34c759; color: #fff; font-size: 32px; margin: 18px auto 0; display: block; }
+.bubbles { display: flex; flex-direction: column; gap: 6px; padding: 10px 0; }
+.bub { max-width: 75%; padding: 8px 13px; border-radius: 18px; font-size: 16px; line-height: 1.3; word-wrap: break-word; user-select: text; }
+.bub.me { align-self: flex-end; background: var(--blue); color: #fff; }
+.bub.them { align-self: flex-start; background: var(--sep); color: var(--text); }
+.composer { display: flex; gap: 8px; padding: 8px 12px calc(var(--sab) + 30px); border-top: .5px solid var(--sep); background: var(--bg); }
+.composer input { flex: 1; padding: 8px 14px; border-radius: 18px; border: 1px solid var(--sep); background: var(--bg); color: var(--text); outline: none; }
+.composer button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--blue); color: #fff; font-size: 18px; }
+.pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 0 -16px; }
+.pgrid div { aspect-ratio: 1; background-size: cover; background-position: center; cursor: pointer; }
+.viewer { position: absolute; inset: 0; background: #000; z-index: 20; display: flex; flex-direction: column; }
+.viewer img { flex: 1; object-fit: contain; width: 100%; min-height: 0; }
+.viewer .vbar { display: flex; justify-content: space-around; padding: 12px 0 calc(var(--sab) + 30px); }
+.month { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; row-gap: 6px; }
+.month b { font-size: 12px; color: var(--sub); font-weight: 500; }
+.month span { padding: 8px 0; border-radius: 50%; width: 38px; height: 38px; margin: auto; font-size: 17px; position: relative; cursor: pointer; }
+.month span.today { color: #ff3b30; font-weight: 700; }
+.month span.sel { background: #ff3b30; color: #fff; }
+.month span.has::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; border-radius: 50%; background: var(--sub); }
+.chk { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #c7c7cc; flex-shrink: 0; display: grid; place-items: center; }
+.chk.on { background: #ff9f0a; border-color: #ff9f0a; }
+.chk.on::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #fff; }
+.store-card { background: var(--card); border-radius: 14px; padding: 12px; display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+.store-card .icon { width: 56px; height: 56px; font-size: 28px; border-radius: 13px; box-shadow: none; }
+.getbtn { border: 0; background: var(--sep); color: var(--blue); font-weight: 700; padding: 6px 18px; border-radius: 16px; font-size: 15px; }
+.art { width: 72%; aspect-ratio: 1; margin: 20px auto; border-radius: 14px; display: grid; place-items: center; font-size: 100px; box-shadow: 0 20px 40px rgba(0,0,0,.3); transition: transform .4s; }
+.art.paused { transform: scale(.85); }
+.progress { height: 6px; border-radius: 3px; background: var(--sep); overflow: hidden; margin: 18px 6px 6px; }
+.progress i { display: block; height: 100%; background: var(--sub); width: 0; }
+.mctl { display: flex; justify-content: space-around; font-size: 40px; margin: 20px 0; }
+.mctl button { background: none; border: 0; color: var(--text); font-size: 40px; }
+.compass { width: 260px; height: 260px; border-radius: 50%; border: 3px solid #555; margin: 40px auto; position: relative; transition: transform .2s; }
+.compass b { position: absolute; font-size: 22px; }
+iframe.map { width: 100%; height: 100%; border: 0; }
+.cloudbar { height: 10px; border-radius: 5px; background: var(--sep); overflow: hidden; display: flex; margin: 10px 0; }
+.toast { position: absolute; bottom: calc(var(--sab) + 90px); left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.8); color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 15px; z-index: 99; }
 </style>
 </head>
 <body>
 <div id="phone">
-  <div class="status"><span id="sbTime">9:41</span><span class="icons">📶 <span class="batt"><i></i></span></span></div>
+  <div class="status" id="status"><span id="sbTime">9:41</span><span class="icons">▂▄▆█ <span id="wifiIco">📶</span> <span class="batt"><i id="battLvl"></i></span></span></div>
+  <div class="island" id="island"></div>
 
   <div id="home">
-    <div class="grid" id="grid"></div>
+    <button class="donebtn" id="doneBtn">Done</button>
+    <div id="pages"></div>
+    <div class="dots-nav" id="dotsNav"></div>
+    <div class="spot" id="spotBtn" style="display:block">🔍 Search</div>
     <div class="dock" id="dock"></div>
-    <div class="home-bar"></div>
+    <div class="home-bar" id="homeBar"></div>
   </div>
+
+  <div id="switcher"></div>
+  <div id="spotlight"><input id="spotIn" placeholder="Search apps"><div id="spotRes"></div></div>
 
   <div id="lock">
     <div class="date" id="lockDate"></div>
     <div class="time" id="lockTime"></div>
+    <div class="lnotes" id="lockNotes"></div>
+    <div class="lbtn" style="left:40px" id="lockTorch">🔦</div>
+    <div class="lbtn" style="right:40px" id="lockCam">📷</div>
     <div class="hint">⌃ Swipe up to open</div>
     <div class="bar"></div>
   </div>
+  <div id="pass"><div>🔒</div><div style="margin-top:10px">Enter Passcode</div><div class="dots" id="passDots"></div><div class="pad" id="passPad"></div><button class="link" style="color:#fff;margin-top:24px" id="passCancel">Cancel</button></div>
 
   <div id="cc">
     <div class="tile">
-      <button class="tog on" data-t>✈️</button><button class="tog on" data-t>📶</button>
-      <button class="tog on" data-t>🛜</button><button class="tog" data-t>🔵</button>
+      <button class="tog orange" data-t="plane">✈️</button><button class="tog on" data-t="cell">📶</button>
+      <button class="tog on" data-t="wifi">🛜</button><button class="tog on" data-t="bt">🔵</button>
     </div>
+    <div class="ccmusic"><div><div style="font-size:13px;opacity:.7">Now Playing</div><div id="ccSong">Not Playing</div></div><div><button id="ccPrev">⏮</button><button id="ccPlay">▶️</button><button id="ccNext">⏭</button></div></div>
     <div class="tile">
-      <button class="tog" data-t>🔒</button><button class="tog orange" data-t>🌙</button>
-      <button class="tog" data-t id="torch">🔦</button><button class="tog" data-t>⏱️</button>
+      <button class="tog" data-t="rot">🔒</button><button class="tog" data-t="dnd">🌙</button>
+      <button class="tog" id="torch">🔦</button><button class="tog" id="ccDark">🌗</button>
     </div>
-    <div class="slider" id="bright"><i></i><span>☀️</span></div>
-    <div class="slider" id="vol"><i></i><span>🔊</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="slider" id="bright"><i></i><span>☀️</span></div><div class="slider" id="vol"><i></i><span>🔊</span></div></div>
+    <div class="tile" style="grid-column:span 2;grid-template-columns:repeat(4,1fr)">
+      <button class="tog" data-open="clock">⏱️</button><button class="tog" data-open="calc">🧮</button><button class="tog" data-open="camera">📷</button><button class="tog" data-open="voice">🎙️</button>
+    </div>
   </div>
 
-  <!-- Calculator -->
-  <div class="window" id="w-calc">
-    <div class="calc">
-      <div class="out" id="calcOut">0</div>
-      <div class="keys" id="calcKeys"></div>
-    </div>
-    <div class="closer"><i></i></div>
-  </div>
-
-  <!-- Notes -->
-  <div class="window light" id="w-notes">
-    <div id="notesList">
-      <header>Notes</header>
-      <div class="body"><div class="note-list" id="noteItems"></div>
-        <p style="text-align:center;margin:20px"><button class="btn" id="newNote">✏️ New Note</button></p></div>
-    </div>
-    <div id="notesEdit" style="display:none;flex:1;flex-direction:column">
-      <div class="toolbar"><button class="btn" id="noteBack">‹ Notes</button><button class="btn" id="noteDel" style="color:#ff3b30">Delete</button></div>
-      <div class="body" style="padding-top:10px"><textarea id="noteText" placeholder="Start typing…"></textarea></div>
-    </div>
-    <div class="closer"><i></i></div>
-  </div>
-
-  <!-- Clock / Stopwatch -->
-  <div class="window" id="w-clock">
-    <header>Stopwatch</header>
-    <div class="body">
-      <div class="big" id="swOut">00:00.00</div>
-      <div class="row"><button class="circle" id="swLap">Lap</button><button class="circle go" id="swGo">Start</button></div>
-      <div class="laps" id="laps" style="margin-top:24px"></div>
-    </div>
-    <div class="closer"><i></i></div>
-  </div>
-
-  <!-- Settings -->
-  <div class="window light" id="w-settings">
-    <header>Settings</header>
-    <div class="body">
-      <div class="label">Wallpaper</div>
-      <div class="group"><div class="walls" id="walls"></div></div>
-      <div class="label">General</div>
-      <div class="group">
-        <div class="cell"><span>About</span><span style="color:#8e8e93">iOS Rebuilt v1</span></div>
-        <div class="cell" id="wiggleCell"><span>Edit Home Screen</span><span style="color:#8e8e93">›</span></div>
-        <div class="cell" id="resetCell"><span style="color:#ff3b30">Reset Everything</span></div>
-      </div>
-      <p style="color:#8e8e93;font-size:13px;margin:0 16px 40px">Tip: swipe down from the top of the home screen for Control Center. Long-press an icon to jiggle.</p>
-    </div>
-    <div class="closer"><i></i></div>
-  </div>
-
-  <!-- Weather -->
-  <div class="window" id="w-weather" style="background:linear-gradient(#2a6fdb,#7cb4ff)">
-    <div class="body" style="text-align:center;padding-top:calc(var(--sat) + 70px)">
-      <div style="font-size:30px" id="wxCity">Locating…</div>
-      <div style="font-size:96px;font-weight:200" id="wxTemp">--°</div>
-      <div style="font-size:20px" id="wxDesc"></div>
-      <div style="font-size:17px;opacity:.8;margin-top:6px" id="wxHL"></div>
-    </div>
-    <div class="closer"><i></i></div>
-  </div>
+  <div id="banner"><div class="sq" id="bnIco"></div><div style="flex:1;min-width:0"><b id="bnTitle" style="font-size:15px"></b><div id="bnMsg" style="font-size:14px"></div></div><small style="color:#666">now</small></div>
 </div>
 <div id="dim"></div>
 
 <script>
-const $ = s => document.querySelector(s);
+'use strict';
+/* =====================================================================
+   CORE HELPERS
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const h = (html) => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const buzz = (ms = 8) => { try { navigator.vibrate && navigator.vibrate(ms); } catch {} };
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const fmtTime = d => new Date(d).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+const fmtDate = d => new Date(d).toLocaleDateString([], { month: 'short', day: 'numeric' });
+
+/* Storage — everything lives on-device in localStorage, namespaced. "Cloud" backs it up. */
+const NS = 'iosr:';
 const store = {
-  get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
-  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+  get(k, d) { try { const v = localStorage.getItem(NS + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(NS + k, JSON.stringify(v)); return true; } catch { toast('Storage full — delete some photos'); return false; } },
+  all() { const o = {}; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith(NS)) o[k.slice(NS.length)] = JSON.parse(localStorage.getItem(k)); } } catch {} return o; },
+  clear() { try { Object.keys(this.all()).forEach(k => localStorage.removeItem(NS + k)); } catch {} },
+  bytes() { let n = 0; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith(NS)) n += (localStorage.getItem(k) || '').length * 2; } } catch {} return n; }
 };
-const buzz = () => navigator.vibrate && navigator.vibrate(8);
+const settings = Object.assign({ dark: false, passcode: '', name: '', email: '', cloud: false, dnd: false, haptics: true, wall: null, c: '°C' }, store.get('settings', {}));
+const saveSettings = () => store.set('settings', settings);
 
-/* ---------- Clock ---------- */
-function tick() {
-  const d = new Date();
-  const t = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(/\s?[AP]M/i, '');
-  $('#sbTime').textContent = t;
-  $('#lockTime').textContent = t;
-  $('#lockDate').textContent = d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+function toast(msg) { const t = h(`<div class="toast">${esc(msg)}</div>`); $('#phone').appendChild(t); setTimeout(() => t.remove(), 1800); }
+function ask(q, def = '') { const r = prompt(q, def); return r === null ? null : r.trim(); }
+
+/* Notifications: banner + lock screen list + badge counts */
+let notifs = store.get('notifs', []);
+let bannerTimer;
+function notify(appId, title, msg) {
+  const a = APPS[appId] || { icon: '🔔', bg: '#888' };
+  notifs.unshift({ id: uid(), app: appId, title, msg, t: Date.now() }); notifs = notifs.slice(0, 20); store.set('notifs', notifs);
+  renderLockNotes();
+  if (settings.dnd) return;
+  $('#bnIco').style.background = a.bg; $('#bnIco').textContent = a.icon;
+  $('#bnTitle').textContent = title; $('#bnMsg').textContent = msg;
+  $('#banner').classList.add('show'); buzz(20); island(a.icon + ' ' + title);
+  clearTimeout(bannerTimer); bannerTimer = setTimeout(() => $('#banner').classList.remove('show'), 3500);
+  $('#banner').onclick = () => { $('#banner').classList.remove('show'); unlockedOpen(appId); };
 }
-tick(); setInterval(tick, 1000);
-
-/* ---------- Lock screen (swipe up or tap) ---------- */
-let ly = null;
-const lock = $('#lock');
-lock.addEventListener('touchstart', e => ly = e.touches[0].clientY, { passive: true });
-lock.addEventListener('touchmove', e => { const dy = Math.min(0, e.touches[0].clientY - ly); lock.style.transition = 'none'; lock.style.transform = `translateY(${dy}px)`; }, { passive: true });
-lock.addEventListener('touchend', e => {
-  const dy = e.changedTouches[0].clientY - ly; lock.style.transition = ''; lock.style.transform = '';
-  if (dy < -80) { lock.classList.add('hidden'); buzz(); }
-});
-lock.addEventListener('click', () => lock.classList.add('hidden'));
-document.addEventListener('visibilitychange', () => { if (document.hidden) { lock.classList.remove('hidden'); closeAll(); } });
-
-/* ---------- Home screen ---------- */
-const APPS = {
-  calc:     { name: 'Calculator', icon: '🧮', bg: '#1c1c1e' },
-  notes:    { name: 'Notes',      icon: '📝', bg: 'linear-gradient(#fff 30%,#ffd60a 30%)' },
-  clock:    { name: 'Clock',      icon: '⏱️', bg: '#000' },
-  weather:  { name: 'Weather',    icon: '⛅', bg: 'linear-gradient(#2a6fdb,#7cb4ff)' },
-  settings: { name: 'Settings',   icon: '⚙️', bg: 'linear-gradient(#aeaeb2,#636366)' },
-  photos:   { name: 'Camera',     icon: '📷', bg: 'linear-gradient(#e5e5ea,#8e8e93)' },
-  maps:     { name: 'Maps',       icon: '🗺️', bg: 'linear-gradient(#5ac85a,#ffe066)' },
-  safari:   { name: 'Safari',     icon: '🧭', bg: 'linear-gradient(#fff,#d1e8ff)' },
-};
-let order = store.get('order', ['calc', 'notes', 'clock', 'weather', 'settings', 'photos', 'maps']);
-const dockApps = ['safari', 'notes', 'calc', 'settings'];
-
-function appEl(id) {
-  const a = APPS[id], el = document.createElement('div');
-  el.className = 'app'; el.dataset.id = id;
-  el.innerHTML = `<div class="icon" style="background:${a.bg}">${a.icon}</div><span>${a.name}</span>`;
-  let timer;
-  el.addEventListener('touchstart', () => timer = setTimeout(() => { toggleWiggle(true); buzz(); }, 550), { passive: true });
-  el.addEventListener('touchend', () => clearTimeout(timer));
-  el.addEventListener('touchmove', () => clearTimeout(timer), { passive: true });
-  el.addEventListener('click', () => onAppTap(id, el));
-  return el;
+function renderLockNotes() {
+  const box = $('#lockNotes'); box.innerHTML = '';
+  notifs.slice(0, 3).forEach(n => { const a = APPS[n.app] || { icon: '🔔', bg: '#888' }; box.appendChild(h(`<div class="ncard"><div class="sq" style="background:${a.bg}">${a.icon}</div><div style="flex:1;min-width:0"><b>${esc(n.title)}</b><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(n.msg)}</div></div><small>${fmtTime(n.t)}</small></div>`)); });
+  if (notifs.length) { const c = h(`<div style="text-align:center;font-size:13px;opacity:.8;cursor:pointer">Clear notifications</div>`); c.onclick = e => { e.stopPropagation(); notifs = []; store.set('notifs', notifs); renderLockNotes(); }; box.appendChild(c); }
 }
-function renderHome() {
-  const g = $('#grid'); g.innerHTML = ''; order.forEach(id => g.appendChild(appEl(id)));
-  const d = $('#dock'); d.innerHTML = ''; dockApps.forEach(id => d.appendChild(appEl(id)));
+function island(text) { const i = $('#island'); i.textContent = text; i.classList.add('wide'); clearTimeout(i._t); i._t = setTimeout(() => { i.classList.remove('wide'); i.textContent = ''; }, 2500); }
+
+/* =====================================================================
+   APP REGISTRY — add your own app here! Each app gets:
+     render(win, body) → build UI inside `body` (a .wbody div) or replace win content.
+     dark: true → dark window chrome.  external: url → opens a link instead.
+   ===================================================================== */
+const APPS = {};
+function defineApp(id, def) { APPS[id] = Object.assign({ id, name: id, icon: '❓', bg: '#888' }, def); }
+
+/* =====================================================================
+   SYSTEM: clock, lock, passcode, appearance
+   ===================================================================== */
+function applyAppearance() {
+  document.documentElement.classList.toggle('dark', settings.dark);
+  document.documentElement.style.setProperty('--wall', settings.wall || WALLS[0]);
+  $('#ccDark').classList.toggle('on', settings.dark);
 }
-let wiggling = false, picked = null;
-function toggleWiggle(on) { wiggling = on; $('#grid').classList.toggle('wiggle', on); picked = null; }
-function onAppTap(id, el) {
-  if (wiggling) { // tap two icons to swap them
-    if (!order.includes(id)) return;
-    if (!picked) { picked = id; el.style.opacity = .5; return; }
-    const i = order.indexOf(picked), j = order.indexOf(id);
-    [order[i], order[j]] = [order[j], order[i]]; store.set('order', order);
-    renderHome(); toggleWiggle(true); buzz(); return;
-  }
-  openApp(id);
-}
-$('#home').addEventListener('click', e => { if (wiggling && e.target.id === 'home') toggleWiggle(false); });
-renderHome();
-
-/* ---------- Windows ---------- */
-function openApp(id) {
-  if (id === 'safari') return location.href = 'https://www.google.com';
-  if (id === 'maps') return location.href = 'https://maps.apple.com';
-  if (id === 'photos') return pickPhoto();
-  const w = $('#w-' + id); if (!w) return;
-  w.classList.add('open'); $('#home').classList.add('behind'); buzz();
-  if (id === 'notes') showNotesList();
-  if (id === 'weather') loadWeather();
-}
-function closeAll() { document.querySelectorAll('.window.open').forEach(w => w.classList.remove('open')); $('#home').classList.remove('behind'); }
-document.querySelectorAll('.closer').forEach(c => {
-  let y0;
-  c.addEventListener('touchstart', e => y0 = e.touches[0].clientY, { passive: true });
-  c.addEventListener('touchend', e => { if (y0 - e.changedTouches[0].clientY > 20) closeAll(); });
-  c.addEventListener('click', closeAll);
-});
-
-/* ---------- Control Center: swipe down from top of home ---------- */
-let cy = null;
-$('#home').addEventListener('touchstart', e => { cy = e.touches[0].clientY < 90 ? e.touches[0].clientY : null; }, { passive: true });
-$('#home').addEventListener('touchend', e => { if (cy !== null && e.changedTouches[0].clientY - cy > 60) $('#cc').classList.add('open'); cy = null; });
-$('#cc').addEventListener('click', e => { if (e.target.id === 'cc') $('#cc').classList.remove('open'); });
-let ccy;
-$('#cc').addEventListener('touchstart', e => ccy = e.touches[0].clientY, { passive: true });
-$('#cc').addEventListener('touchend', e => { if (ccy - e.changedTouches[0].clientY > 60) $('#cc').classList.remove('open'); });
-document.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => { b.classList.toggle('on'); buzz(); }));
-$('#torch').addEventListener('click', () => { $('#dim').style.background = $('#torch').classList.contains('on') ? '#fff' : '#000'; $('#dim').style.opacity = $('#torch').classList.contains('on') ? 1 : 1 - bright; if ($('#torch').classList.contains('on')) $('#dim').style.pointerEvents = 'auto'; else $('#dim').style.pointerEvents = 'none'; });
-$('#dim').addEventListener('click', () => $('#torch').click());
-let bright = 1;
-function slider(el, cb) {
-  const set = y => { const r = el.getBoundingClientRect(); const v = Math.max(0, Math.min(1, (r.bottom - y) / r.height)); el.querySelector('i').style.height = v * 100 + '%'; cb(v); };
-  el.addEventListener('touchmove', e => { e.stopPropagation(); set(e.touches[0].clientY); }, { passive: true });
-  el.addEventListener('touchstart', e => { e.stopPropagation(); set(e.touches[0].clientY); }, { passive: true });
-  el.addEventListener('click', e => set(e.clientY));
-}
-slider($('#bright'), v => { bright = .25 + v * .75; $('#dim').style.background = '#000'; $('#dim').style.opacity = 1 - bright; });
-slider($('#vol'), () => {});
-$('#bright i').style.height = '100%';
-
-/* ---------- Calculator ---------- */
-(() => {
-  const keys = ['AC','±','%','÷','7','8','9','×','4','5','6','−','1','2','3','+','0','.','='];
-  let cur = '0', prev = null, op = null, fresh = false;
-  const out = $('#calcOut');
-  const fmt = n => { const s = String(+parseFloat(n).toPrecision(10)); return s.length > 9 ? (+s).toExponential(4) : s; };
-  const show = () => { out.textContent = cur.endsWith('.') ? cur : fmt(cur); out.style.fontSize = out.textContent.length > 6 ? '56px' : '80px'; };
-  const calc = (a, b, o) => ({ '+': a + b, '−': a - b, '×': a * b, '÷': b === 0 ? NaN : a / b })[o];
-  keys.forEach(k => {
-    const b = document.createElement('button'); b.textContent = k;
-    b.className = ['AC','±','%'].includes(k) ? 'fn' : ['÷','×','−','+','='].includes(k) ? 'op' : k === '0' ? 'zero' : '';
-    b.onclick = () => {
-      buzz(); document.querySelectorAll('.keys .op').forEach(x => x.classList.remove('on'));
-      if (/[0-9]/.test(k)) { cur = fresh || cur === '0' ? k : (cur.length < 9 ? cur + k : cur); fresh = false; }
-      else if (k === '.') { if (fresh) { cur = '0.'; fresh = false; } else if (!cur.includes('.')) cur += '.'; }
-      else if (k === 'AC') { cur = '0'; prev = op = null; }
-      else if (k === '±') cur = String(-parseFloat(cur));
-      else if (k === '%') cur = String(parseFloat(cur) / 100);
-      else if (k === '=') { if (op !== null) { cur = String(calc(prev, parseFloat(cur), op)); op = null; fresh = true; } }
-      else { if (op !== null && !fresh) cur = String(calc(prev, parseFloat(cur), op)); prev = parseFloat(cur); op = k; fresh = true; b.classList.add('on'); }
-      show();
-    };
-    $('#calcKeys').appendChild(b);
-  });
-})();
-
-/* ---------- Notes ---------- */
-let notes = store.get('notes', [{ id: 1, text: 'Welcome to iOS Rebuilt 👋\nTap + to write a note. Everything saves on your phone.', t: Date.now() }]);
-let editing = null;
-function showNotesList() {
-  $('#notesEdit').style.display = 'none'; $('#notesList').style.display = 'block';
-  notes.sort((a, b) => b.t - a.t);
-  $('#noteItems').innerHTML = notes.length ? '' : '<div class="note-item"><small>No notes</small></div>';
-  notes.forEach(n => {
-    const [title, ...rest] = n.text.split('\n'); const el = document.createElement('div'); el.className = 'note-item';
-    el.innerHTML = `<b></b><small></small>`;
-    el.querySelector('b').textContent = title || 'New Note';
-    el.querySelector('small').textContent = new Date(n.t).toLocaleDateString() + '  ' + (rest.join(' ').slice(0, 40) || 'No additional text');
-    el.onclick = () => editNote(n); $('#noteItems').appendChild(el);
-  });
-}
-function editNote(n) { editing = n; $('#notesList').style.display = 'none'; $('#notesEdit').style.display = 'flex'; $('#noteText').value = n.text; }
-$('#newNote').onclick = () => { const n = { id: Date.now(), text: '', t: Date.now() }; notes.push(n); editNote(n); setTimeout(() => $('#noteText').focus(), 50); };
-$('#noteText').oninput = e => { editing.text = e.target.value; editing.t = Date.now(); store.set('notes', notes); };
-$('#noteBack').onclick = () => { notes = notes.filter(n => n.text.trim()); store.set('notes', notes); showNotesList(); };
-$('#noteDel').onclick = () => { notes = notes.filter(n => n !== editing); store.set('notes', notes); showNotesList(); };
-
-/* ---------- Stopwatch ---------- */
-(() => {
-  let start = 0, elapsed = 0, raf = null, lapStart = 0, lapN = 0;
-  const f = ms => { const m = Math.floor(ms / 60000), s = Math.floor(ms / 1000) % 60, c = Math.floor(ms / 10) % 100; return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(c).padStart(2,'0')}`; };
-  const now = () => elapsed + (raf ? performance.now() - start : 0);
-  const loop = () => { $('#swOut').textContent = f(now()); raf = requestAnimationFrame(loop); };
-  $('#swGo').onclick = () => {
-    buzz();
-    if (raf) { elapsed = now(); cancelAnimationFrame(raf); raf = null; $('#swGo').textContent = 'Start'; $('#swGo').className = 'circle go'; $('#swLap').textContent = 'Reset'; }
-    else { start = performance.now(); raf = requestAnimationFrame(loop); $('#swGo').textContent = 'Stop'; $('#swGo').className = 'circle stop'; $('#swLap').textContent = 'Lap'; }
-  };
-  $('#swLap').onclick = () => {
-    buzz();
-    if (raf) { const t = now(); const d = document.createElement('div'); d.innerHTML = `<span>Lap ${++lapN}</span><span>${f(t - lapStart)}</span>`; lapStart = t; $('#laps').prepend(d); }
-    else { elapsed = 0; lapStart = 0; lapN = 0; $('#laps').innerHTML = ''; $('#swOut').textContent = f(0); }
-  };
-})();
-
-/* ---------- Weather (Open-Meteo, no key) ---------- */
-const WX = { 0: 'Clear', 1: 'Mostly Clear', 2: 'Partly Cloudy', 3: 'Cloudy', 45: 'Fog', 48: 'Fog', 51: 'Drizzle', 53: 'Drizzle', 55: 'Drizzle', 61: 'Rain', 63: 'Rain', 65: 'Heavy Rain', 71: 'Snow', 73: 'Snow', 75: 'Heavy Snow', 80: 'Showers', 81: 'Showers', 82: 'Showers', 95: 'Thunderstorm' };
-function loadWeather() {
-  if (!navigator.geolocation) return $('#wxCity').textContent = 'Location unavailable';
-  navigator.geolocation.getCurrentPosition(async p => {
-    try {
-      const { latitude: la, longitude: lo } = p.coords;
-      const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`).then(r => r.json());
-      $('#wxCity').textContent = 'My Location';
-      $('#wxTemp').textContent = Math.round(r.current.temperature_2m) + '°';
-      $('#wxDesc').textContent = WX[r.current.weather_code] || '';
-      $('#wxHL').textContent = `H:${Math.round(r.daily.temperature_2m_max[0])}°  L:${Math.round(r.daily.temperature_2m_min[0])}°`;
-    } catch { $('#wxCity').textContent = 'No connection'; }
-  }, () => $('#wxCity').textContent = 'Allow location to see weather');
-}
-
-/* ---------- Camera / photo -> wallpaper ---------- */
-function pickPhoto() {
-  const i = document.createElement('input'); i.type = 'file'; i.accept = 'image/*';
-  i.onchange = () => {
-    const f = i.files[0]; if (!f) return; const rd = new FileReader();
-    rd.onload = () => { const img = new Image(); img.onload = () => {
-      const c = document.createElement('canvas'); const s = Math.min(1, 1200 / img.height); c.width = img.width * s; c.height = img.height * s;
-      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-      if (confirm('Use this photo as your wallpaper?')) setWall(`url(${c.toDataURL('image/jpeg', .8)})`);
-    }; img.src = rd.result; };
-    rd.readAsDataURL(f);
-  };
-  i.click();
-}
-
-/* ---------- Settings / wallpaper ---------- */
 const WALLS = [
   'linear-gradient(160deg,#5b4bff 0%,#c14bd8 50%,#ff8a5b 100%)',
   'linear-gradient(160deg,#0f2027,#203a43,#2c5364)',
@@ -421,19 +346,929 @@ const WALLS = [
   'linear-gradient(160deg,#11998e,#38ef7d)',
   'linear-gradient(160deg,#000,#434343)',
   'linear-gradient(160deg,#f12711,#f5af19)',
+  'radial-gradient(circle at 30% 20%,#ff6a88,#5a2a9f 60%,#0b0b2b)',
+  'linear-gradient(200deg,#89f7fe,#66a6ff)',
 ];
-function setWall(w) { document.documentElement.style.setProperty('--wall', w); try { store.set('wall', w); } catch {} renderWalls(); }
-function renderWalls() {
-  const cur = store.get('wall', WALLS[0]); $('#walls').innerHTML = '';
-  WALLS.forEach(w => { const d = document.createElement('div'); d.style.background = w; if (w === cur) d.className = 'sel'; d.onclick = () => { setWall(w); buzz(); }; $('#walls').appendChild(d); });
+function tick() {
+  const d = new Date();
+  const t = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(/\s?[AP]M/i, '');
+  $('#sbTime').textContent = t; $('#lockTime').textContent = t;
+  $('#lockDate').textContent = d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+  checkAlarms(d);
+  $$('[data-clockw]').forEach(e => e.textContent = t);
 }
-document.documentElement.style.setProperty('--wall', store.get('wall', WALLS[0]));
-renderWalls();
-$('#wiggleCell').onclick = () => { closeAll(); toggleWiggle(true); };
-$('#resetCell').onclick = () => { if (confirm('Erase notes, layout and wallpaper?')) { localStorage.clear(); location.reload(); } };
+if (navigator.getBattery) navigator.getBattery().then(b => { const u = () => $('#battLvl').style.width = Math.round(b.level * 100) + '%'; u(); b.onlevelchange = u; }).catch(() => {});
 
-/* ---------- PWA ---------- */
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+const lock = $('#lock');
+let lockY = null;
+function tryUnlock() {
+  if (settings.passcode) { showPass(); return; }
+  lock.classList.add('hidden'); buzz();
+}
+lock.addEventListener('touchstart', e => lockY = e.touches[0].clientY, { passive: true });
+lock.addEventListener('touchmove', e => { if (lockY == null) return; const dy = Math.min(0, e.touches[0].clientY - lockY); lock.style.transition = 'none'; lock.style.transform = `translateY(${dy}px)`; }, { passive: true });
+lock.addEventListener('touchend', e => { const dy = e.changedTouches[0].clientY - lockY; lock.style.transition = ''; lock.style.transform = ''; lockY = null; if (dy < -80) tryUnlock(); });
+lock.addEventListener('click', e => { if (e.target.closest('.lbtn') || e.target.closest('.ncard')) return; tryUnlock(); });
+$('#lockTorch').onclick = () => $('#torch').click();
+$('#lockCam').onclick = () => { lock.classList.add('hidden'); openApp('camera'); };
+function lockNow() { lock.classList.remove('hidden'); closeAll(true); $('#cc').classList.remove('open'); $('#switcher').classList.remove('show'); $('#spotlight').classList.remove('show'); }
+document.addEventListener('visibilitychange', () => { if (document.hidden && settings.passcode) lockNow(); });
+
+let passBuf = '', passAfter = null;
+function showPass() {
+  passBuf = ''; drawPass(); $('#pass').classList.add('show');
+}
+function drawPass() { $('#passDots').innerHTML = [0,1,2,3].map(i => `<i class="${i < passBuf.length ? 'f' : ''}"></i>`).join(''); }
+['1','2','3','4','5','6','7','8','9','','0','⌫'].forEach(k => {
+  const b = h(`<button style="${k ? '' : 'visibility:hidden'}">${k}</button>`);
+  b.onclick = () => {
+    buzz();
+    if (k === '⌫') passBuf = passBuf.slice(0, -1); else passBuf += k;
+    drawPass();
+    if (passBuf.length === 4) {
+      if (passBuf === settings.passcode) { $('#pass').classList.remove('show'); lock.classList.add('hidden'); if (passAfter) { passAfter(); passAfter = null; } }
+      else { $('#passDots').classList.add('shake'); buzz(200); setTimeout(() => { $('#passDots').classList.remove('shake'); passBuf = ''; drawPass(); }, 400); }
+    }
+  };
+  $('#passPad').appendChild(b);
+});
+$('#passCancel').onclick = () => $('#pass').classList.remove('show');
+function unlockedOpen(id) { if (!lock.classList.contains('hidden')) { if (settings.passcode) { passAfter = () => openApp(id); showPass(); return; } lock.classList.add('hidden'); } openApp(id); }
+
+/* =====================================================================
+   HOME SCREEN: pages, dock, widgets, jiggle mode, spotlight, switcher
+   ===================================================================== */
+const DEFAULT_LAYOUT = [
+  ['@clockw', '@weatherw', 'calendar', 'photos', 'camera', 'maps', 'weather', 'clock', 'notes', 'reminders', 'appstore', 'settings'],
+  ['calc', 'contacts', 'music', 'cloud', 'compass', 'voice', 'files', 'health', 'news', 'tips']
+];
+let layout = store.get('layout', DEFAULT_LAYOUT);
+const DOCK = ['phone', 'safari', 'messages', 'music'];
+let removed = store.get('removed', []);
+let wiggling = false, picked = null;
+
+function appEl(id, inDock) {
+  const a = APPS[id]; if (!a) return document.createElement('div');
+  const el = h(`<div class="app" data-id="${id}"><div class="icon" style="background:${a.bg}">${a.icon}</div><span class="n">${esc(a.name)}</span>${inDock ? '' : '<div class="del">−</div>'}</div>`);
+  const badge = a.badge ? a.badge() : 0;
+  if (badge) el.querySelector('.icon').appendChild(h(`<div class="badge">${badge}</div>`));
+  let timer;
+  const start = () => { timer = setTimeout(() => { setWiggle(true); buzz(30); }, 550); };
+  el.addEventListener('touchstart', start, { passive: true });
+  el.addEventListener('mousedown', start);
+  ['touchend', 'touchmove', 'mouseup', 'mouseleave'].forEach(ev => el.addEventListener(ev, () => clearTimeout(timer), { passive: true }));
+  el.addEventListener('click', e => {
+    if (e.target.classList.contains('del')) { e.stopPropagation(); removeApp(id); return; }
+    if (wiggling) { if (inDock) return; swapPick(id); return; }
+    openApp(id, el);
+  });
+  return el;
+}
+function widgetEl(kind) {
+  if (kind === '@clockw') {
+    const w = h(`<div class="widget"><div style="font-size:13px;opacity:.8" id="wdDay"></div><div class="big" data-clockw></div><div style="font-size:13px;opacity:.8" id="wdNext">No events today</div></div>`);
+    const d = new Date(); w.querySelector('#wdDay').textContent = d.toLocaleDateString([], { weekday: 'long' }).toUpperCase() + ' ' + d.getDate();
+    const evs = store.get('events', []).filter(e => e.date === dayKey(d));
+    if (evs.length) w.querySelector('#wdNext').textContent = '📅 ' + evs[0].title;
+    w.onclick = () => !wiggling && openApp('calendar'); return w;
+  }
+  if (kind === '@weatherw') {
+    const wx = store.get('wxcache', null);
+    const w = h(`<div class="widget" style="background:linear-gradient(#2a6fdb,#7cb4ff)"><div style="font-size:14px;font-weight:600">${esc(wx?.city || 'Weather')} ➤</div><div class="big">${wx ? Math.round(wx.temp) + '°' : '--°'}</div><div style="font-size:13px">${esc(wx ? wx.desc : 'Tap to load')}<br>${wx ? `H:${Math.round(wx.hi)}° L:${Math.round(wx.lo)}°` : ''}</div></div>`);
+    w.onclick = () => !wiggling && openApp('weather'); return w;
+  }
+}
+function renderHome() {
+  const pages = $('#pages'); const scroll = pages.scrollLeft; pages.innerHTML = '';
+  const placed = new Set();
+  layout.forEach(p => {
+    const pg = h('<div class="page"></div>');
+    p.forEach(id => { if (id.startsWith('@')) pg.appendChild(widgetEl(id)); else if (APPS[id] && !removed.includes(id)) { pg.appendChild(appEl(id)); placed.add(id); } });
+    pages.appendChild(pg);
+  });
+  // apps installed but not on any page go on the last page
+  const extra = Object.keys(APPS).filter(id => !placed.has(id) && !DOCK.includes(id) && !removed.includes(id) && !APPS[id].hidden);
+  if (extra.length) { extra.forEach(id => layout[layout.length - 1].push(id)); store.set('layout', layout); return renderHome(); }
+  const dock = $('#dock'); dock.innerHTML = ''; DOCK.forEach(id => dock.appendChild(appEl(id, true)));
+  pages.scrollLeft = scroll; drawDots();
+}
+function drawDots() { const n = layout.length, i = Math.round($('#pages').scrollLeft / ($('#pages').clientWidth || 1)); $('#dotsNav').innerHTML = Array.from({ length: n }, (_, j) => `<i class="${j === i ? 'on' : ''}"></i>`).join(''); }
+$('#pages').addEventListener('scroll', drawDots, { passive: true });
+function setWiggle(on) { wiggling = on; picked = null; $('#home').classList.toggle('wiggle', on); $('#home').classList.toggle('wiggle-on', on); $$('.app.picked').forEach(e => e.classList.remove('picked')); }
+$('#doneBtn').onclick = () => setWiggle(false);
+function swapPick(id) {
+  if (!picked) { picked = id; $(`#pages .app[data-id="${id}"]`)?.classList.add('picked'); return; }
+  if (picked === id) { picked = null; $$('.app.picked').forEach(e => e.classList.remove('picked')); return; }
+  const find = x => { for (let p = 0; p < layout.length; p++) { const i = layout[p].indexOf(x); if (i > -1) return [p, i]; } };
+  const A = find(picked), B = find(id);
+  if (A && B) { [layout[A[0]][A[1]], layout[B[0]][B[1]]] = [layout[B[0]][B[1]], layout[A[0]][A[1]]]; store.set('layout', layout); }
+  renderHome(); setWiggle(true); buzz();
+}
+function removeApp(id) {
+  if (['settings', 'appstore'].includes(id)) return toast("Can't remove " + APPS[id].name);
+  if (!confirm(`Remove "${APPS[id].name}"? You can get it back from the App Store.`)) return;
+  removed.push(id); store.set('removed', removed);
+  layout = layout.map(p => p.filter(x => x !== id)); store.set('layout', layout); renderHome(); setWiggle(true);
+}
+function installApp(id) {
+  removed = removed.filter(x => x !== id); store.set('removed', removed);
+  if (!layout.some(p => p.includes(id))) { let last = layout[layout.length - 1]; if (last.length >= 24) { last = []; layout.push(last); } last.push(id); store.set('layout', layout); }
+  renderHome();
+}
+
+/* Spotlight */
+$('#spotBtn').onclick = () => { $('#spotlight').classList.add('show'); $('#spotIn').value = ''; drawSpot(); setTimeout(() => $('#spotIn').focus(), 50); };
+$('#spotIn').oninput = drawSpot;
+function drawSpot() {
+  const q = $('#spotIn').value.toLowerCase(); const r = $('#spotRes'); r.innerHTML = '';
+  Object.values(APPS).filter(a => !a.hidden && !removed.includes(a.id) && a.name.toLowerCase().includes(q)).forEach(a => { const el = appEl(a.id, true); el.querySelector('.n').style.display = 'block'; el.onclick = () => { $('#spotlight').classList.remove('show'); openApp(a.id); }; r.appendChild(el); });
+  if (q && settings && store.get('notes', []).some(n => n.text.toLowerCase().includes(q))) r.appendChild(h(`<div style="grid-column:span 4;font-size:14px;opacity:.8">📝 Matches in Notes</div>`));
+}
+$('#spotlight').addEventListener('click', e => { if (e.target.id === 'spotlight') $('#spotlight').classList.remove('show'); });
+
+/* =====================================================================
+   WINDOW MANAGER
+   ===================================================================== */
+const running = []; // app ids, most recent last
+let current = null;
+function openApp(id) {
+  const a = APPS[id]; if (!a) return;
+  if (a.external) { window.open(a.external, '_blank'); return; }
+  $('#switcher').classList.remove('show'); $('#cc').classList.remove('open');
+  closeAll(true);
+  const win = h(`<div class="window ${a.dark ? 'darkwin' : ''}" data-app="${id}"></div>`);
+  $('#phone').appendChild(win);
+  const body = document.createElement('div'); body.className = 'wbody';
+  try { a.render(win, body); } catch (err) { console.error(err); win.innerHTML = `<div class="nav"><h1>${esc(a.name)}</h1></div><div class="wbody"><div class="empty">This app crashed 💥<br><small>${esc(err.message)}</small></div></div>`; }
+  if (!win.contains(body) && !win.children.length) win.appendChild(body);
+  const closer = h('<div class="closer"><i></i></div>'); win.appendChild(closer);
+  let y0 = null;
+  closer.addEventListener('touchstart', e => y0 = e.touches[0].clientY, { passive: true });
+  closer.addEventListener('touchmove', e => { if (y0 == null) return; const dy = Math.min(0, e.touches[0].clientY - y0); win.style.transition = 'none'; win.style.transform = `scale(${1 + dy / 1200}) translateY(${dy / 2}px)`; win.style.borderRadius = Math.min(40, -dy / 4) + 'px'; }, { passive: true });
+  closer.addEventListener('touchend', e => { const dy = e.changedTouches[0].clientY - y0; y0 = null; win.style.transition = ''; win.style.transform = ''; win.style.borderRadius = ''; if (dy < -150) openSwitcher(); else if (dy < -20) closeAll(); });
+  closer.addEventListener('click', () => closeAll());
+  new MutationObserver(() => { if (win.lastElementChild !== closer && !win.querySelector('.viewer')) win.appendChild(closer); }).observe(win, { childList: true });
+  requestAnimationFrame(() => requestAnimationFrame(() => win.classList.add('open')));
+  $('#home').classList.add('behind');
+  $('#status').classList.toggle('darktext', !a.dark && !settings.dark && !a.fullbleed);
+  current = id; const i = running.indexOf(id); if (i > -1) running.splice(i, 1); running.push(id);
+  buzz();
+}
+function closeAll(instant) {
+  $$('.window').forEach(w => {
+    if (w._cleanup) try { w._cleanup(); } catch {}
+    if (instant) w.remove(); else { w.classList.add('closing'); w.classList.remove('open'); setTimeout(() => w.remove(), 350); }
+  });
+  $('#home').classList.remove('behind'); $('#status').classList.remove('darktext'); current = null;
+  renderHome();
+}
+function openSwitcher() {
+  closeAll(true);
+  const s = $('#switcher'); s.innerHTML = '';
+  if (!running.length) { s.appendChild(h('<div style="margin:auto;opacity:.8">No Recent Apps</div>')); }
+  [...running].reverse().forEach(id => {
+    const a = APPS[id]; if (!a) return;
+    const c = h(`<div class="card" style="background:${a.bg}">${a.icon}<span>${esc(a.name)}</span></div>`);
+    let y0;
+    c.addEventListener('touchstart', e => y0 = e.touches[0].clientY, { passive: true });
+    c.addEventListener('touchend', e => { const dy = e.changedTouches[0].clientY - y0; if (dy < -80) { c.classList.add('gone'); running.splice(running.indexOf(id), 1); setTimeout(() => c.remove(), 300); buzz(); } else if (Math.abs(dy) < 10) { s.classList.remove('show'); openApp(id); } });
+    c.addEventListener('click', e => { if (!('ontouchstart' in window)) { s.classList.remove('show'); openApp(id); } });
+    s.appendChild(c);
+  });
+  s.classList.add('show');
+}
+$('#switcher').addEventListener('click', e => { if (e.target.id === 'switcher') $('#switcher').classList.remove('show'); });
+// Swipe up on home bar → switcher (on home screen)
+let hb0;
+$('#homeBar').addEventListener('touchstart', e => hb0 = e.touches[0].clientY, { passive: true });
+$('#homeBar').addEventListener('touchend', e => { if (hb0 - e.changedTouches[0].clientY > 40) openSwitcher(); });
+$('#homeBar').addEventListener('click', openSwitcher);
+
+/* Helper to build a standard "large title" page */
+function page(win, title, opts = {}) {
+  win.innerHTML = '';
+  const nav = h(`<div class="nav"><h1>${esc(title)}</h1><div class="actions"></div></div>`);
+  if (opts.back) { const b = h(`<button class="link">‹ ${esc(opts.backLabel || 'Back')}</button>`); b.onclick = opts.back; nav.prepend(b); nav.style.flexWrap = 'wrap'; nav.querySelector('h1').style.width = '100%'; nav.querySelector('h1').style.order = 3; }
+  (opts.actions || []).forEach(([label, fn]) => { const b = h(`<button class="link">${label}</button>`); b.onclick = fn; nav.querySelector('.actions').appendChild(b); });
+  const body = h('<div class="wbody"></div>');
+  win.append(nav, body);
+  if (win.querySelector('.closer')) win.appendChild(win.querySelector('.closer'));
+  return body;
+}
+function list(rows) {
+  const l = h('<div class="list"></div>');
+  rows.forEach(r => { const c = h(`<div class="cell"><div class="l">${r.icon ? `<div class="sq" style="background:${r.bg || '#888'}">${r.icon}</div>` : ''}${r.left || ''}<div><div>${esc(r.title)}</div>${r.sub ? `<small>${esc(r.sub)}</small>` : ''}</div></div><div class="r">${r.right ?? ''}</div></div>`); if (r.onclick) c.onclick = r.onclick; else c.style.cursor = 'default'; if (r.onEl) r.onEl(c); l.appendChild(c); });
+  return l;
+}
+function switchEl(on, fn) { const s = h(`<div class="switch ${on ? 'on' : ''}"></div>`); s.onclick = e => { e.stopPropagation(); s.classList.toggle('on'); buzz(); fn(s.classList.contains('on')); }; return s; }
+function pickImage(capture) {
+  return new Promise(res => {
+    const i = document.createElement('input'); i.type = 'file'; i.accept = 'image/*'; if (capture) i.capture = 'environment';
+    i.onchange = () => { const f = i.files[0]; if (!f) return res(null); const rd = new FileReader(); rd.onload = () => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1, 900 / Math.max(img.width, img.height)); c.width = img.width * s; c.height = img.height * s; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .75)); }; img.src = rd.result; }; rd.readAsDataURL(f); };
+    i.click();
+  });
+}
+function addPhoto(src) { const p = store.get('photos', []); p.unshift({ id: uid(), src, t: Date.now() }); if (store.set('photos', p)) { toast('Saved to Photos'); cloudSync(); } }
+
+/* =====================================================================
+   CONTROL CENTER
+   ===================================================================== */
+let ccY = null;
+$('#home').addEventListener('touchstart', e => { const t = e.touches[0]; const r = $('#phone').getBoundingClientRect(); ccY = (t.clientY - r.top) < 70 ? t.clientY : null; }, { passive: true });
+$('#home').addEventListener('touchend', e => { if (ccY != null && e.changedTouches[0].clientY - ccY > 50) $('#cc').classList.add('open'); ccY = null; });
+$('#status').style.pointerEvents = 'auto'; $('#status').style.cursor = 'pointer';
+$('#status').onclick = () => { if (lock.classList.contains('hidden')) $('#cc').classList.toggle('open'); };
+$('#cc').addEventListener('click', e => { if (e.target.id === 'cc') $('#cc').classList.remove('open'); });
+let ccy2;
+$('#cc').addEventListener('touchstart', e => ccy2 = e.touches[0].clientY, { passive: true });
+$('#cc').addEventListener('touchend', e => { if (ccy2 - e.changedTouches[0].clientY > 60) $('#cc').classList.remove('open'); });
+$$('[data-t]').forEach(b => b.addEventListener('click', () => {
+  b.classList.toggle('on'); buzz();
+  const k = b.dataset.t, on = b.classList.contains('on');
+  if (k === 'dnd') { settings.dnd = on; saveSettings(); island(on ? '🌙 Focus On' : '🌙 Focus Off'); }
+  if (k === 'plane' && on) { $$('[data-t=wifi],[data-t=cell],[data-t=bt]').forEach(x => x.classList.remove('on')); island('✈️ Airplane Mode'); }
+  if (k === 'wifi') $('#wifiIco').style.opacity = on ? 1 : .3;
+}));
+$('[data-t=dnd]').classList.toggle('on', settings.dnd);
+$$('[data-open]').forEach(b => b.onclick = () => openApp(b.dataset.open));
+$('#ccDark').onclick = () => { settings.dark = !settings.dark; saveSettings(); applyAppearance(); };
+let bright = 1, torchOn = false;
+$('#torch').onclick = () => { torchOn = !torchOn; $('#torch').classList.toggle('on', torchOn); $('#lockTorch').style.background = torchOn ? '#fff' : ''; const d = $('#dim'); d.style.background = torchOn ? '#fff' : '#000'; d.style.opacity = torchOn ? 1 : 1 - bright; d.style.pointerEvents = torchOn ? 'auto' : 'none'; buzz(); };
+$('#dim').onclick = () => torchOn && $('#torch').click();
+function slider(el, init, cb) {
+  const set = y => { const r = el.getBoundingClientRect(); const v = Math.max(0, Math.min(1, (r.bottom - y) / r.height)); el.querySelector('i').style.height = v * 100 + '%'; cb(v); };
+  el.querySelector('i').style.height = init * 100 + '%';
+  el.addEventListener('touchstart', e => { e.stopPropagation(); set(e.touches[0].clientY); }, { passive: true });
+  el.addEventListener('touchmove', e => { e.stopPropagation(); set(e.touches[0].clientY); }, { passive: true });
+  el.addEventListener('touchend', e => e.stopPropagation());
+  let down = false; el.onmousedown = e => { down = true; set(e.clientY); }; window.addEventListener('mousemove', e => down && set(e.clientY)); window.addEventListener('mouseup', () => down = false);
+}
+slider($('#bright'), 1, v => { bright = .2 + v * .8; if (!torchOn) { $('#dim').style.background = '#000'; $('#dim').style.opacity = 1 - bright; } });
+slider($('#vol'), .7, v => { Music.setVol(v); });
+
+/* =====================================================================
+   CLOUD — "iCloud-style" sync. Data lives on-device; Cloud makes
+   backups you can download, restore, or move to another device.
+   ===================================================================== */
+let cloudTimer;
+function cloudSync() {
+  if (!settings.cloud) return;
+  clearTimeout(cloudTimer);
+  cloudTimer = setTimeout(() => {
+    const snap = store.all(); delete snap.cloudBackups;
+    const backups = store.get('cloudBackups', []);
+    backups.unshift({ t: Date.now(), size: JSON.stringify(snap).length });
+    store.set('cloudBackups', backups.slice(0, 5));
+    store.set('lastSync', Date.now());
+  }, 1500);
+}
+function exportBackup() {
+  const data = store.all(); data._meta = { app: 'iOS Rebuilt', version: 2, t: Date.now() };
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `ios-rebuilt-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000); toast('Backup downloaded');
+}
+function importBackup() {
+  const i = document.createElement('input'); i.type = 'file'; i.accept = 'application/json,.json';
+  i.onchange = () => { const f = i.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => {
+    try { const d = JSON.parse(rd.result); if (!d._meta) throw new Error('Not an iOS Rebuilt backup'); if (!confirm('Restore this backup? Current data will be replaced.')) return; store.clear(); Object.entries(d).forEach(([k, v]) => k !== '_meta' && store.set(k, v)); location.reload(); }
+    catch (e) { alert('Restore failed: ' + e.message); } }; rd.readAsText(f); };
+  i.click();
+}
+
+/* =====================================================================
+   APPS
+   ===================================================================== */
+
+/* ---------- Settings ---------- */
+defineApp('settings', { name: 'Settings', icon: '⚙️', bg: 'linear-gradient(#aeaeb2,#636366)', render(win) {
+  const main = () => {
+    const b = page(win, 'Settings');
+    b.appendChild(h('<input class="search" placeholder="🔍 Search">'));
+    b.appendChild(list([{ left: `<div class="avatar" style="width:56px;height:56px;font-size:22px">${esc((settings.name || '?')[0].toUpperCase())}</div>`, title: settings.name || 'Sign in to your Cloud', sub: settings.name ? 'Cloud, Backups & Account' : 'Set up Cloud, Backup and more.', right: '›', onclick: () => openApp('cloud') }]));
+    b.appendChild(list([
+      { icon: '✈️', bg: '#ff9500', title: 'Airplane Mode', right: '', onEl: c => c.querySelector('.r').appendChild(switchEl($('[data-t=plane]').classList.contains('on'), () => $('[data-t=plane]').click())) },
+      { icon: '🛜', bg: '#007aff', title: 'Wi-Fi', right: navigator.onLine ? 'Connected ›' : 'Off ›' },
+      { icon: '🔵', bg: '#007aff', title: 'Bluetooth', right: 'On ›' },
+    ]));
+    b.appendChild(list([
+      { icon: '🔔', bg: '#ff3b30', title: 'Notifications', right: '›', onclick: notifPage },
+      { icon: '🌙', bg: '#5856d6', title: 'Focus', right: '', onEl: c => c.querySelector('.r').appendChild(switchEl(settings.dnd, v => { settings.dnd = v; saveSettings(); $('[data-t=dnd]').classList.toggle('on', v); })) },
+    ]));
+    b.appendChild(list([
+      { icon: 'Aa', bg: '#007aff', title: 'Display & Brightness', right: '›', onclick: displayPage },
+      { icon: '🖼️', bg: '#34aadc', title: 'Wallpaper', right: '›', onclick: wallPage },
+      { icon: '🔒', bg: '#ff3b30', title: 'Face ID & Passcode', right: settings.passcode ? 'On ›' : 'Off ›', onclick: passPage },
+      { icon: '📳', bg: '#ff2d55', title: 'Sounds & Haptics', right: '', onEl: c => c.querySelector('.r').appendChild(switchEl(settings.haptics, v => { settings.haptics = v; saveSettings(); })) },
+    ]));
+    b.appendChild(list([
+      { icon: 'ⓘ', bg: '#8e8e93', title: 'General', right: '›', onclick: generalPage },
+      { icon: '🔲', bg: '#8e8e93', title: 'Home Screen', right: '›', onclick: () => { closeAll(); setTimeout(() => setWiggle(true), 400); } },
+      { icon: '🛍️', bg: '#007aff', title: 'App Store', right: '›', onclick: () => openApp('appstore') },
+    ]));
+  };
+  const back = () => main();
+  const notifPage = () => { const b = page(win, 'Notifications', { back }); b.appendChild(list([{ title: 'Send Test Notification', onclick: () => notify('settings', 'Settings', 'Notifications are working 🎉') }, { title: 'Clear All', onclick: () => { notifs = []; store.set('notifs', []); renderLockNotes(); toast('Cleared'); } }])); };
+  const displayPage = () => { const b = page(win, 'Display', { back }); b.appendChild(h('<div class="label">Appearance</div>')); const seg = h(`<div class="seg"><button class="${settings.dark ? '' : 'on'}">☀️ Light</button><button class="${settings.dark ? 'on' : ''}">🌙 Dark</button></div>`); seg.children[0].onclick = () => { settings.dark = false; saveSettings(); applyAppearance(); displayPage(); }; seg.children[1].onclick = () => { settings.dark = true; saveSettings(); applyAppearance(); displayPage(); }; b.appendChild(seg); b.appendChild(h('<div class="label">Temperature Unit</div>')); const s2 = h(`<div class="seg"><button class="${settings.c === '°C' ? 'on' : ''}">°C</button><button class="${settings.c === '°F' ? 'on' : ''}">°F</button></div>`); s2.children[0].onclick = () => { settings.c = '°C'; saveSettings(); store.set('wxcache', null); displayPage(); }; s2.children[1].onclick = () => { settings.c = '°F'; saveSettings(); store.set('wxcache', null); displayPage(); }; b.appendChild(s2); };
+  const wallPage = () => {
+    const b = page(win, 'Wallpaper', { back });
+    const g = h('<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px"></div>');
+    WALLS.forEach(w => { const d = h(`<div style="aspect-ratio:.5;border-radius:12px;background:${w};border:3px solid ${settings.wall === w || (!settings.wall && w === WALLS[0]) ? 'var(--blue)' : 'transparent'}"></div>`); d.onclick = () => { settings.wall = w; saveSettings(); applyAppearance(); wallPage(); buzz(); }; g.appendChild(d); });
+    b.appendChild(g);
+    const btn = h('<button class="pbtn">📷 Choose from Photos</button>'); btn.onclick = async () => { const src = await pickImage(); if (src) { settings.wall = `url(${src}) center/cover`; saveSettings(); applyAppearance(); toast('Wallpaper set'); } }; b.appendChild(btn);
+  };
+  const passPage = () => {
+    const b = page(win, 'Passcode', { back });
+    if (settings.passcode) b.appendChild(list([{ title: 'Turn Passcode Off', onclick: () => { const p = ask('Enter current passcode'); if (p === settings.passcode) { settings.passcode = ''; saveSettings(); toast('Passcode off'); passPage(); } else if (p !== null) toast('Wrong passcode'); } }, { title: 'Lock Now', onclick: lockNow }]));
+    else b.appendChild(list([{ title: 'Turn Passcode On', onclick: () => { const p = ask('Choose a 4-digit passcode'); if (p && /^\d{4}$/.test(p)) { settings.passcode = p; saveSettings(); toast('Passcode set'); passPage(); } else if (p !== null) toast('Must be 4 digits'); } }]));
+    b.appendChild(h('<p style="color:var(--sub);font-size:13px;margin:0 16px">Your passcode protects the lock screen. It is stored only on this device.</p>'));
+  };
+  const generalPage = () => {
+    const b = page(win, 'General', { back });
+    b.appendChild(list([
+      { title: 'About', right: 'iOS Rebuilt 2.0 ›', onclick: () => alert('iOS Rebuilt 2.0\nOpen source (MIT)\n\nApps: ' + Object.keys(APPS).length + '\nStorage used: ' + (store.bytes() / 1024).toFixed(1) + ' KB\n\nNot affiliated with Apple.') },
+      { title: 'Software Update', right: '›', onclick: () => { toast('Checking…'); if (navigator.serviceWorker?.controller) navigator.serviceWorker.getRegistration().then(r => r && r.update()); setTimeout(() => alert('iOS Rebuilt is up to date.\n\nNew versions install automatically when you open the app online.'), 900); } },
+      { title: 'Storage', right: (store.bytes() / 1024).toFixed(0) + ' KB ›', onclick: () => openApp('cloud') },
+    ]));
+    b.appendChild(list([{ title: 'Reset Home Screen Layout', onclick: () => { layout = JSON.parse(JSON.stringify(DEFAULT_LAYOUT)); removed = []; store.set('layout', layout); store.set('removed', []); toast('Layout reset'); } }, { title: '<span style="color:#ff3b30">Erase All Content and Settings</span>', onclick: () => { if (confirm('Erase everything on this device?')) { store.clear(); location.reload(); } } }]));
+    b.querySelector('.list:last-child .cell:last-child div div').innerHTML = '<span style="color:#ff3b30">Erase All Content and Settings</span>';
+  };
+  main();
+} });
+
+/* ---------- Cloud (iCloud-style) ---------- */
+defineApp('cloud', { name: 'Cloud', icon: '☁️', bg: 'linear-gradient(#fff,#d6e9ff)', render(win) {
+  const draw = () => {
+    const b = page(win, 'Cloud');
+    if (!settings.name) {
+      b.appendChild(h('<div style="text-align:center;font-size:70px;margin:10px 0">☁️</div>'));
+      b.appendChild(h('<p style="text-align:center;color:var(--sub);margin-bottom:20px">Sign in to back up your notes, photos, messages, reminders and settings. Everything stays private on your device — backups are files you control.</p>'));
+      const n = h('<input class="field" placeholder="Your name">'), e = h('<input class="field" placeholder="Email (optional)" type="email">');
+      const go = h('<button class="pbtn">Sign In</button>');
+      go.onclick = () => { if (!n.value.trim()) return toast('Enter your name'); settings.name = n.value.trim(); settings.email = e.value.trim(); settings.cloud = true; saveSettings(); cloudSync(); notify('cloud', 'Cloud', `Welcome, ${settings.name}! Backup is on.`); draw(); };
+      b.append(n, e, go); return;
+    }
+    b.appendChild(h(`<div style="text-align:center;margin-bottom:20px"><div class="avatar" style="width:84px;height:84px;font-size:36px;margin:0 auto 10px">${esc(settings.name[0].toUpperCase())}</div><div style="font-size:22px;font-weight:600">${esc(settings.name)}</div><div style="color:var(--sub)">${esc(settings.email || 'Cloud account')}</div></div>`));
+    const all = store.all(); const size = k => JSON.stringify(all[k] || '').length;
+    const parts = [['Photos', size('photos'), '#ff9f0a'], ['Messages', size('chats'), '#34c759'], ['Notes', size('notes'), '#ffd60a'], ['Other', Math.max(0, store.bytes() / 2 - size('photos') - size('chats') - size('notes')), '#8e8e93']];
+    const total = 5 * 1024 * 1024, used = store.bytes() / 2;
+    b.appendChild(h('<div class="label">Storage</div>'));
+    const card = h(`<div class="list" style="padding:14px 16px"><b>Cloud Storage</b> <span style="color:var(--sub)">${(used / 1024).toFixed(0)} KB of 5 MB used</span><div class="cloudbar">${parts.map(p => `<i style="background:${p[2]};width:${p[1] / total * 100}%"></i>`).join('')}</div><div style="display:flex;gap:12px;font-size:12px;color:var(--sub);flex-wrap:wrap">${parts.map(p => `<span>● ${p[0]}</span>`).join('').replace(/●/g, (m, i) => m)}</div></div>`);
+    $$('span', card).slice(1).forEach((s, i) => s.style.color = parts[i]?.[2]);
+    b.appendChild(card);
+    const last = store.get('lastSync', 0);
+    b.appendChild(h('<div class="label">Backup</div>'));
+    b.appendChild(list([
+      { icon: '🔄', bg: '#34c759', title: 'Cloud Backup', sub: last ? 'Last backup ' + fmtDate(last) + ' ' + fmtTime(last) : 'Never', onEl: c => c.querySelector('.r').appendChild(switchEl(settings.cloud, v => { settings.cloud = v; saveSettings(); if (v) cloudSync(); })) },
+      { icon: '⬆️', bg: '#007aff', title: 'Back Up Now', onclick: () => { settings.cloud = true; saveSettings(); cloudSync(); setTimeout(() => { toast('Backed up ✓'); draw(); }, 1600); } },
+      { icon: '💾', bg: '#5856d6', title: 'Download Backup File', sub: 'Move your data to another device', onclick: exportBackup },
+      { icon: '📥', bg: '#ff9500', title: 'Restore from Backup File', onclick: importBackup },
+    ]));
+    b.appendChild(h('<div class="label">Apps Using Cloud</div>'));
+    b.appendChild(list(['notes', 'photos', 'messages', 'reminders', 'contacts', 'calendar'].map(id => ({ icon: APPS[id].icon, bg: APPS[id].bg, title: APPS[id].name, right: '✓' }))));
+    b.appendChild(list([{ title: 'Sign Out', onclick: () => { if (confirm('Sign out? Your data stays on this device.')) { settings.name = ''; settings.email = ''; settings.cloud = false; saveSettings(); draw(); } } }]));
+    b.lastChild.querySelector('.cell div div').style.color = '#ff3b30';
+  };
+  draw();
+} });
+
+/* ---------- Phone ---------- */
+defineApp('phone', { name: 'Phone', icon: '📞', bg: 'linear-gradient(#5cf777,#0ac139)', render(win) {
+  let tab = 'Keypad';
+  const draw = () => {
+    win.innerHTML = '';
+    const content = h('<div style="flex:1;display:flex;flex-direction:column;overflow:hidden"></div>'); win.appendChild(content);
+    const tabs = h('<div class="tabs"></div>');
+    [['⭐', 'Favorites'], ['🕘', 'Recents'], ['👤', 'Contacts'], ['⌨️', 'Keypad']].forEach(([i, n]) => { const t = h(`<button class="${tab === n ? 'on' : ''}"><b>${i}</b>${n}</button>`); t.onclick = () => { tab = n; draw(); }; tabs.appendChild(t); });
+    win.appendChild(tabs);
+    const call = num => { const rec = store.get('calls', []); rec.unshift({ num, t: Date.now() }); store.set('calls', rec.slice(0, 50)); island('📞 Calling ' + num); location.href = 'tel:' + num.replace(/[^\d+*#]/g, ''); };
+    if (tab === 'Keypad') {
+      let num = '';
+      const out = h('<div style="font-size:36px;text-align:center;min-height:50px;margin-top:calc(var(--sat) + 70px)"></div>');
+      const d = h('<div class="dial"></div>');
+      [['1', ''], ['2', 'ABC'], ['3', 'DEF'], ['4', 'GHI'], ['5', 'JKL'], ['6', 'MNO'], ['7', 'PQRS'], ['8', 'TUV'], ['9', 'WXYZ'], ['*', ''], ['0', '+'], ['#', '']].forEach(([n, l]) => { const k = h(`<button>${n}<small>${l}</small></button>`); k.onclick = () => { num += n; out.textContent = num; buzz(); }; d.appendChild(k); });
+      const c = h('<button class="callbtn">📞</button>'); c.onclick = () => num && call(num);
+      const del = h('<button class="link" style="display:block;margin:6px auto">⌫</button>'); del.onclick = () => { num = num.slice(0, -1); out.textContent = num; };
+      content.append(out, d, c, del);
+    } else if (tab === 'Recents') {
+      const b = page(content, 'Recents'); const rec = store.get('calls', []);
+      if (!rec.length) b.appendChild(h('<div class="empty">No recent calls</div>'));
+      else b.appendChild(list(rec.map(r => ({ title: r.num, sub: 'mobile', right: fmtDate(r.t), onclick: () => call(r.num) }))));
+    } else {
+      const b = page(content, tab); let cs = store.get('contacts', []); if (tab === 'Favorites') cs = cs.filter(c => c.fav);
+      if (!cs.length) b.appendChild(h(`<div class="empty">${tab === 'Favorites' ? 'No Favorites — star a contact in Contacts' : 'No Contacts'}</div>`));
+      else b.appendChild(list(cs.map(c => ({ left: `<div class="avatar">${esc(c.name[0])}</div>`, title: c.name, sub: c.phone, right: '📞', onclick: () => c.phone ? call(c.phone) : toast('No number') }))));
+    }
+  };
+  draw();
+} });
+
+/* ---------- Contacts ---------- */
+defineApp('contacts', { name: 'Contacts', icon: '👤', bg: 'linear-gradient(#d8d8dc,#a6a6ab)', render(win) {
+  const draw = (q = '') => {
+    const cs = store.get('contacts', []).sort((a, b) => a.name.localeCompare(b.name));
+    const b = page(win, 'Contacts', { actions: [['＋', edit]] });
+    const s = h(`<input class="search" placeholder="🔍 Search" value="${esc(q)}">`); s.oninput = () => { const v = s.value; draw(v); setTimeout(() => { const n = win.querySelector('.search'); n.focus(); n.setSelectionRange(v.length, v.length); }); }; b.appendChild(s);
+    if (settings.name) b.appendChild(list([{ left: `<div class="avatar" style="width:56px;height:56px">${esc(settings.name[0])}</div>`, title: settings.name, sub: 'My Card' }]));
+    const f = cs.filter(c => c.name.toLowerCase().includes(q.toLowerCase()));
+    if (!f.length) b.appendChild(h('<div class="empty">No Contacts</div>'));
+    else b.appendChild(list(f.map(c => ({ left: `<div class="avatar">${esc(c.name[0].toUpperCase())}</div>`, title: c.name + (c.fav ? ' ⭐' : ''), sub: c.phone, onclick: () => detail(c) }))));
+  };
+  const detail = c => {
+    const b = page(win, '', { back: () => draw(), backLabel: 'Contacts', actions: [['Edit', () => edit(c)]] });
+    b.appendChild(h(`<div style="text-align:center;margin-bottom:20px"><div class="avatar" style="width:100px;height:100px;font-size:44px;margin:0 auto 10px">${esc(c.name[0].toUpperCase())}</div><div style="font-size:28px">${esc(c.name)}</div></div>`));
+    const acts = h('<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px"></div>');
+    [['💬', 'message', () => { closeAll(true); openApp('messages'); setTimeout(() => window._openChat && window._openChat(c.name), 50); }], ['📞', 'call', () => c.phone ? location.href = 'tel:' + c.phone : toast('No number')], ['✉️', 'mail', () => c.email ? location.href = 'mailto:' + c.email : toast('No email')]].forEach(([i, n, fn]) => { const x = h(`<button class="pbtn gray" style="margin:0;padding:10px;font-size:13px">${i}<br>${n}</button>`); x.onclick = fn; acts.appendChild(x); });
+    b.appendChild(acts);
+    b.appendChild(list([{ title: 'phone', sub: c.phone || '—' }, { title: 'email', sub: c.email || '—' }, { title: c.fav ? 'Remove from Favorites' : 'Add to Favorites', onclick: () => { const cs = store.get('contacts', []); const x = cs.find(y => y.id === c.id); x.fav = !x.fav; store.set('contacts', cs); detail(x); } }]));
+  };
+  const edit = (c = null) => {
+    const b = page(win, c ? 'Edit Contact' : 'New Contact', { back: () => c ? detail(c) : draw(), backLabel: 'Cancel' });
+    const n = h(`<input class="field" placeholder="Name" value="${esc(c?.name)}">`), p = h(`<input class="field" placeholder="Phone" type="tel" value="${esc(c?.phone)}">`), e = h(`<input class="field" placeholder="Email" type="email" value="${esc(c?.email)}">`);
+    const save = h('<button class="pbtn">Done</button>');
+    save.onclick = () => { if (!n.value.trim()) return toast('Name required'); const cs = store.get('contacts', []); if (c) Object.assign(cs.find(x => x.id === c.id), { name: n.value.trim(), phone: p.value.trim(), email: e.value.trim() }); else cs.push({ id: uid(), name: n.value.trim(), phone: p.value.trim(), email: e.value.trim() }); store.set('contacts', cs); cloudSync(); draw(); };
+    b.append(n, p, e, save);
+    if (c) { const d = h('<button class="pbtn gray" style="color:#ff3b30">Delete Contact</button>'); d.onclick = () => { if (confirm('Delete contact?')) { store.set('contacts', store.get('contacts', []).filter(x => x.id !== c.id)); draw(); } }; b.appendChild(d); }
+  };
+  draw();
+} });
+
+/* ---------- Messages (with a built-in chatbot "Siri") ---------- */
+const BOT = 'Siri';
+function botReply(text) {
+  const t = text.toLowerCase();
+  if (/\b(hi|hey|hello|yo)\b/.test(t)) return `Hey${settings.name ? ' ' + settings.name : ''}! 👋 Ask me the time, a joke, or to flip a coin.`;
+  if (t.includes('time')) return `It's ${fmtTime(Date.now())}. ⏰`;
+  if (t.includes('date') || t.includes('day')) return `Today is ${new Date().toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}.`;
+  if (t.includes('joke')) return ['Why did the iPhone go to school? To improve its cell-f esteem. 📱', 'I would tell you a UDP joke, but you might not get it.', 'My battery and I have a lot in common: both drain fast around you. 🔋'][Math.floor(Math.random() * 3)];
+  if (t.includes('coin')) return Math.random() < .5 ? 'Heads! 🪙' : 'Tails! 🪙';
+  if (t.includes('dice') || t.includes('roll')) return `🎲 ${1 + Math.floor(Math.random() * 6)}`;
+  if (t.includes('weather')) { const w = store.get('wxcache'); return w ? `It's ${Math.round(w.temp)}° and ${w.desc.toLowerCase()} in ${w.city}.` : 'Open the Weather app first and I\'ll remember it. ⛅'; }
+  if (t.includes('note')) return 'Open Notes to jot that down 📝 — everything is backed up to Cloud.';
+  if (/[\d)]\s*[-+*/x×÷]\s*[\d(]/.test(t)) { try { const ex = t.replace(/[x×]/g, '*').replace(/÷/g, '/').replace(/[^0-9+\-*/().\s]/g, ''); const v = Function('"use strict";return (' + ex + ')')(); if (isFinite(v)) return `That's ${+v.toFixed(8)} 🧮`; } catch {} }
+  if (t.includes('love')) return 'Aw. I\'m just a few lines of JavaScript, but ❤️.';
+  if (t.includes('who are you') || t.includes('your name')) return 'I\'m the built-in assistant of iOS Rebuilt. Open source, so you can make me smarter on GitHub!';
+  return ['Interesting! Tell me more.', 'Hmm, I\'m not sure about that one yet. 🤔', 'Noted! (Not really, try the Notes app.)', '👍'][Math.floor(Math.random() * 4)];
+}
+defineApp('messages', { name: 'Messages', icon: '💬', bg: 'linear-gradient(#5cf777,#0ac139)', badge: () => store.get('chats', {})[BOT]?.unread || 0, render(win) {
+  const chats = () => { const c = store.get('chats', {}); if (!c[BOT]) { c[BOT] = { msgs: [{ me: false, text: `Hi! I'm ${BOT}. Say hello 👋`, t: Date.now() }], unread: 0 }; store.set('chats', c); } return c; };
+  const listView = () => {
+    const c = chats();
+    const b = page(win, 'Messages', { actions: [['✏️', () => { const n = ask('To: (name)'); if (n) openChat(n); }]] });
+    b.appendChild(list(Object.entries(c).sort((a, z) => (z[1].msgs.at(-1)?.t || 0) - (a[1].msgs.at(-1)?.t || 0)).map(([name, ch]) => ({ left: `<div class="avatar">${esc(name[0].toUpperCase())}</div>`, title: name, sub: ch.msgs.at(-1)?.text || '', right: (ch.unread ? '🔵 ' : '') + (ch.msgs.at(-1) ? fmtTime(ch.msgs.at(-1).t) : ''), onclick: () => openChat(name) }))));
+  };
+  const openChat = name => {
+    const c = chats(); if (!c[name]) c[name] = { msgs: [], unread: 0 }; c[name].unread = 0; store.set('chats', c);
+    win.innerHTML = '';
+    const top = h(`<div class="navbar" style="flex-direction:column;gap:2px;border-bottom:.5px solid var(--sep)"><button class="link" style="align-self:flex-start;position:absolute">‹</button><div class="avatar">${esc(name[0].toUpperCase())}</div><div style="font-size:12px;font-weight:400">${esc(name)}</div></div>`);
+    top.querySelector('button').onclick = listView;
+    const body = h('<div class="wbody"><div class="bubbles"></div></div>'); const bub = body.firstChild;
+    const comp = h('<div class="composer"><input placeholder="iMessage"><button>↑</button></div>');
+    const draw = () => { bub.innerHTML = ''; chats()[name].msgs.forEach(m => bub.appendChild(h(`<div class="bub ${m.me ? 'me' : 'them'}">${esc(m.text)}</div>`))); body.scrollTop = 1e9; };
+    const send = () => {
+      const inp = comp.querySelector('input'), text = inp.value.trim(); if (!text) return; inp.value = '';
+      const c = chats(); c[name].msgs.push({ me: true, text, t: Date.now() }); store.set('chats', c); draw(); cloudSync(); buzz();
+      if (name === BOT) { const typing = h('<div class="bub them">•••</div>'); setTimeout(() => { bub.appendChild(typing); body.scrollTop = 1e9; }, 300); setTimeout(() => { const c = chats(); c[name].msgs.push({ me: false, text: botReply(text), t: Date.now() }); store.set('chats', c); if (current === 'messages' && win.isConnected) draw(); }, 1200); }
+    };
+    comp.querySelector('button').onclick = send; comp.querySelector('input').onkeydown = e => e.key === 'Enter' && send();
+    win.append(top, body, comp); draw();
+  };
+  window._openChat = openChat;
+  listView();
+} });
+
+/* ---------- Safari ---------- */
+defineApp('safari', { name: 'Safari', icon: '🧭', bg: 'linear-gradient(#fff,#d1e8ff)', render(win) {
+  const b = page(win, 'Start Page');
+  const go = q => { q = q.trim(); if (!q) return; const url = /^https?:\/\//.test(q) ? q : /^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(q) ? 'https://' + q : 'https://duckduckgo.com/?q=' + encodeURIComponent(q); const hist = store.get('history', []); hist.unshift({ q, url, t: Date.now() }); store.set('history', hist.slice(0, 30)); window.open(url, '_blank'); };
+  const bar = h('<input class="search" placeholder="🔍 Search or enter website name" enterkeyhint="go" style="font-size:17px;padding:12px">'); bar.onkeydown = e => { if (e.key === 'Enter') go(bar.value); }; b.appendChild(bar);
+  b.appendChild(h('<div class="label">Favorites</div>'));
+  const g = h('<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;text-align:center;font-size:12px"></div>');
+  [['Wikipedia', '📚', 'wikipedia.org'], ['YouTube', '▶️', 'youtube.com'], ['GitHub', '🐙', 'github.com/mrcodelover1211/IOS-rebuilt-'], ['News', '📰', 'news.google.com'], ['Maps', '🗺️', 'openstreetmap.org'], ['Reddit', '👽', 'reddit.com'], ['Translate', '🌐', 'translate.google.com'], ['Weather', '⛅', 'weather.com']].forEach(([n, i, u]) => { const x = h(`<div style="cursor:pointer"><div style="width:60px;height:60px;border-radius:14px;background:var(--card);display:grid;place-items:center;font-size:28px;margin:0 auto 4px">${i}</div>${n}</div>`); x.onclick = () => go('https://' + u); g.appendChild(x); });
+  b.appendChild(g);
+  const hist = store.get('history', []);
+  if (hist.length) { b.appendChild(h('<div class="label">Recently Visited</div>')); b.appendChild(list(hist.slice(0, 8).map(x => ({ title: x.q, sub: x.url, onclick: () => go(x.url) })))); }
+} });
+
+/* ---------- Music (built-in synth songs + your own files) ---------- */
+const Music = (() => {
+  let ctx, gain, playing = false, idx = 0, timer, el, vol = .7, pos = 0, startT = 0, ui = null;
+  const songs = [
+    { title: 'Sunrise Loop', artist: 'iOS Rebuilt Band', art: '🌅', bg: 'linear-gradient(#ff9a9e,#fecfef)', bpm: 110, notes: [60, 64, 67, 72, 67, 64, 62, 65, 69, 74, 69, 65] },
+    { title: 'Night Drive', artist: 'Synthwave Kid', art: '🌃', bg: 'linear-gradient(#141e30,#243b55)', bpm: 96, notes: [57, 60, 64, 69, 64, 60, 55, 59, 62, 67, 62, 59] },
+    { title: 'Pixel Party', artist: '8-Bit Heroes', art: '👾', bg: 'linear-gradient(#11998e,#38ef7d)', bpm: 140, notes: [72, 76, 79, 76, 74, 77, 81, 77, 71, 74, 79, 74] },
+  ];
+  const freq = n => 440 * Math.pow(2, (n - 69) / 12);
+  const cur = () => songs[idx];
+  function beep(n, dur) { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'triangle'; o.frequency.value = freq(n); g.gain.setValueAtTime(.0001, ctx.currentTime); g.gain.exponentialRampToValueAtTime(.3, ctx.currentTime + .02); g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + dur); o.connect(g).connect(gain); o.start(); o.stop(ctx.currentTime + dur + .05); }
+  function step() { const s = cur(); if (s.file) return; beep(s.notes[pos % s.notes.length], 60 / s.bpm * .9); if (pos % 4 === 0) beep(s.notes[0] - 24, 60 / s.bpm * 2); pos++; timer = setTimeout(step, 60 / s.bpm * 1000 / 2); }
+  function play() {
+    const s = cur(); playing = true; startT = Date.now();
+    if (s.file) { el = el || new Audio(); if (el.src !== s.file) el.src = s.file; el.volume = vol; el.play().catch(() => {}); el.onended = next; }
+    else { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); ctx.resume(); if (!gain) { gain = ctx.createGain(); gain.connect(ctx.destination); } gain.gain.value = vol; clearTimeout(timer); step(); }
+    sync(); island('🎵 ' + s.title);
+  }
+  function pause() { playing = false; clearTimeout(timer); el && el.pause(); sync(); }
+  function next() { pause(); idx = (idx + 1) % songs.length; pos = 0; play(); }
+  function prev() { pause(); idx = (idx - 1 + songs.length) % songs.length; pos = 0; play(); }
+  function sync() { $('#ccSong').textContent = playing ? cur().title : 'Not Playing'; $('#ccPlay').textContent = playing ? '⏸' : '▶️'; ui && ui(); }
+  function addFile() { const i = document.createElement('input'); i.type = 'file'; i.accept = 'audio/*'; i.onchange = () => { const f = i.files[0]; if (!f) return; songs.push({ title: f.name.replace(/\.[^.]+$/, ''), artist: 'My Music', art: '🎧', bg: 'linear-gradient(#a18cd1,#fbc2eb)', file: URL.createObjectURL(f) }); idx = songs.length - 1; pause(); play(); }; i.click(); }
+  $('#ccPlay').onclick = () => playing ? pause() : play(); $('#ccNext').onclick = next; $('#ccPrev').onclick = prev;
+  return { songs, cur, play, pause, next, prev, addFile, get playing() { return playing; }, set ui(f) { ui = f; }, get idx() { return idx; }, set idx(v) { pause(); idx = v; pos = 0; }, setVol(v) { vol = v; if (gain) gain.gain.value = v; if (el) el.volume = v; }, elapsed: () => playing ? (Date.now() - startT) / 1000 : 0 };
+})();
+defineApp('music', { name: 'Music', icon: '🎵', bg: 'linear-gradient(#fc5c7d,#fa233b)', render(win) {
+  const listView = () => {
+    const b = page(win, 'Library', { actions: [['＋ Add', Music.addFile]] });
+    b.appendChild(list(Music.songs.map((s, i) => ({ left: `<div class="sq" style="width:48px;height:48px;font-size:26px;background:${s.bg}">${s.art}</div>`, title: s.title, sub: s.artist, right: Music.playing && Music.idx === i ? '🔊' : '', onclick: () => { Music.idx = i; Music.play(); player(); } }))));
+    b.appendChild(h('<p style="color:var(--sub);font-size:13px;text-align:center">Tap ＋ Add to play songs from your Files.</p>'));
+    if (Music.playing) { const np = h('<button class="pbtn">▶ Now Playing</button>'); np.onclick = player; b.appendChild(np); }
+  };
+  const player = () => {
+    const b = page(win, '', { back: listView, backLabel: 'Library' });
+    const draw = () => {
+      const s = Music.cur(); b.innerHTML = '';
+      b.appendChild(h(`<div class="art ${Music.playing ? '' : 'paused'}" style="background:${s.bg}">${s.art}</div>`));
+      b.appendChild(h(`<div style="padding:0 6px"><div style="font-size:22px;font-weight:700">${esc(s.title)}</div><div style="color:var(--sub);font-size:18px">${esc(s.artist)}</div></div>`));
+      b.appendChild(h('<div class="progress"><i></i></div>'));
+      const c = h(`<div class="mctl"><button>⏮</button><button>${Music.playing ? '⏸' : '▶️'}</button><button>⏭</button></div>`);
+      c.children[0].onclick = Music.prev; c.children[1].onclick = () => Music.playing ? Music.pause() : Music.play(); c.children[2].onclick = Music.next;
+      b.appendChild(c);
+    };
+    Music.ui = draw; draw();
+    const iv = setInterval(() => { const p = b.querySelector('.progress i'); if (p) p.style.width = (Music.elapsed() % 60) / 60 * 100 + '%'; }, 250);
+    win._cleanup = () => { clearInterval(iv); Music.ui = null; };
+  };
+  listView();
+} });
+
+/* ---------- Camera ---------- */
+defineApp('camera', { name: 'Camera', icon: '📷', bg: 'linear-gradient(#e5e5ea,#8e8e93)', dark: true, fullbleed: true, render(win) {
+  win.style.background = '#000';
+  const v = h('<video autoplay playsinline muted style="flex:1;width:100%;object-fit:cover;min-height:0;background:#111"></video>');
+  const bar = h('<div style="display:flex;justify-content:space-around;align-items:center;padding:20px 0 calc(var(--sab) + 40px)"><div class="sq" style="width:50px;height:50px;background:#333;background-size:cover;cursor:pointer"></div><button style="width:74px;height:74px;border-radius:50%;border:5px solid #fff;background:#fff;outline:3px solid #000;outline-offset:-8px"></button><button style="width:50px;height:50px;border-radius:50%;border:0;background:#333;color:#fff;font-size:22px">🔄</button></div>');
+  const msg = h('<div style="position:absolute;top:45%;left:0;right:0;text-align:center;color:#aaa;padding:20px"></div>');
+  win.append(v, bar, msg);
+  let stream, facing = 'environment';
+  const thumb = bar.children[0]; const ph = store.get('photos', []); if (ph[0]) thumb.style.backgroundImage = `url(${ph[0].src})`;
+  thumb.onclick = () => openApp('photos');
+  const start = async () => {
+    stream && stream.getTracks().forEach(t => t.stop());
+    try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facing }, audio: false }); v.srcObject = stream; msg.textContent = ''; }
+    catch { msg.innerHTML = 'Camera not available here.<br><br>'; const b = h('<button class="pbtn" style="width:auto;padding:10px 20px">Take Photo with System Camera</button>'); b.onclick = async () => { const s = await pickImage(true); if (s) { addPhoto(s); thumb.style.backgroundImage = `url(${s})`; } }; msg.appendChild(b); }
+  };
+  bar.children[1].onclick = () => {
+    if (!stream) return bar.querySelector('.pbtn')?.click();
+    const c = document.createElement('canvas'); const s = Math.min(1, 900 / Math.max(v.videoWidth, v.videoHeight)); c.width = v.videoWidth * s; c.height = v.videoHeight * s; c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+    const src = c.toDataURL('image/jpeg', .75); addPhoto(src); thumb.style.backgroundImage = `url(${src})`;
+    win.style.filter = 'brightness(3)'; setTimeout(() => win.style.filter = '', 120); buzz(30);
+  };
+  bar.children[2].onclick = () => { facing = facing === 'user' ? 'environment' : 'user'; start(); };
+  start();
+  win._cleanup = () => stream && stream.getTracks().forEach(t => t.stop());
+} });
+
+/* ---------- Photos ---------- */
+defineApp('photos', { name: 'Photos', icon: '🌸', bg: 'linear-gradient(135deg,#fff,#f0f0f5)', render(win) {
+  const draw = () => {
+    const ph = store.get('photos', []);
+    const b = page(win, 'Library', { actions: [['＋', async () => { const s = await pickImage(); if (s) { addPhoto(s); draw(); } }]] });
+    b.appendChild(h(`<div style="color:var(--sub);margin:-4px 0 10px">${ph.length} Photos</div>`));
+    if (!ph.length) { b.appendChild(h('<div class="empty">No Photos<br><small>Tap ＋ or use the Camera app</small></div>')); return; }
+    const g = h('<div class="pgrid"></div>');
+    ph.forEach(p => { const d = h('<div></div>'); d.style.backgroundImage = `url(${p.src})`; d.onclick = () => view(p); g.appendChild(d); });
+    b.appendChild(g);
+  };
+  const view = p => {
+    const v = h(`<div class="viewer"><div class="navbar" style="color:#fff"><button class="link">‹ Library</button><span>${fmtDate(p.t)}</span><span></span></div><img src="${p.src}"><div class="vbar"><button class="link">⬆️ Share</button><button class="link">🖼️ Wallpaper</button><button class="link red">🗑️ Delete</button></div></div>`);
+    const btns = $$('button', v);
+    btns[0].onclick = () => v.remove();
+    btns[1].onclick = async () => { try { const blob = await (await fetch(p.src)).blob(); const f = new File([blob], 'photo.jpg', { type: 'image/jpeg' }); if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ files: [f] }); else { const a = document.createElement('a'); a.href = p.src; a.download = 'photo.jpg'; a.click(); } } catch {} };
+    btns[2].onclick = () => { settings.wall = `url(${p.src}) center/cover`; saveSettings(); applyAppearance(); toast('Wallpaper set'); };
+    btns[3].onclick = () => { if (!confirm('Delete photo?')) return; store.set('photos', store.get('photos', []).filter(x => x.id !== p.id)); v.remove(); draw(); };
+    win.appendChild(v);
+  };
+  draw();
+} });
+
+/* ---------- Notes ---------- */
+defineApp('notes', { name: 'Notes', icon: '📝', bg: 'linear-gradient(#fff 30%,#ffd60a 30%)', render(win) {
+  let notes = store.get('notes', [{ id: uid(), text: 'Welcome to iOS Rebuilt 👋\nTap ✏️ to write a note. Everything is saved on your phone and backed up to Cloud.', t: Date.now() }]);
+  const save = () => { store.set('notes', notes); cloudSync(); };
+  const listView = (q = '') => {
+    notes = notes.filter(n => n.text.trim()); save(); notes.sort((a, b) => (b.pin - a.pin) || b.t - a.t);
+    const b = page(win, 'Notes', { actions: [['✏️', () => { const n = { id: uid(), text: '', t: Date.now() }; notes.push(n); edit(n); }]] });
+    const s = h(`<input class="search" placeholder="🔍 Search" value="${esc(q)}">`); s.oninput = () => { const v = s.value; listView(v); const n = win.querySelector('.search'); n.focus(); n.setSelectionRange(v.length, v.length); }; b.appendChild(s);
+    const f = notes.filter(n => n.text.toLowerCase().includes(q.toLowerCase()));
+    if (!f.length) { b.appendChild(h('<div class="empty">No Notes</div>')); return; }
+    b.appendChild(list(f.map(n => { const [t, ...r] = n.text.split('\n'); return { title: (n.pin ? '📌 ' : '') + (t || 'New Note'), sub: fmtDate(n.t) + '  ' + (r.join(' ').slice(0, 50) || 'No additional text'), onclick: () => edit(n) }; })));
+    b.appendChild(h(`<div style="text-align:center;color:var(--sub);font-size:13px">${notes.length} Notes</div>`));
+  };
+  const edit = n => {
+    const b = page(win, '', { back: () => listView(), backLabel: 'Notes', actions: [['📌', () => { n.pin = !n.pin; save(); toast(n.pin ? 'Pinned' : 'Unpinned'); }], ['⬆️', () => navigator.share ? navigator.share({ text: n.text }).catch(() => {}) : navigator.clipboard?.writeText(n.text).then(() => toast('Copied'))], ['🗑️', () => { notes = notes.filter(x => x !== n); save(); listView(); }]] });
+    b.previousSibling.querySelector('h1').remove();
+    const ta = h('<textarea class="note" placeholder="Start typing…"></textarea>'); ta.value = n.text;
+    ta.oninput = () => { n.text = ta.value; n.t = Date.now(); save(); };
+    b.appendChild(ta); if (!n.text) setTimeout(() => ta.focus(), 400);
+  };
+  listView();
+} });
+
+/* ---------- Reminders ---------- */
+defineApp('reminders', { name: 'Reminders', icon: '☑️', bg: '#fff', badge: () => store.get('reminders', []).filter(r => !r.done).length, render(win) {
+  let rs = store.get('reminders', []); let showDone = false;
+  const save = () => { store.set('reminders', rs); cloudSync(); };
+  const draw = () => {
+    const b = page(win, 'Reminders', { actions: [[showDone ? 'Hide Done' : 'Show Done', () => { showDone = !showDone; draw(); }]] });
+    b.previousSibling.querySelector('h1').style.color = '#ff9f0a';
+    const l = h('<div class="list"></div>');
+    rs.filter(r => showDone || !r.done).forEach(r => {
+      const c = h(`<div class="cell"><div class="l"><div class="chk ${r.done ? 'on' : ''}"></div><div><div style="${r.done ? 'color:var(--sub)' : ''}">${esc(r.text)}</div>${r.due ? `<small>⏰ ${esc(new Date(r.due).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }))}</small>` : ''}</div></div><div class="r">⋯</div></div>`);
+      c.querySelector('.chk').onclick = e => { e.stopPropagation(); r.done = !r.done; buzz(); save(); setTimeout(draw, r.done ? 400 : 0); c.querySelector('.chk').classList.toggle('on', r.done); };
+      c.querySelector('.r').onclick = e => { e.stopPropagation(); const a = ask('Edit reminder (empty = delete)', r.text); if (a === null) return; if (!a) rs = rs.filter(x => x !== r); else r.text = a; save(); draw(); };
+      l.appendChild(c);
+    });
+    if (!l.children.length) l.appendChild(h('<div class="empty">All done! 🎉</div>'));
+    b.appendChild(l);
+    const inp = h('<input class="field" placeholder="＋ New Reminder (Enter to add)" enterkeyhint="done">');
+    const due = h('<input class="field" type="datetime-local" style="color:var(--sub)">');
+    inp.onkeydown = e => { if (e.key === 'Enter' && inp.value.trim()) { rs.push({ id: uid(), text: inp.value.trim(), done: false, due: due.value ? new Date(due.value).getTime() : null }); save(); draw(); setTimeout(() => win.querySelector('.field')?.focus(), 50); } };
+    b.append(inp, h('<div class="label" style="margin-top:4px">Remind me at (optional)</div>'), due);
+  };
+  draw();
+} });
+
+/* ---------- Calendar ---------- */
+const dayKey = d => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+defineApp('calendar', { name: 'Calendar', icon: '📅', bg: '#fff', render(win) {
+  let view = new Date(), sel = new Date();
+  const draw = () => {
+    const evs = store.get('events', []);
+    const b = page(win, view.toLocaleDateString([], { month: 'long', year: 'numeric' }), { actions: [['‹', () => { view.setMonth(view.getMonth() - 1); draw(); }], ['Today', () => { view = new Date(); sel = new Date(); draw(); }], ['›', () => { view.setMonth(view.getMonth() + 1); draw(); }]] });
+    b.previousSibling.querySelector('h1').style.fontSize = '28px';
+    const m = h('<div class="month"></div>'); ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(d => m.appendChild(h(`<b>${d}</b>`)));
+    const first = new Date(view.getFullYear(), view.getMonth(), 1), days = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+    for (let i = 0; i < first.getDay(); i++) m.appendChild(h('<span></span>'));
+    for (let d = 1; d <= days; d++) {
+      const dt = new Date(view.getFullYear(), view.getMonth(), d), k = dayKey(dt);
+      const s = h(`<span class="${k === dayKey(new Date()) ? 'today' : ''} ${k === dayKey(sel) ? 'sel' : ''} ${evs.some(e => e.date === k) ? 'has' : ''}">${d}</span>`);
+      s.onclick = () => { sel = dt; draw(); }; m.appendChild(s);
+    }
+    b.appendChild(m);
+    b.appendChild(h(`<div class="label" style="margin-top:20px">${sel.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}</div>`));
+    const de = evs.filter(e => e.date === dayKey(sel)).sort((a, z) => (a.time || '').localeCompare(z.time || ''));
+    b.appendChild(list(de.length ? de.map(e => ({ left: '<div style="width:4px;height:36px;border-radius:2px;background:#ff3b30"></div>', title: e.title, sub: e.time || 'All-day', right: '🗑️', onclick: () => { if (confirm('Delete event?')) { store.set('events', evs.filter(x => x.id !== e.id)); draw(); } } })) : [{ title: 'No Events', sub: '' }]));
+    const add = h('<button class="pbtn">＋ Add Event</button>');
+    add.onclick = () => { const t = ask('Event title'); if (!t) return; const tm = ask('Time (e.g. 14:30) — leave empty for all-day', ''); evs.push({ id: uid(), date: dayKey(sel), title: t, time: tm || '' }); store.set('events', evs); cloudSync(); draw(); };
+    b.appendChild(add);
+  };
+  draw();
+} });
+
+/* ---------- Clock: World, Alarm, Stopwatch, Timer ---------- */
+let alarms = store.get('alarms', []);
+let lastAlarmMin = '';
+function checkAlarms(d) {
+  const hm = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  if (hm === lastAlarmMin) return;
+  alarms.filter(a => a.on && a.time === hm).forEach(a => { notify('clock', 'Alarm', a.label || 'Alarm ⏰'); beepAlarm(); });
+  store.get('reminders', []).filter(r => !r.done && r.due && Math.abs(r.due - d.getTime()) < 30000).forEach(r => notify('reminders', 'Reminder', r.text));
+  lastAlarmMin = hm;
+}
+function beepAlarm() { try { const c = new (window.AudioContext || window.webkitAudioContext)(); for (let i = 0; i < 6; i++) { const o = c.createOscillator(), g = c.createGain(); o.frequency.value = 880; g.gain.value = .2; o.connect(g).connect(c.destination); o.start(c.currentTime + i * .4); o.stop(c.currentTime + i * .4 + .2); } } catch {} buzz([200, 100, 200, 100, 200]); }
+const SW = { start: 0, elapsed: 0, running: false, laps: [] };
+const TM = { end: 0, left: 0, running: false, total: 0 };
+defineApp('clock', { name: 'Clock', icon: '⏰', bg: '#000', dark: true, render(win) {
+  let tab = store.get('clockTab', 'Stopwatch'), raf;
+  const f = ms => { const m = Math.floor(ms / 60000), s = Math.floor(ms / 1000) % 60, c = Math.floor(ms / 10) % 100; return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(c).padStart(2, '0')}`; };
+  const fT = ms => { const s = Math.ceil(ms / 1000); return `${String(Math.floor(s / 3600)).padStart(2, '0')}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
+  const swNow = () => SW.elapsed + (SW.running ? performance.now() - SW.start : 0);
+  const draw = () => {
+    cancelAnimationFrame(raf); store.set('clockTab', tab);
+    win.innerHTML = '';
+    const content = h('<div style="flex:1;display:flex;flex-direction:column;overflow:hidden"></div>'); win.appendChild(content);
+    const tabs = h('<div class="tabs"></div>');
+    [['🌐', 'World Clock'], ['⏰', 'Alarm'], ['⏱️', 'Stopwatch'], ['⏲️', 'Timer']].forEach(([i, n]) => { const t = h(`<button class="${tab === n ? 'on' : ''}" style="${tab === n ? 'color:#ff9f0a' : ''}"><b>${i}</b>${n}</button>`); t.onclick = () => { tab = n; draw(); }; tabs.appendChild(t); });
+    win.appendChild(tabs);
+    if (tab === 'World Clock') {
+      const zones = store.get('zones', ['America/New_York', 'Europe/London', 'Asia/Tokyo', 'Australia/Sydney']);
+      const b = page(content, 'World Clock', { actions: [['＋', () => { const z = ask('Time zone (e.g. Europe/Paris, Asia/Dubai)'); if (!z) return; try { new Intl.DateTimeFormat([], { timeZone: z }); zones.push(z); store.set('zones', zones); draw(); } catch { toast('Unknown time zone'); } }]] });
+      const l = list(zones.map(z => ({ title: z.split('/').pop().replace(/_/g, ' '), sub: z.split('/')[0], right: `<span style="font-size:36px;font-weight:300;color:var(--text)">${new Date().toLocaleTimeString([], { timeZone: z, hour: 'numeric', minute: '2-digit' })}</span>`, onclick: () => { if (confirm('Remove ' + z + '?')) { store.set('zones', zones.filter(x => x !== z)); draw(); } } })));
+      b.appendChild(l);
+    } else if (tab === 'Alarm') {
+      const b = page(content, 'Alarm', { actions: [['＋', () => { const t = ask('Alarm time (24h, e.g. 07:30)'); if (!t || !/^\d{1,2}:\d{2}$/.test(t)) return t && toast('Use HH:MM'); const lb = ask('Label', 'Alarm'); alarms.push({ id: uid(), time: t.padStart(5, '0'), label: lb || 'Alarm', on: true }); store.set('alarms', alarms); draw(); }]] });
+      if (!alarms.length) b.appendChild(h('<div class="empty">No Alarms</div>'));
+      else b.appendChild(list(alarms.map(a => ({ title: '', right: '', onEl: c => { c.querySelector('.l').innerHTML = `<div><div style="font-size:48px;font-weight:300;${a.on ? '' : 'color:var(--sub)'}">${a.time}</div><small>${esc(a.label)}</small></div>`; c.querySelector('.r').appendChild(switchEl(a.on, v => { a.on = v; store.set('alarms', alarms); })); c.onclick = () => { if (confirm('Delete alarm?')) { alarms = alarms.filter(x => x !== a); store.set('alarms', alarms); draw(); } }; } }))));
+      b.appendChild(h('<p style="color:var(--sub);font-size:13px">Alarms ring while iOS Rebuilt is open.</p>'));
+    } else if (tab === 'Stopwatch') {
+      const b = page(content, ''); b.previousSibling.remove(); b.style.paddingTop = 'calc(var(--sat) + 60px)';
+      const out = h(`<div class="bigclock">${f(swNow())}</div>`);
+      const row = h(`<div class="row"><button class="circle">${SW.running ? 'Lap' : 'Reset'}</button><button class="circle ${SW.running ? 'stop' : 'go'}">${SW.running ? 'Stop' : 'Start'}</button></div>`);
+      const laps = h('<div class="laps" style="margin-top:24px"></div>');
+      const drawLaps = () => laps.innerHTML = SW.laps.map((l, i) => `<div><span>Lap ${SW.laps.length - i}</span><span>${f(l)}</span></div>`).join('');
+      row.children[1].onclick = () => { if (SW.running) { SW.elapsed = swNow(); SW.running = false; } else { SW.start = performance.now(); SW.running = true; } buzz(); draw(); };
+      row.children[0].onclick = () => { if (SW.running) { const t = swNow(), prev = SW.laps.reduce((a, b) => a + b, 0); SW.laps.unshift(t - prev); drawLaps(); } else { SW.elapsed = 0; SW.laps = []; draw(); } buzz(); };
+      b.append(out, row, laps); drawLaps();
+      const loop = () => { out.textContent = f(swNow()); raf = requestAnimationFrame(loop); }; loop();
+    } else {
+      const b = page(content, ''); b.previousSibling.remove(); b.style.paddingTop = 'calc(var(--sat) + 60px)';
+      const left = () => TM.running ? Math.max(0, TM.end - Date.now()) : TM.left;
+      if (!TM.running && !TM.left) {
+        const pick = h('<div style="display:flex;gap:10px;justify-content:center;margin:40px 0"><select class="field" style="width:30%"></select><select class="field" style="width:30%"></select><select class="field" style="width:30%"></select></div>');
+        const [hS, mS, sS] = pick.children;
+        for (let i = 0; i < 24; i++) hS.add(new Option(i + ' h', i)); for (let i = 0; i < 60; i++) { mS.add(new Option(i + ' m', i)); sS.add(new Option(i + ' s', i)); }
+        mS.value = 5;
+        const go = h('<div class="row"><span></span><button class="circle go">Start</button></div>');
+        go.children[1].onclick = () => { const ms = (hS.value * 3600 + mS.value * 60 + +sS.value) * 1000; if (!ms) return; TM.total = ms; TM.end = Date.now() + ms; TM.running = true; scheduleTimer(); draw(); };
+        b.append(pick, go);
+        const presets = h('<div style="display:flex;gap:8px;justify-content:center;margin-top:30px"></div>');
+        [1, 3, 5, 10, 25].forEach(m => { const x = h(`<button class="pbtn gray" style="width:auto;padding:8px 14px">${m} min</button>`); x.onclick = () => { TM.total = m * 60000; TM.end = Date.now() + TM.total; TM.running = true; scheduleTimer(); draw(); }; presets.appendChild(x); });
+        b.appendChild(presets);
+      } else {
+        const out = h(`<div class="bigclock">${fT(left())}</div>`);
+        const row = h(`<div class="row"><button class="circle">Cancel</button><button class="circle ${TM.running ? 'pause' : 'go'}">${TM.running ? 'Pause' : 'Resume'}</button></div>`);
+        row.children[0].onclick = () => { TM.running = false; TM.left = 0; clearTimeout(TM.t); draw(); };
+        row.children[1].onclick = () => { if (TM.running) { TM.left = left(); TM.running = false; clearTimeout(TM.t); } else { TM.end = Date.now() + TM.left; TM.running = true; scheduleTimer(); } draw(); };
+        b.append(out, row);
+        const loop = () => { out.textContent = fT(left()); if (TM.running || TM.left) raf = requestAnimationFrame(loop); }; loop();
+      }
+    }
+  };
+  win._cleanup = () => cancelAnimationFrame(raf);
+  draw();
+} });
+function scheduleTimer() { clearTimeout(TM.t); TM.t = setTimeout(() => { TM.running = false; TM.left = 0; notify('clock', 'Timer', 'Timer done! ⏲️'); beepAlarm(); }, TM.end - Date.now()); }
+
+/* ---------- Weather (Open-Meteo, free, no key) ---------- */
+const WX = { 0: ['Clear', '☀️'], 1: ['Mostly Clear', '🌤️'], 2: ['Partly Cloudy', '⛅'], 3: ['Cloudy', '☁️'], 45: ['Fog', '🌫️'], 48: ['Fog', '🌫️'], 51: ['Drizzle', '🌦️'], 53: ['Drizzle', '🌦️'], 55: ['Drizzle', '🌦️'], 61: ['Rain', '🌧️'], 63: ['Rain', '🌧️'], 65: ['Heavy Rain', '🌧️'], 71: ['Snow', '🌨️'], 73: ['Snow', '🌨️'], 75: ['Heavy Snow', '❄️'], 80: ['Showers', '🌦️'], 81: ['Showers', '🌧️'], 82: ['Storms', '⛈️'], 95: ['Thunderstorm', '⛈️'], 96: ['Thunderstorm', '⛈️'], 99: ['Thunderstorm', '⛈️'] };
+defineApp('weather', { name: 'Weather', icon: '⛅', bg: 'linear-gradient(#2a6fdb,#7cb4ff)', dark: true, fullbleed: true, render(win) {
+  win.style.background = 'linear-gradient(#1d4fa8,#5d9cf0)'; win.style.color = '#fff';
+  const b = h('<div class="wbody" style="text-align:center;padding-top:calc(var(--sat) + 60px)"><div style="font-size:30px" class="c">Loading…</div><div style="font-size:96px;font-weight:200" class="t">--°</div><div style="font-size:20px" class="d"></div><div style="font-size:17px;opacity:.8;margin-top:4px" class="hl"></div><div class="hrs" style="margin-top:24px"></div><div class="days" style="margin-top:14px"></div><input class="search" placeholder="🔍 Search for a city" style="margin-top:20px;background:rgba(255,255,255,.2);color:#fff"></div>');
+  win.appendChild(b);
+  const unit = settings.c === '°F' ? '&temperature_unit=fahrenheit' : '';
+  const load = async (la, lo, city) => {
+    try {
+      const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto&forecast_days=7${unit}`).then(r => r.json());
+      const [desc, ico] = WX[r.current.weather_code] || ['', '🌡️'];
+      $('.c', b).textContent = city; $('.t', b).textContent = Math.round(r.current.temperature_2m) + '°'; $('.d', b).textContent = desc;
+      $('.hl', b).textContent = `H:${Math.round(r.daily.temperature_2m_max[0])}°  L:${Math.round(r.daily.temperature_2m_min[0])}°`;
+      store.set('wxcache', { city, temp: r.current.temperature_2m, desc, hi: r.daily.temperature_2m_max[0], lo: r.daily.temperature_2m_min[0] });
+      const nowH = new Date().getHours(), start = r.hourly.time.findIndex(t => new Date(t).getHours() === nowH && new Date(t).getDate() === new Date().getDate());
+      const hrs = r.hourly.time.slice(Math.max(0, start), Math.max(0, start) + 12).map((t, i) => `<div style="text-align:center;min-width:48px"><div style="font-size:13px">${i ? new Date(t).getHours() : 'Now'}</div><div style="font-size:22px;margin:6px 0">${(WX[r.hourly.weather_code[start + i]] || ['', '🌡️'])[1]}</div><div>${Math.round(r.hourly.temperature_2m[start + i])}°</div></div>`).join('');
+      $('.hrs', b).innerHTML = `<div style="background:rgba(255,255,255,.15);border-radius:16px;padding:12px;display:flex;overflow-x:auto;gap:4px">${hrs}</div>`;
+      $('.days', b).innerHTML = `<div style="background:rgba(255,255,255,.15);border-radius:16px;padding:6px 14px;text-align:left">${r.daily.time.map((t, i) => `<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:.5px solid rgba(255,255,255,.2)"><span style="width:60px">${i ? new Date(t + 'T12:00').toLocaleDateString([], { weekday: 'short' }) : 'Today'}</span><span>${(WX[r.daily.weather_code[i]] || ['', '🌡️'])[1]}</span><span style="opacity:.7">${Math.round(r.daily.temperature_2m_min[i])}°</span><span>${Math.round(r.daily.temperature_2m_max[i])}°</span></div>`).join('')}</div>`;
+      store.set('wxloc', { la, lo, city });
+    } catch { $('.c', b).textContent = 'No connection'; }
+  };
+  const saved = store.get('wxloc');
+  const locate = () => navigator.geolocation ? navigator.geolocation.getCurrentPosition(p => load(p.coords.latitude, p.coords.longitude, 'My Location'), () => saved ? load(saved.la, saved.lo, saved.city) : load(40.71, -74.01, 'New York'), { timeout: 8000 }) : load(40.71, -74.01, 'New York');
+  if (saved && saved.city !== 'My Location') load(saved.la, saved.lo, saved.city); else locate();
+  $('input', b).onkeydown = async e => { if (e.key !== 'Enter') return; try { const r = await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&name=' + encodeURIComponent(e.target.value)).then(r => r.json()); const g = r.results?.[0]; if (!g) return toast('City not found'); load(g.latitude, g.longitude, g.name); e.target.value = ''; e.target.blur(); } catch { toast('No connection'); } };
+} });
+
+/* ---------- Maps (OpenStreetMap) ---------- */
+defineApp('maps', { name: 'Maps', icon: '🗺️', bg: 'linear-gradient(#5ac85a,#ffe066)', fullbleed: true, render(win) {
+  const f = h('<iframe class="map" title="Map"></iframe>');
+  const bar = h('<div style="position:absolute;bottom:calc(var(--sab) + 30px);left:12px;right:12px;background:var(--card);border-radius:16px;padding:10px;box-shadow:0 4px 20px rgba(0,0,0,.2);display:flex;gap:8px"><input class="search" style="margin:0" placeholder="🔍 Search Maps"><button class="link">📍</button></div>');
+  const show = (la, lo, z = .02) => f.src = `https://www.openstreetmap.org/export/embed.html?bbox=${lo - z},${la - z},${lo + z},${la + z}&layer=mapnik&marker=${la},${lo}`;
+  const me = () => navigator.geolocation?.getCurrentPosition(p => show(p.coords.latitude, p.coords.longitude), () => show(51.505, -0.09, .05));
+  bar.querySelector('button').onclick = me;
+  bar.querySelector('input').onkeydown = async e => { if (e.key !== 'Enter') return; try { const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(e.target.value)).then(r => r.json()); if (!r[0]) return toast('Not found'); show(+r[0].lat, +r[0].lon); e.target.blur(); } catch { toast('No connection'); } };
+  win.style.position = 'absolute'; win.append(f, bar); show(51.505, -0.09, .05); me();
+} });
+
+/* ---------- Calculator ---------- */
+defineApp('calc', { name: 'Calculator', icon: '🧮', bg: '#1c1c1e', dark: true, render(win) {
+  win.style.background = '#000';
+  const w = h('<div class="calc"><div class="out">0</div><div class="keys"></div></div>'); win.appendChild(w);
+  const out = $('.out', w);
+  let cur = '0', prev = null, op = null, fresh = false;
+  const fmt = n => { if (!isFinite(n)) return 'Error'; const s = String(+parseFloat(n).toPrecision(10)); return s.length > 9 ? (+s).toExponential(4) : (+s).toLocaleString('en-US', { maximumFractionDigits: 8 }); };
+  const show = () => { out.textContent = cur.endsWith('.') ? cur : fmt(cur); out.style.fontSize = out.textContent.length > 7 ? '56px' : '80px'; $('.keys button', w).textContent = cur === '0' && !op ? 'AC' : 'C'; };
+  const calc = (a, b, o) => ({ '+': a + b, '−': a - b, '×': a * b, '÷': a / b })[o];
+  ['AC', '±', '%', '÷', '7', '8', '9', '×', '4', '5', '6', '−', '1', '2', '3', '+', '0', '.', '='].forEach(k => {
+    const b = h(`<button>${k}</button>`); b.className = ['AC', '±', '%'].includes(k) ? 'fn' : '÷×−+='.includes(k) ? 'op' : k === '0' ? 'zero' : '';
+    b.onclick = () => {
+      buzz(); $$('.keys .op', w).forEach(x => x.classList.remove('on')); const key = b.textContent;
+      if (/\d/.test(key)) { cur = fresh || cur === '0' ? key : (cur.replace(/[-.]/g, '').length < 9 ? cur + key : cur); fresh = false; }
+      else if (key === '.') { if (fresh) { cur = '0.'; fresh = false; } else if (!cur.includes('.')) cur += '.'; }
+      else if (key === 'AC') { cur = '0'; prev = op = null; }
+      else if (key === 'C') { cur = '0'; }
+      else if (key === '±') cur = String(-parseFloat(cur));
+      else if (key === '%') cur = String(parseFloat(cur) / 100);
+      else if (key === '=') { if (op !== null) { cur = String(calc(prev, parseFloat(cur), op)); op = null; fresh = true; } }
+      else { if (op !== null && !fresh) cur = String(calc(prev, parseFloat(cur), op)); prev = parseFloat(cur); op = key; fresh = true; b.classList.add('on'); }
+      show();
+    };
+    $('.keys', w).appendChild(b);
+  });
+} });
+
+/* ---------- Compass ---------- */
+defineApp('compass', { name: 'Compass', icon: '🧭', bg: '#000', dark: true, render(win) {
+  win.style.background = '#000';
+  const b = page(win, 'Compass');
+  const deg = h('<div style="text-align:center;font-size:56px;font-weight:200">0°</div>');
+  const c = h('<div class="compass"><b style="top:8px;left:50%;transform:translateX(-50%);color:#ff3b30">N</b><b style="bottom:8px;left:50%;transform:translateX(-50%)">S</b><b style="left:12px;top:50%;transform:translateY(-50%)">W</b><b style="right:12px;top:50%;transform:translateY(-50%)">E</b><div style="position:absolute;left:50%;top:20%;bottom:50%;width:4px;margin-left:-2px;background:#ff3b30;border-radius:2px"></div></div>');
+  const btn = h('<button class="pbtn">Enable Compass</button>');
+  const onOri = e => { const hd = e.webkitCompassHeading ?? (360 - (e.alpha || 0)); c.style.transform = `rotate(${-hd}deg)`; deg.textContent = Math.round(hd) + '° ' + ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(hd / 45) % 8]; };
+  btn.onclick = async () => { try { if (window.DeviceOrientationEvent?.requestPermission) { const p = await DeviceOrientationEvent.requestPermission(); if (p !== 'granted') return toast('Permission denied'); } window.addEventListener('deviceorientation', onOri); btn.remove(); } catch { toast('Compass not available'); } };
+  b.append(c, deg, btn);
+  win._cleanup = () => window.removeEventListener('deviceorientation', onOri);
+} });
+
+/* ---------- Voice Memos ---------- */
+defineApp('voice', { name: 'Voice Memos', icon: '🎙️', bg: '#1c1c1e', dark: true, render(win) {
+  const memos = []; // kept in memory (audio is too big for localStorage)
+  let rec, chunks = [];
+  const draw = () => {
+    const b = page(win, 'All Recordings');
+    if (window._memos?.length) b.appendChild(list(window._memos.map((m, i) => ({ title: 'New Recording ' + (i + 1), sub: fmtTime(m.t), right: '▶️', onclick: () => new Audio(m.url).play() }))));
+    else b.appendChild(h('<div class="empty">No recordings yet</div>'));
+    const btn = h(`<button style="display:block;margin:30px auto;width:70px;height:70px;border-radius:50%;border:4px solid #fff;background:#ff3b30;${rec ? 'border-radius:14px;width:50px;height:50px' : ''}"></button>`);
+    btn.onclick = async () => {
+      if (rec) { rec.stop(); return; }
+      try { const s = await navigator.mediaDevices.getUserMedia({ audio: true }); rec = new MediaRecorder(s); chunks = []; rec.ondataavailable = e => chunks.push(e.data); rec.onstop = () => { s.getTracks().forEach(t => t.stop()); (window._memos = window._memos || []).unshift({ url: URL.createObjectURL(new Blob(chunks)), t: Date.now() }); rec = null; draw(); }; rec.start(); island('🔴 Recording'); draw(); }
+      catch { toast('Microphone not available'); }
+    };
+    b.appendChild(btn);
+    b.appendChild(h('<p style="color:var(--sub);font-size:13px;text-align:center">Recordings last until you close iOS Rebuilt.</p>'));
+  };
+  draw();
+} });
+
+/* ---------- Files ---------- */
+defineApp('files', { name: 'Files', icon: '📁', bg: 'linear-gradient(#fff,#e3f0ff)', render(win) {
+  const b = page(win, 'Browse');
+  const all = store.all(); const kb = k => ((JSON.stringify(all[k] || '').length) / 1024).toFixed(1) + ' KB';
+  b.appendChild(h('<div class="label">Cloud Drive</div>'));
+  b.appendChild(list([
+    { icon: '📝', bg: '#ffd60a', title: 'Notes', sub: (all.notes || []).length + ' items · ' + kb('notes'), onclick: () => openApp('notes') },
+    { icon: '🌸', bg: '#ff9f0a', title: 'Photos', sub: (all.photos || []).length + ' items · ' + kb('photos'), onclick: () => openApp('photos') },
+    { icon: '💬', bg: '#34c759', title: 'Messages', sub: Object.keys(all.chats || {}).length + ' chats · ' + kb('chats'), onclick: () => openApp('messages') },
+    { icon: '☑️', bg: '#ff9500', title: 'Reminders', sub: (all.reminders || []).length + ' items', onclick: () => openApp('reminders') },
+    { icon: '📅', bg: '#ff3b30', title: 'Calendar', sub: (all.events || []).length + ' events', onclick: () => openApp('calendar') },
+  ]));
+  b.appendChild(h('<div class="label">Actions</div>'));
+  b.appendChild(list([{ icon: '💾', bg: '#5856d6', title: 'Export Everything', onclick: exportBackup }, { icon: '📥', bg: '#ff9500', title: 'Import Backup', onclick: importBackup }, { icon: '📄', bg: '#007aff', title: 'Export Notes as Text', onclick: () => { const t = store.get('notes', []).map(n => n.text).join('\n\n———\n\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain' })); a.download = 'notes.txt'; a.click(); } }]));
+} });
+
+/* ---------- Health (step-ish counter via motion + water tracker) ---------- */
+defineApp('health', { name: 'Health', icon: '❤️', bg: '#fff', render(win) {
+  const today = dayKey(new Date());
+  const hd = store.get('health', {}); hd[today] = hd[today] || { water: 0, steps: 0, mood: '' };
+  const save = () => store.set('health', hd);
+  const draw = () => {
+    const d = hd[today]; const b = page(win, 'Summary');
+    const card = (ico, title, val, color, extra = '') => h(`<div class="list" style="padding:14px 16px"><div style="color:${color};font-weight:600">${ico} ${title}</div><div style="font-size:30px;font-weight:700;margin-top:6px">${val}</div>${extra}</div>`);
+    const w = card('💧', 'Water', d.water + ' <span style="font-size:16px;color:var(--sub)">glasses</span>', '#32ade6', '<div style="display:flex;gap:8px;margin-top:8px"><button class="pbtn gray" style="margin:0">− 1</button><button class="pbtn" style="margin:0;background:#32ade6">＋ 1</button></div>');
+    $$('button', w)[0].onclick = () => { d.water = Math.max(0, d.water - 1); save(); draw(); }; $$('button', w)[1].onclick = () => { d.water++; save(); draw(); buzz(); };
+    const s = card('🔥', 'Steps', d.steps.toLocaleString(), '#ff3b30', '<button class="pbtn gray" style="margin:8px 0 0">Count steps while open</button>');
+    $('button', s).onclick = async () => { try { if (window.DeviceMotionEvent?.requestPermission) await DeviceMotionEvent.requestPermission(); let last = 0; const fn = e => { const a = e.accelerationIncludingGravity; if (!a) return; const m = Math.hypot(a.x, a.y, a.z); if (m > 13 && Date.now() - last > 350) { last = Date.now(); d.steps++; save(); const v = s.querySelector('div:nth-child(2)'); if (v) v.textContent = d.steps.toLocaleString(); } }; window.addEventListener('devicemotion', fn); win._cleanup = () => window.removeEventListener('devicemotion', fn); toast('Counting… walk with your phone'); } catch { toast('Motion not available'); } };
+    const m = card('🧠', 'Mood', d.mood || 'How do you feel?', '#5856d6', '<div style="display:flex;justify-content:space-between;font-size:30px;margin-top:8px">' + ['😫', '😕', '😐', '🙂', '🤩'].map(x => `<span style="cursor:pointer">${x}</span>`).join('') + '</div>');
+    $$('span', m).forEach(x => x.onclick = () => { d.mood = x.textContent; save(); draw(); });
+    b.append(w, s, m);
+  };
+  draw();
+} });
+
+/* ---------- News (Hacker News, public API) ---------- */
+defineApp('news', { name: 'News', icon: '📰', bg: 'linear-gradient(#ff5a5f,#fa233b)', render(win) {
+  const b = page(win, 'Top Stories'); b.appendChild(h('<div class="empty">Loading…</div>'));
+  fetch('https://hacker-news.firebaseio.com/v0/topstories.json').then(r => r.json()).then(ids => Promise.all(ids.slice(0, 20).map(id => fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(r => r.json())))).then(items => {
+    b.innerHTML = ''; b.appendChild(list(items.filter(Boolean).map(it => ({ title: it.title, sub: `▲ ${it.score} · ${it.by} · ${it.url ? new URL(it.url).hostname : 'news.ycombinator.com'}`, onclick: () => window.open(it.url || `https://news.ycombinator.com/item?id=${it.id}`, '_blank') }))));
+  }).catch(() => { b.innerHTML = '<div class="empty">No connection</div>'; });
+} });
+
+/* ---------- Tips ---------- */
+defineApp('tips', { name: 'Tips', icon: '💡', bg: 'linear-gradient(#ffd60a,#ff9f0a)', render(win) {
+  const b = page(win, 'Tips');
+  [['🔓', 'Unlock', 'Swipe up on the lock screen. Set a passcode in Settings → Face ID & Passcode.'], ['🎛️', 'Control Center', 'Swipe down from the top (or tap the status bar). Flashlight, dark mode, music, brightness.'], ['🔀', 'App Switcher', 'Swipe up on the bar at the bottom of the home screen, or swipe up and hold in an app. Flick cards up to close.'], ['✏️', 'Edit Home Screen', 'Long-press any icon. Tap two icons to swap, tap − to remove. Get apps back in the App Store.'], ['☁️', 'Cloud', 'Sign in from Settings to back up everything. Download a backup file to move to another phone.'], ['💬', 'Siri', 'Open Messages and chat with Siri: ask for the time, a joke, the weather, or some math.'], ['📲', 'Install', 'In Safari tap Share → Add to Home Screen for the full-screen app experience.'], ['🛠️', 'Make it better', 'iOS Rebuilt is open source! Add your own app on GitHub: github.com/mrcodelover1211/IOS-rebuilt-']].forEach(([i, t, d]) => b.appendChild(h(`<div class="list" style="padding:16px"><div style="font-size:32px">${i}</div><div style="font-weight:700;font-size:18px;margin:6px 0">${t}</div><div style="color:var(--sub)">${d}</div></div>`)));
+} });
+
+/* ---------- App Store ---------- */
+defineApp('appstore', { name: 'App Store', icon: '🛍️', bg: 'linear-gradient(#1ac8fc,#1a73f5)', render(win) {
+  const draw = () => {
+    const b = page(win, 'Apps');
+    b.appendChild(h('<div style="background:linear-gradient(135deg,#5b4bff,#ff8a5b);color:#fff;border-radius:18px;padding:20px;margin-bottom:20px"><div style="font-size:12px;opacity:.8;font-weight:600">OPEN SOURCE</div><div style="font-size:24px;font-weight:700;margin:4px 0">Build your own app</div><div style="opacity:.9">Every app here is ~50 lines of JavaScript. Fork iOS Rebuilt on GitHub and add yours.</div></div>'));
+    Object.values(APPS).filter(a => !a.hidden && !DOCK.includes(a.id)).forEach(a => {
+      const inst = !removed.includes(a.id);
+      const c = h(`<div class="store-card"><div class="icon" style="background:${a.bg}">${a.icon}</div><div style="flex:1"><div style="font-weight:600">${esc(a.name)}</div><small style="color:var(--sub)">${inst ? 'Installed' : 'Free'}</small></div><button class="getbtn">${inst ? 'OPEN' : 'GET'}</button></div>`);
+      $('button', c).onclick = () => { if (inst) openApp(a.id); else { $('button', c).textContent = '⏳'; setTimeout(() => { installApp(a.id); toast(a.name + ' installed'); draw(); }, 700); } };
+      b.appendChild(c);
+    });
+  };
+  draw();
+} });
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+applyAppearance();
+renderHome();
+renderLockNotes();
+tick(); setInterval(tick, 1000);
+if (!store.get('welcomed')) { store.set('welcomed', true); setTimeout(() => notify('tips', 'Welcome to iOS Rebuilt', 'Swipe up to unlock. Open Tips to learn the gestures.'), 1200); }
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>
