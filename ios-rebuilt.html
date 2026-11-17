@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="iOS">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAE/ElEQVR4nO3aTXJTRxSG4b4q7YEAawCTFRglI5lJxhnGyPNgwyISS8xjWAZmkICTFdjOHmLCLDtwBqQU/R1h43t13na9T/WAclG+/cltfXXaar7/7p8irdIvl5fZexBUL3sD4uo32TsQVr8Ua0Wr9T0bilgrClkrCjmtKGStKOQlmELWikLWikJOKwp5CaaQtaKQtaKQ04pC1opCXoIpZK0oZK0o5LSikJdgCtVaK6/f3MnewvXsPvmYvYVra37Y+ZC9h2t4/ear7C3c1O6Tv7O3cFU1TSu34GSUqlI0uzW8c7yq5wW9uqf4t5Bmd3iRvYfPeHV8d/mLT2s401MrIxR8CvrhWH5Z4S/oenXF6TWlkNeC0c6H9C3dZI2WjkL6ltasXimX2HU0/3s22rlI39LN12hn7q366Phu+pai1cveQLiOju/NnYzhRfqW2lqj4cL5uJe+pZWLWyuz9oYX6ftpd+3Nn4/0/axctfxtpYpN3gQxIPQS7Je396f/3hv+lbiT7szmms3LUcHfVvg7bAUwZg2fBOPvsBW8mNBaEYG1QgGMWcW0wt9hK3Axa/gkGH+HreDFtFYogDGtFQ5cTKcVhawVCmBML8EweDGtFYWsFQpgTKcVDlxML8EweDGtFQpgTGuFAxfTaUUha4UCGNNLMAxeTGtFIWuFAhjTaYUDF9NLMAxeTGuFAhjTWuHAxXRaUchaoQDG9BIMgxfTWlHIWqEAxnRa4cDF9BIMgxfTWqEAxrRWOHAxnVYUslYogDG9BMPgxbRWFLJWKIAxnVY4cDG9BMPgxbRWKIAxrRUOXEynFYWsFQpgTC/BMHgxrRWFrBUKYEynFQ5cTC/BMHgxrRUKYExrhQMX02lFIWuFAhjTSzAMXkxrRSFrhQIY02mFAxfTSzAMXkxrhQIY01rhwMV0WlHIWqEAxvQSDIMX01pRyFqhAMZ0WuHAxfQSDIMX01qhAMa0VjhwMZ1WFLJWKIAxvQTD4MW0VhSyViiAMZ1WOHAxvQTD4MW0ViiAMa0VDlxMpxWFrBUKYEwvwTB4Ma0VhawVCmBMpxUOXEwvwTB4Ma0VCmBMa4UDF9NpRSFrhQIY00swDF5Ma0Uha4UCGNNphQMX00swDF5Ma4UCGNNa4cDFdFpRyFqhAMb0EgyDF9NaUchaoQDGdFrhwMX0EgyDF9NaoQDGtFb+8+J0e/rvn77+YwNPXIL7QfSzN5Bv9ljMfiXpiID0mlKAa1anD1o+GVMvTrdvTcwvWxVcgj0/3f750e85z+7yxXl+9nhjz/oy0EuwzZyGxR/P9f9DW9JO/1oVTCtl6R349j2a+VPolXJJXf87OHvc9SNinaQ7mHlPOnx0kv1Sr1697A2E63DrZP58DNp/StLZODgbdH/8WljQaeXTGi+cj/NBp99/2XjrpPVQB+eDrh/R1iLXyqc1Z/980On37/p9Y3/xZLzPfnnXrebw4bvPvUDJ9s+/Wf7ieOt9p99/A49o8ft3pBnjD0cp5Vnw86vXBH8ySinN+MFv2Xu4qmd/fpu9hXZMaviFLNhLsJVqeU3XmDx8V1GKZlLPO8esH2t7F3lZz5mYaiYPfs3eg6Bq+CSYktTxtxWlqOKTYMpR07SiDbNWFKrgk2DKYq0oZK0o5LSikJdgClkrClkrCjmtKGStKOQlmELWikLWikJOKwp5CaaQtaKQtaKQ04pC/wK+foL83/266AAAAABJRU5ErkJggg==">
+<title>iOS Rebuilt</title>
+<style>
+:root {
+  --wall: linear-gradient(160deg, #5b4bff 0%, #c14bd8 50%, #ff8a5b 100%);
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+html, body { height: 100%; overflow: hidden; background: #000; color: #fff; font-family: var(--font); overscroll-behavior: none; touch-action: manipulation; }
+#phone { position: fixed; inset: 0; background: var(--wall); background-size: cover; background-position: center; }
+
+/* Status bar */
+.status { position: absolute; top: 0; left: 0; right: 0; height: calc(var(--sat) + 28px); padding: calc(var(--sat) + 6px) 26px 0; display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; z-index: 50; pointer-events: none; }
+.status .icons { display: flex; gap: 6px; align-items: center; }
+.batt { width: 25px; height: 12px; border: 1.5px solid currentColor; border-radius: 4px; padding: 1px; opacity: .9; }
+.batt i { display: block; height: 100%; width: 80%; background: currentColor; border-radius: 2px; }
+
+/* Lock screen */
+#lock { position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; background: inherit; background: var(--wall); background-size: cover; background-position: center; transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s; }
+#lock.hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+#lock .date { margin-top: calc(var(--sat) + 60px); font-size: 20px; font-weight: 500; opacity: .9; }
+#lock .time { font-size: 92px; font-weight: 600; letter-spacing: -2px; line-height: 1; }
+#lock .hint { position: absolute; bottom: calc(var(--sab) + 40px); font-size: 14px; opacity: .8; animation: bob 2s infinite; }
+#lock .bar { position: absolute; bottom: calc(var(--sab) + 10px); width: 134px; height: 5px; background: #fff; border-radius: 3px; }
+@keyframes bob { 50% { transform: translateY(-6px); opacity: .5; } }
+
+/* Home screen */
+#home { position: absolute; inset: 0; padding: calc(var(--sat) + 44px) 22px 0; transition: transform .3s, filter .3s; }
+#home.behind { transform: scale(.92); filter: blur(6px) brightness(.7); }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); row-gap: 24px; column-gap: 12px; }
+.app { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+.icon { width: 62px; height: 62px; border-radius: 15px; display: grid; place-items: center; font-size: 32px; box-shadow: 0 4px 12px rgba(0,0,0,.25); transition: transform .15s; }
+.app:active .icon { transform: scale(.88); filter: brightness(.8); }
+.app span { font-size: 12px; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.wiggle .icon { animation: wig .25s infinite alternate; }
+@keyframes wig { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
+.dock { position: absolute; left: 12px; right: 12px; bottom: calc(var(--sab) + 12px); padding: 14px 16px; border-radius: 32px; background: rgba(255,255,255,.22); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); display: flex; justify-content: space-around; }
+.dock .app span { display: none; }
+.home-bar { position: absolute; bottom: calc(var(--sab) + 4px); left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.6); }
+
+/* App windows */
+.window { position: absolute; inset: 0; z-index: 30; background: #000; display: flex; flex-direction: column; transform: scale(.2); opacity: 0; pointer-events: none; transition: transform .35s cubic-bezier(.2,.9,.25,1), opacity .25s; border-radius: 40px; overflow: hidden; }
+.window.open { transform: scale(1); opacity: 1; pointer-events: auto; border-radius: 0; }
+.window.light { background: #f2f2f7; color: #000; }
+.window header { padding: calc(var(--sat) + 40px) 20px 10px; font-size: 34px; font-weight: 700; }
+.window .body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px; }
+.closer { position: absolute; bottom: 0; left: 0; right: 0; height: calc(var(--sab) + 30px); display: flex; justify-content: center; align-items: flex-end; padding-bottom: calc(var(--sab) + 6px); z-index: 5; }
+.closer i { width: 134px; height: 5px; border-radius: 3px; background: currentColor; opacity: .6; }
+
+/* Calculator */
+.calc { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding: 0 16px calc(var(--sab) + 36px); }
+.calc .out { font-size: 80px; font-weight: 300; text-align: right; padding: 0 12px 10px; overflow: hidden; white-space: nowrap; }
+.keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.keys button { aspect-ratio: 1; border: 0; border-radius: 50%; font-size: 32px; font-family: var(--font); background: #333; color: #fff; }
+.keys button:active { filter: brightness(1.6); }
+.keys .fn { background: #a5a5a5; color: #000; }
+.keys .op { background: #ff9f0a; }
+.keys .op.on { background: #fff; color: #ff9f0a; }
+.keys .zero { grid-column: span 2; aspect-ratio: auto; border-radius: 40px; text-align: left; padding-left: 30px; }
+
+/* Notes */
+.note-list { background: #fff; border-radius: 12px; overflow: hidden; }
+.note-item { padding: 12px 16px; border-bottom: 1px solid #e5e5ea; }
+.note-item b { display: block; font-size: 17px; }
+.note-item small { color: #8e8e93; }
+.btn { background: none; border: 0; color: #e0a800; font-size: 17px; font-family: var(--font); padding: 8px 0; }
+textarea { width: 100%; height: 60vh; border: 0; background: transparent; font: 17px var(--font); resize: none; outline: none; user-select: text; -webkit-user-select: text; color: inherit; }
+.toolbar { display: flex; justify-content: space-between; padding: calc(var(--sat) + 8px) 16px 0; }
+
+/* Clock */
+.big { font-size: 76px; font-weight: 200; text-align: center; margin: 40px 0; font-variant-numeric: tabular-nums; }
+.row { display: flex; justify-content: space-between; padding: 0 10px; }
+.circle { width: 84px; height: 84px; border-radius: 50%; border: 3px solid #000; outline: 2px solid #333; font-size: 17px; font-family: var(--font); color: #fff; background: #333; }
+.circle.go { background: #0a3a17; color: #30d158; outline-color: #0a3a17; }
+.circle.stop { background: #3a0f0d; color: #ff453a; outline-color: #3a0f0d; }
+.laps div { display: flex; justify-content: space-between; padding: 12px 6px; border-bottom: 1px solid #222; font-variant-numeric: tabular-nums; }
+
+/* Settings */
+.group { background: #fff; border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+.group .cell { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e5ea; font-size: 17px; }
+.label { font-size: 13px; color: #6d6d72; text-transform: uppercase; margin: 0 16px 6px; }
+.walls { display: flex; gap: 10px; padding: 12px; overflow-x: auto; }
+.walls div { min-width: 56px; height: 100px; border-radius: 10px; border: 3px solid transparent; }
+.walls div.sel { border-color: #007aff; }
+
+/* Control Center */
+#cc { position: absolute; inset: 0; z-index: 45; background: rgba(0,0,0,.35); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: calc(var(--sat) + 60px) 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-content: start; transform: translateY(-100%); transition: transform .35s cubic-bezier(.2,.9,.25,1); }
+#cc.open { transform: none; }
+.tile { background: rgba(255,255,255,.18); border-radius: 22px; padding: 16px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.tog { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.25); border: 0; font-size: 24px; }
+.tog.on { background: #007aff; }
+.tog.on.orange { background: #ff9f0a; }
+.slider { background: rgba(255,255,255,.18); border-radius: 22px; height: 150px; position: relative; overflow: hidden; }
+.slider i { position: absolute; bottom: 0; left: 0; right: 0; background: #fff; height: 60%; }
+.slider span { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-size: 24px; mix-blend-mode: difference; }
+#dim { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 100; }
+</style>
+</head>
+<body>
+<div id="phone">
+  <div class="status"><span id="sbTime">9:41</span><span class="icons">📶 <span class="batt"><i></i></span></span></div>
+
+  <div id="home">
+    <div class="grid" id="grid"></div>
+    <div class="dock" id="dock"></div>
+    <div class="home-bar"></div>
+  </div>
+
+  <div id="lock">
+    <div class="date" id="lockDate"></div>
+    <div class="time" id="lockTime"></div>
+    <div class="hint">⌃ Swipe up to open</div>
+    <div class="bar"></div>
+  </div>
+
+  <div id="cc">
+    <div class="tile">
+      <button class="tog on" data-t>✈️</button><button class="tog on" data-t>📶</button>
+      <button class="tog on" data-t>🛜</button><button class="tog" data-t>🔵</button>
+    </div>
+    <div class="tile">
+      <button class="tog" data-t>🔒</button><button class="tog orange" data-t>🌙</button>
+      <button class="tog" data-t id="torch">🔦</button><button class="tog" data-t>⏱️</button>
+    </div>
+    <div class="slider" id="bright"><i></i><span>☀️</span></div>
+    <div class="slider" id="vol"><i></i><span>🔊</span></div>
+  </div>
+
+  <!-- Calculator -->
+  <div class="window" id="w-calc">
+    <div class="calc">
+      <div class="out" id="calcOut">0</div>
+      <div class="keys" id="calcKeys"></div>
+    </div>
+    <div class="closer"><i></i></div>
+  </div>
+
+  <!-- Notes -->
+  <div class="window light" id="w-notes">
+    <div id="notesList">
+      <header>Notes</header>
+      <div class="body"><div class="note-list" id="noteItems"></div>
+        <p style="text-align:center;margin:20px"><button class="btn" id="newNote">✏️ New Note</button></p></div>
+    </div>
+    <div id="notesEdit" style="display:none;flex:1;flex-direction:column">
+      <div class="toolbar"><button class="btn" id="noteBack">‹ Notes</button><button class="btn" id="noteDel" style="color:#ff3b30">Delete</button></div>
+      <div class="body" style="padding-top:10px"><textarea id="noteText" placeholder="Start typing…"></textarea></div>
+    </div>
+    <div class="closer"><i></i></div>
+  </div>
+
+  <!-- Clock / Stopwatch -->
+  <div class="window" id="w-clock">
+    <header>Stopwatch</header>
+    <div class="body">
+      <div class="big" id="swOut">00:00.00</div>
+      <div class="row"><button class="circle" id="swLap">Lap</button><button class="circle go" id="swGo">Start</button></div>
+      <div class="laps" id="laps" style="margin-top:24px"></div>
+    </div>
+    <div class="closer"><i></i></div>
+  </div>
+
+  <!-- Settings -->
+  <div class="window light" id="w-settings">
+    <header>Settings</header>
+    <div class="body">
+      <div class="label">Wallpaper</div>
+      <div class="group"><div class="walls" id="walls"></div></div>
+      <div class="label">General</div>
+      <div class="group">
+        <div class="cell"><span>About</span><span style="color:#8e8e93">iOS Rebuilt v1</span></div>
+        <div class="cell" id="wiggleCell"><span>Edit Home Screen</span><span style="color:#8e8e93">›</span></div>
+        <div class="cell" id="resetCell"><span style="color:#ff3b30">Reset Everything</span></div>
+      </div>
+      <p style="color:#8e8e93;font-size:13px;margin:0 16px 40px">Tip: swipe down from the top of the home screen for Control Center. Long-press an icon to jiggle.</p>
+    </div>
+    <div class="closer"><i></i></div>
+  </div>
+
+  <!-- Weather -->
+  <div class="window" id="w-weather" style="background:linear-gradient(#2a6fdb,#7cb4ff)">
+    <div class="body" style="text-align:center;padding-top:calc(var(--sat) + 70px)">
+      <div style="font-size:30px" id="wxCity">Locating…</div>
+      <div style="font-size:96px;font-weight:200" id="wxTemp">--°</div>
+      <div style="font-size:20px" id="wxDesc"></div>
+      <div style="font-size:17px;opacity:.8;margin-top:6px" id="wxHL"></div>
+    </div>
+    <div class="closer"><i></i></div>
+  </div>
+</div>
+<div id="dim"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const store = {
+  get: (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+const buzz = () => navigator.vibrate && navigator.vibrate(8);
+
+/* ---------- Clock ---------- */
+function tick() {
+  const d = new Date();
+  const t = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(/\s?[AP]M/i, '');
+  $('#sbTime').textContent = t;
+  $('#lockTime').textContent = t;
+  $('#lockDate').textContent = d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+}
+tick(); setInterval(tick, 1000);
+
+/* ---------- Lock screen (swipe up or tap) ---------- */
+let ly = null;
+const lock = $('#lock');
+lock.addEventListener('touchstart', e => ly = e.touches[0].clientY, { passive: true });
+lock.addEventListener('touchmove', e => { const dy = Math.min(0, e.touches[0].clientY - ly); lock.style.transition = 'none'; lock.style.transform = `translateY(${dy}px)`; }, { passive: true });
+lock.addEventListener('touchend', e => {
+  const dy = e.changedTouches[0].clientY - ly; lock.style.transition = ''; lock.style.transform = '';
+  if (dy < -80) { lock.classList.add('hidden'); buzz(); }
+});
+lock.addEventListener('click', () => lock.classList.add('hidden'));
+document.addEventListener('visibilitychange', () => { if (document.hidden) { lock.classList.remove('hidden'); closeAll(); } });
+
+/* ---------- Home screen ---------- */
+const APPS = {
+  calc:     { name: 'Calculator', icon: '🧮', bg: '#1c1c1e' },
+  notes:    { name: 'Notes',      icon: '📝', bg: 'linear-gradient(#fff 30%,#ffd60a 30%)' },
+  clock:    { name: 'Clock',      icon: '⏱️', bg: '#000' },
+  weather:  { name: 'Weather',    icon: '⛅', bg: 'linear-gradient(#2a6fdb,#7cb4ff)' },
+  settings: { name: 'Settings',   icon: '⚙️', bg: 'linear-gradient(#aeaeb2,#636366)' },
+  photos:   { name: 'Camera',     icon: '📷', bg: 'linear-gradient(#e5e5ea,#8e8e93)' },
+  maps:     { name: 'Maps',       icon: '🗺️', bg: 'linear-gradient(#5ac85a,#ffe066)' },
+  safari:   { name: 'Safari',     icon: '🧭', bg: 'linear-gradient(#fff,#d1e8ff)' },
+};
+let order = store.get('order', ['calc', 'notes', 'clock', 'weather', 'settings', 'photos', 'maps']);
+const dockApps = ['safari', 'notes', 'calc', 'settings'];
+
+function appEl(id) {
+  const a = APPS[id], el = document.createElement('div');
+  el.className = 'app'; el.dataset.id = id;
+  el.innerHTML = `<div class="icon" style="background:${a.bg}">${a.icon}</div><span>${a.name}</span>`;
+  let timer;
+  el.addEventListener('touchstart', () => timer = setTimeout(() => { toggleWiggle(true); buzz(); }, 550), { passive: true });
+  el.addEventListener('touchend', () => clearTimeout(timer));
+  el.addEventListener('touchmove', () => clearTimeout(timer), { passive: true });
+  el.addEventListener('click', () => onAppTap(id, el));
+  return el;
+}
+function renderHome() {
+  const g = $('#grid'); g.innerHTML = ''; order.forEach(id => g.appendChild(appEl(id)));
+  const d = $('#dock'); d.innerHTML = ''; dockApps.forEach(id => d.appendChild(appEl(id)));
+}
+let wiggling = false, picked = null;
+function toggleWiggle(on) { wiggling = on; $('#grid').classList.toggle('wiggle', on); picked = null; }
+function onAppTap(id, el) {
+  if (wiggling) { // tap two icons to swap them
+    if (!order.includes(id)) return;
+    if (!picked) { picked = id; el.style.opacity = .5; return; }
+    const i = order.indexOf(picked), j = order.indexOf(id);
+    [order[i], order[j]] = [order[j], order[i]]; store.set('order', order);
+    renderHome(); toggleWiggle(true); buzz(); return;
+  }
+  openApp(id);
+}
+$('#home').addEventListener('click', e => { if (wiggling && e.target.id === 'home') toggleWiggle(false); });
+renderHome();
+
+/* ---------- Windows ---------- */
+function openApp(id) {
+  if (id === 'safari') return location.href = 'https://www.google.com';
+  if (id === 'maps') return location.href = 'https://maps.apple.com';
+  if (id === 'photos') return pickPhoto();
+  const w = $('#w-' + id); if (!w) return;
+  w.classList.add('open'); $('#home').classList.add('behind'); buzz();
+  if (id === 'notes') showNotesList();
+  if (id === 'weather') loadWeather();
+}
+function closeAll() { document.querySelectorAll('.window.open').forEach(w => w.classList.remove('open')); $('#home').classList.remove('behind'); }
+document.querySelectorAll('.closer').forEach(c => {
+  let y0;
+  c.addEventListener('touchstart', e => y0 = e.touches[0].clientY, { passive: true });
+  c.addEventListener('touchend', e => { if (y0 - e.changedTouches[0].clientY > 20) closeAll(); });
+  c.addEventListener('click', closeAll);
+});
+
+/* ---------- Control Center: swipe down from top of home ---------- */
+let cy = null;
+$('#home').addEventListener('touchstart', e => { cy = e.touches[0].clientY < 90 ? e.touches[0].clientY : null; }, { passive: true });
+$('#home').addEventListener('touchend', e => { if (cy !== null && e.changedTouches[0].clientY - cy > 60) $('#cc').classList.add('open'); cy = null; });
+$('#cc').addEventListener('click', e => { if (e.target.id === 'cc') $('#cc').classList.remove('open'); });
+let ccy;
+$('#cc').addEventListener('touchstart', e => ccy = e.touches[0].clientY, { passive: true });
+$('#cc').addEventListener('touchend', e => { if (ccy - e.changedTouches[0].clientY > 60) $('#cc').classList.remove('open'); });
+document.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => { b.classList.toggle('on'); buzz(); }));
+$('#torch').addEventListener('click', () => { $('#dim').style.background = $('#torch').classList.contains('on') ? '#fff' : '#000'; $('#dim').style.opacity = $('#torch').classList.contains('on') ? 1 : 1 - bright; if ($('#torch').classList.contains('on')) $('#dim').style.pointerEvents = 'auto'; else $('#dim').style.pointerEvents = 'none'; });
+$('#dim').addEventListener('click', () => $('#torch').click());
+let bright = 1;
+function slider(el, cb) {
+  const set = y => { const r = el.getBoundingClientRect(); const v = Math.max(0, Math.min(1, (r.bottom - y) / r.height)); el.querySelector('i').style.height = v * 100 + '%'; cb(v); };
+  el.addEventListener('touchmove', e => { e.stopPropagation(); set(e.touches[0].clientY); }, { passive: true });
+  el.addEventListener('touchstart', e => { e.stopPropagation(); set(e.touches[0].clientY); }, { passive: true });
+  el.addEventListener('click', e => set(e.clientY));
+}
+slider($('#bright'), v => { bright = .25 + v * .75; $('#dim').style.background = '#000'; $('#dim').style.opacity = 1 - bright; });
+slider($('#vol'), () => {});
+$('#bright i').style.height = '100%';
+
+/* ---------- Calculator ---------- */
+(() => {
+  const keys = ['AC','±','%','÷','7','8','9','×','4','5','6','−','1','2','3','+','0','.','='];
+  let cur = '0', prev = null, op = null, fresh = false;
+  const out = $('#calcOut');
+  const fmt = n => { const s = String(+parseFloat(n).toPrecision(10)); return s.length > 9 ? (+s).toExponential(4) : s; };
+  const show = () => { out.textContent = cur.endsWith('.') ? cur : fmt(cur); out.style.fontSize = out.textContent.length > 6 ? '56px' : '80px'; };
+  const calc = (a, b, o) => ({ '+': a + b, '−': a - b, '×': a * b, '÷': b === 0 ? NaN : a / b })[o];
+  keys.forEach(k => {
+    const b = document.createElement('button'); b.textContent = k;
+    b.className = ['AC','±','%'].includes(k) ? 'fn' : ['÷','×','−','+','='].includes(k) ? 'op' : k === '0' ? 'zero' : '';
+    b.onclick = () => {
+      buzz(); document.querySelectorAll('.keys .op').forEach(x => x.classList.remove('on'));
+      if (/[0-9]/.test(k)) { cur = fresh || cur === '0' ? k : (cur.length < 9 ? cur + k : cur); fresh = false; }
+      else if (k === '.') { if (fresh) { cur = '0.'; fresh = false; } else if (!cur.includes('.')) cur += '.'; }
+      else if (k === 'AC') { cur = '0'; prev = op = null; }
+      else if (k === '±') cur = String(-parseFloat(cur));
+      else if (k === '%') cur = String(parseFloat(cur) / 100);
+      else if (k === '=') { if (op !== null) { cur = String(calc(prev, parseFloat(cur), op)); op = null; fresh = true; } }
+      else { if (op !== null && !fresh) cur = String(calc(prev, parseFloat(cur), op)); prev = parseFloat(cur); op = k; fresh = true; b.classList.add('on'); }
+      show();
+    };
+    $('#calcKeys').appendChild(b);
+  });
+})();
+
+/* ---------- Notes ---------- */
+let notes = store.get('notes', [{ id: 1, text: 'Welcome to iOS Rebuilt 👋\nTap + to write a note. Everything saves on your phone.', t: Date.now() }]);
+let editing = null;
+function showNotesList() {
+  $('#notesEdit').style.display = 'none'; $('#notesList').style.display = 'block';
+  notes.sort((a, b) => b.t - a.t);
+  $('#noteItems').innerHTML = notes.length ? '' : '<div class="note-item"><small>No notes</small></div>';
+  notes.forEach(n => {
+    const [title, ...rest] = n.text.split('\n'); const el = document.createElement('div'); el.className = 'note-item';
+    el.innerHTML = `<b></b><small></small>`;
+    el.querySelector('b').textContent = title || 'New Note';
+    el.querySelector('small').textContent = new Date(n.t).toLocaleDateString() + '  ' + (rest.join(' ').slice(0, 40) || 'No additional text');
+    el.onclick = () => editNote(n); $('#noteItems').appendChild(el);
+  });
+}
+function editNote(n) { editing = n; $('#notesList').style.display = 'none'; $('#notesEdit').style.display = 'flex'; $('#noteText').value = n.text; }
+$('#newNote').onclick = () => { const n = { id: Date.now(), text: '', t: Date.now() }; notes.push(n); editNote(n); setTimeout(() => $('#noteText').focus(), 50); };
+$('#noteText').oninput = e => { editing.text = e.target.value; editing.t = Date.now(); store.set('notes', notes); };
+$('#noteBack').onclick = () => { notes = notes.filter(n => n.text.trim()); store.set('notes', notes); showNotesList(); };
+$('#noteDel').onclick = () => { notes = notes.filter(n => n !== editing); store.set('notes', notes); showNotesList(); };
+
+/* ---------- Stopwatch ---------- */
+(() => {
+  let start = 0, elapsed = 0, raf = null, lapStart = 0, lapN = 0;
+  const f = ms => { const m = Math.floor(ms / 60000), s = Math.floor(ms / 1000) % 60, c = Math.floor(ms / 10) % 100; return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(c).padStart(2,'0')}`; };
+  const now = () => elapsed + (raf ? performance.now() - start : 0);
+  const loop = () => { $('#swOut').textContent = f(now()); raf = requestAnimationFrame(loop); };
+  $('#swGo').onclick = () => {
+    buzz();
+    if (raf) { elapsed = now(); cancelAnimationFrame(raf); raf = null; $('#swGo').textContent = 'Start'; $('#swGo').className = 'circle go'; $('#swLap').textContent = 'Reset'; }
+    else { start = performance.now(); raf = requestAnimationFrame(loop); $('#swGo').textContent = 'Stop'; $('#swGo').className = 'circle stop'; $('#swLap').textContent = 'Lap'; }
+  };
+  $('#swLap').onclick = () => {
+    buzz();
+    if (raf) { const t = now(); const d = document.createElement('div'); d.innerHTML = `<span>Lap ${++lapN}</span><span>${f(t - lapStart)}</span>`; lapStart = t; $('#laps').prepend(d); }
+    else { elapsed = 0; lapStart = 0; lapN = 0; $('#laps').innerHTML = ''; $('#swOut').textContent = f(0); }
+  };
+})();
+
+/* ---------- Weather (Open-Meteo, no key) ---------- */
+const WX = { 0: 'Clear', 1: 'Mostly Clear', 2: 'Partly Cloudy', 3: 'Cloudy', 45: 'Fog', 48: 'Fog', 51: 'Drizzle', 53: 'Drizzle', 55: 'Drizzle', 61: 'Rain', 63: 'Rain', 65: 'Heavy Rain', 71: 'Snow', 73: 'Snow', 75: 'Heavy Snow', 80: 'Showers', 81: 'Showers', 82: 'Showers', 95: 'Thunderstorm' };
+function loadWeather() {
+  if (!navigator.geolocation) return $('#wxCity').textContent = 'Location unavailable';
+  navigator.geolocation.getCurrentPosition(async p => {
+    try {
+      const { latitude: la, longitude: lo } = p.coords;
+      const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`).then(r => r.json());
+      $('#wxCity').textContent = 'My Location';
+      $('#wxTemp').textContent = Math.round(r.current.temperature_2m) + '°';
+      $('#wxDesc').textContent = WX[r.current.weather_code] || '';
+      $('#wxHL').textContent = `H:${Math.round(r.daily.temperature_2m_max[0])}°  L:${Math.round(r.daily.temperature_2m_min[0])}°`;
+    } catch { $('#wxCity').textContent = 'No connection'; }
+  }, () => $('#wxCity').textContent = 'Allow location to see weather');
+}
+
+/* ---------- Camera / photo -> wallpaper ---------- */
+function pickPhoto() {
+  const i = document.createElement('input'); i.type = 'file'; i.accept = 'image/*';
+  i.onchange = () => {
+    const f = i.files[0]; if (!f) return; const rd = new FileReader();
+    rd.onload = () => { const img = new Image(); img.onload = () => {
+      const c = document.createElement('canvas'); const s = Math.min(1, 1200 / img.height); c.width = img.width * s; c.height = img.height * s;
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      if (confirm('Use this photo as your wallpaper?')) setWall(`url(${c.toDataURL('image/jpeg', .8)})`);
+    }; img.src = rd.result; };
+    rd.readAsDataURL(f);
+  };
+  i.click();
+}
+
+/* ---------- Settings / wallpaper ---------- */
+const WALLS = [
+  'linear-gradient(160deg,#5b4bff 0%,#c14bd8 50%,#ff8a5b 100%)',
+  'linear-gradient(160deg,#0f2027,#203a43,#2c5364)',
+  'linear-gradient(160deg,#ff9a9e,#fad0c4)',
+  'linear-gradient(160deg,#11998e,#38ef7d)',
+  'linear-gradient(160deg,#000,#434343)',
+  'linear-gradient(160deg,#f12711,#f5af19)',
+];
+function setWall(w) { document.documentElement.style.setProperty('--wall', w); try { store.set('wall', w); } catch {} renderWalls(); }
+function renderWalls() {
+  const cur = store.get('wall', WALLS[0]); $('#walls').innerHTML = '';
+  WALLS.forEach(w => { const d = document.createElement('div'); d.style.background = w; if (w === cur) d.className = 'sel'; d.onclick = () => { setWall(w); buzz(); }; $('#walls').appendChild(d); });
+}
+document.documentElement.style.setProperty('--wall', store.get('wall', WALLS[0]));
+renderWalls();
+$('#wiggleCell').onclick = () => { closeAll(); toggleWiggle(true); };
+$('#resetCell').onclick = () => { if (confirm('Erase notes, layout and wallpaper?')) { localStorage.clear(); location.reload(); } };
+
+/* ---------- PWA ---------- */
+
+</script>
+</body>
+</html>
