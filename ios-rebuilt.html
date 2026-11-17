@@ -223,6 +223,35 @@ textarea.note { width: 100%; height: 100%; min-height: 60vh; border: 0; backgrou
 iframe.map { width: 100%; height: 100%; border: 0; }
 .cloudbar { height: 10px; border-radius: 5px; background: var(--sep); overflow: hidden; display: flex; margin: 10px 0; }
 .toast { position: absolute; bottom: calc(var(--sab) + 90px); left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.8); color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 15px; z-index: 99; }
+
+.modal { position: absolute; inset: 0; z-index: 150; background: rgba(0,0,0,0); display: grid; place-items: center; transition: background .2s; }
+.modal.show { background: rgba(0,0,0,.35); }
+.alert { width: 270px; border-radius: 14px; background: rgba(242,242,247,.92); color: #000; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); overflow: hidden; transform: scale(1.15); opacity: 0; transition: transform .2s, opacity .2s; }
+.dark .alert, .dark .asheet .agroup { background: rgba(44,44,46,.92); color: #fff; }
+.modal.show .alert { transform: none; opacity: 1; }
+.atext { padding: 18px 16px 16px; text-align: center; font-size: 13px; }
+.atext b { display: block; font-size: 17px; margin-bottom: 4px; }
+.ain { width: 100%; margin-top: 12px; padding: 7px 8px; border-radius: 7px; border: .5px solid #c7c7cc; background: #fff; color: #000; font-size: 15px; outline: none; }
+.abtns { display: flex; border-top: .5px solid rgba(60,60,67,.3); }
+.abtns.stack { flex-direction: column; }
+.abtns button, .agroup button { flex: 1; padding: 12px; border: 0; background: none; color: #007aff; font-size: 17px; }
+.abtns button + button { border-left: .5px solid rgba(60,60,67,.3); }
+.abtns.stack button + button { border-left: 0; border-top: .5px solid rgba(60,60,67,.3); }
+.abtns .bold, .agroup .bold { font-weight: 600; }
+.abtns .red, .agroup .red { color: #ff3b30; }
+.sheetm { place-items: end stretch; padding: 0 8px calc(var(--sab) + 8px); }
+.asheet { transform: translateY(110%); transition: transform .3s cubic-bezier(.2,.9,.25,1); }
+.modal.show .asheet { transform: none; }
+.agroup { background: rgba(242,242,247,.95); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-radius: 14px; overflow: hidden; margin-top: 8px; display: flex; flex-direction: column; }
+.agroup button { padding: 17px; font-size: 20px; border-top: .5px solid rgba(60,60,67,.2); }
+.agroup button:active, .abtns button:active { background: rgba(0,0,0,.08); }
+.stitle { padding: 14px; text-align: center; font-size: 13px; color: #8e8e93; }
+.browser-bar { display: flex; gap: 6px; align-items: center; padding: 8px 10px calc(var(--sab) + 30px); background: var(--card); border-top: .5px solid var(--sep); }
+.browser-bar input { flex: 1; min-width: 0; padding: 9px 12px; border-radius: 12px; border: 0; background: var(--sep); color: var(--text); text-align: center; outline: none; }
+.browser-bar button { background: none; border: 0; color: var(--blue); display: grid; place-items: center; padding: 4px; }
+iframe.web { flex: 1; width: 100%; border: 0; background: #fff; }
+.tile2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #bbada0; padding: 8px; border-radius: 10px; touch-action: none; }
+.tile2048 div { aspect-ratio: 1; border-radius: 6px; display: grid; place-items: center; font-weight: 700; font-size: 26px; background: #cdc1b4; color: #776e65; transition: transform .1s; }
 </style>
 </head>
 <body>
@@ -313,6 +342,11 @@ const APP_ICON = {
   tips: [G('lightbulb', '#fff', 2), 'linear-gradient(#ffd60a,#ff9f0a)'],
   settings: [ART.settings, 'linear-gradient(#e3e3e8,#9c9ca2)'],
   cloud: [G('cloud', '#fff', 2), 'linear-gradient(#5ac8fa,#007aff)'],
+  translate: [`<div style="position:relative;width:44px;height:40px"><div style="position:absolute;left:0;top:0;width:28px;height:28px;border-radius:6px;background:#fff;color:#007aff;display:grid;place-items:center;font-weight:700;font-size:16px">A</div><div style="position:absolute;right:0;bottom:0;width:28px;height:28px;border-radius:6px;background:#1c1c1e;color:#fff;display:grid;place-items:center;font-size:15px;border:1.5px solid #fff">文</div></div>`, 'linear-gradient(#3a8dff,#0a5fdc)'],
+  stocks: [`<svg viewBox="0 0 100 100" width="62" height="62"><polyline points="10,70 28,55 42,62 58,38 72,46 90,22" fill="none" stroke="#30d158" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></svg>`, '#000'],
+  game: [`<div style="display:grid;grid-template-columns:repeat(2,20px);gap:4px">${['#f2b179', '#edcf72', '#f65e3b', '#eee4da'].map(c => `<i style="width:20px;height:20px;border-radius:4px;background:${c};display:block"></i>`).join('')}</div>`, '#bbada0'],
+  facetime: [G('camera', '#fff', 2), 'linear-gradient(#65f27d,#1ec83f)'],
+  magnifier: [G('search', '#fff', 2.4), '#1c1c1e'],
   appstore: [`<svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M9 4l7 13M15 4L8 17M5 14h14M17 19l1.5 2"/></svg>`, 'linear-gradient(#18bffb,#1d6ff2)'],
 };
 /* =====================================================================
@@ -340,7 +374,20 @@ const settings = Object.assign({ dark: false, passcode: '', name: '', email: '',
 const saveSettings = () => store.set('settings', settings);
 
 function toast(msg) { const t = h(`<div class="toast">${esc(msg)}</div>`); $('#phone').appendChild(t); setTimeout(() => t.remove(), 1800); }
-function ask(q, def = '') { const r = prompt(q, def); return r === null ? null : r.trim(); }
+/* iOS-style dialogs (replace prompt/confirm/alert, which break in Home Screen apps) */
+function dialog({ title = '', msg = '', input = null, buttons = [['OK', true]] }) {
+  return new Promise(res => {
+    const m = h(`<div class="modal"><div class="alert"><div class="atext"><b>${esc(title)}</b>${msg ? `<div>${esc(msg).replace(/\n/g, '<br>')}</div>` : ''}${input !== null ? `<input class="ain">` : ''}</div><div class="abtns ${buttons.length > 2 ? 'stack' : ''}"></div></div></div>`);
+    const inp = m.querySelector('.ain'); if (inp) { inp.value = input; }
+    buttons.forEach(([label, val, style]) => { const b = h(`<button class="${style || ''}">${esc(label)}</button>`); b.onclick = () => { m.classList.remove('show'); setTimeout(() => m.remove(), 200); res(val === true && inp ? inp.value.trim() : val); }; m.querySelector('.abtns').appendChild(b); });
+    if (inp) inp.onkeydown = e => { if (e.key === 'Enter') m.querySelector('.abtns button:last-child').click(); };
+    $('#phone').appendChild(m); requestAnimationFrame(() => m.classList.add('show')); if (inp) setTimeout(() => inp.focus(), 50);
+  });
+}
+const uiAsk = (q, def = '') => dialog({ title: q, input: def, buttons: [['Cancel', null], ['OK', true, 'bold']] });
+const uiConfirm = (q, ok = 'OK', danger = /delete|remove|erase|sign out/i.test(q)) => dialog({ title: q, buttons: [['Cancel', false], [ok, true, danger ? 'red' : 'bold']] });
+const uiAlert = (msg) => { const [t, ...r] = String(msg).split('\n'); return dialog({ title: t, msg: r.join('\n').trim() }); };
+function sheet(title, options) { return new Promise(res => { const m = h(`<div class="modal sheetm"><div class="asheet"><div class="agroup">${title ? `<div class="stitle">${esc(title)}</div>` : ''}</div><div class="agroup"><button class="bold">Cancel</button></div></div></div>`); options.forEach(([label, val, style]) => { const b = h(`<button class="${style || ''}">${esc(label)}</button>`); b.onclick = () => close(val); m.querySelector('.agroup').appendChild(b); }); const close = v => { m.classList.remove('show'); setTimeout(() => m.remove(), 250); res(v); }; m.querySelector('.agroup:last-child button').onclick = () => close(null); m.onclick = e => { if (e.target === m) close(null); }; $('#phone').appendChild(m); requestAnimationFrame(() => m.classList.add('show')); }); }
 
 /* Notifications: banner + lock screen list + badge counts */
 let notifs = store.get('notifs', []);
@@ -440,7 +487,7 @@ function unlockedOpen(id) { if (!lock.classList.contains('hidden')) { if (settin
    ===================================================================== */
 const DEFAULT_LAYOUT = [
   ['@clockw', '@weatherw', 'calendar', 'photos', 'camera', 'maps', 'weather', 'clock', 'notes', 'reminders', 'appstore', 'settings'],
-  ['calc', 'contacts', 'music', 'cloud', 'compass', 'voice', 'files', 'health', 'news', 'tips']
+  ['calc', 'contacts', 'facetime', 'cloud', 'translate', 'stocks', 'game', 'compass', 'voice', 'files', 'health', 'news', 'magnifier', 'tips']
 ];
 let layout = store.get('layout', DEFAULT_LAYOUT);
 const DOCK = ['phone', 'safari', 'messages', 'music'];
@@ -504,9 +551,9 @@ function swapPick(id) {
   if (A && B) { [layout[A[0]][A[1]], layout[B[0]][B[1]]] = [layout[B[0]][B[1]], layout[A[0]][A[1]]]; store.set('layout', layout); }
   renderHome(); setWiggle(true); buzz();
 }
-function removeApp(id) {
+async function removeApp(id) {
   if (['settings', 'appstore'].includes(id)) return toast("Can't remove " + APPS[id].name);
-  if (!confirm(`Remove "${APPS[id].name}"? You can get it back from the App Store.`)) return;
+  if (!await uiConfirm(`Remove "${APPS[id].name}"? You can get it back from the App Store.`, 'Remove')) return;
   removed.push(id); store.set('removed', removed);
   layout = layout.map(p => p.filter(x => x !== id)); store.set('layout', layout); renderHome(); setWiggle(true);
 }
@@ -671,9 +718,9 @@ function exportBackup() {
 }
 function importBackup() {
   const i = document.createElement('input'); i.type = 'file'; i.accept = 'application/json,.json';
-  i.onchange = () => { const f = i.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => {
-    try { const d = JSON.parse(rd.result); if (!d._meta) throw new Error('Not an iOS Rebuilt backup'); if (!confirm('Restore this backup? Current data will be replaced.')) return; store.clear(); Object.entries(d).forEach(([k, v]) => k !== '_meta' && store.set(k, v)); location.reload(); }
-    catch (e) { alert('Restore failed: ' + e.message); } }; rd.readAsText(f); };
+  i.onchange = () => { const f = i.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = async () => {
+    try { const d = JSON.parse(rd.result); if (!d._meta) throw new Error('Not an iOS Rebuilt backup'); if (!await uiConfirm('Restore this backup? Current data will be replaced.')) return; store.clear(); Object.entries(d).forEach(([k, v]) => k !== '_meta' && store.set(k, v)); location.reload(); }
+    catch (e) { uiAlert('Restore failed: ' + e.message); } }; rd.readAsText(f); };
   i.click();
 }
 
@@ -720,18 +767,18 @@ defineApp('settings', { name: 'Settings', icon: '⚙️', bg: 'linear-gradient(#
   };
   const passPage = () => {
     const b = page(win, 'Passcode', { back });
-    if (settings.passcode) b.appendChild(list([{ title: 'Turn Passcode Off', onclick: () => { const p = ask('Enter current passcode'); if (p === settings.passcode) { settings.passcode = ''; saveSettings(); toast('Passcode off'); passPage(); } else if (p !== null) toast('Wrong passcode'); } }, { title: 'Lock Now', onclick: lockNow }]));
-    else b.appendChild(list([{ title: 'Turn Passcode On', onclick: () => { const p = ask('Choose a 4-digit passcode'); if (p && /^\d{4}$/.test(p)) { settings.passcode = p; saveSettings(); toast('Passcode set'); passPage(); } else if (p !== null) toast('Must be 4 digits'); } }]));
+    if (settings.passcode) b.appendChild(list([{ title: 'Turn Passcode Off', onclick: async () => { const p = await uiAsk('Enter current passcode'); if (p === settings.passcode) { settings.passcode = ''; saveSettings(); toast('Passcode off'); passPage(); } else if (p !== null) toast('Wrong passcode'); } }, { title: 'Lock Now', onclick: lockNow }]));
+    else b.appendChild(list([{ title: 'Turn Passcode On', onclick: async () => { const p = await uiAsk('Choose a 4-digit passcode'); if (p && /^\d{4}$/.test(p)) { settings.passcode = p; saveSettings(); toast('Passcode set'); passPage(); } else if (p !== null) toast('Must be 4 digits'); } }]));
     b.appendChild(h('<p style="color:var(--sub);font-size:13px;margin:0 16px">Your passcode protects the lock screen. It is stored only on this device.</p>'));
   };
   const generalPage = () => {
     const b = page(win, 'General', { back });
     b.appendChild(list([
-      { title: 'About', right: 'iOS Rebuilt 3.0 ›', onclick: () => alert('iOS Rebuilt 3.0\nOpen source (MIT)\n\nApps: ' + Object.keys(APPS).length + '\nStorage used: ' + (store.bytes() / 1024).toFixed(1) + ' KB\n\nNot affiliated with Apple.') },
-      { title: 'Software Update', right: '›', onclick: () => { toast('Checking…'); if (navigator.serviceWorker?.controller) navigator.serviceWorker.getRegistration().then(r => r && r.update()); setTimeout(() => alert('iOS Rebuilt is up to date.\n\nNew versions install automatically when you open the app online.'), 900); } },
+      { title: 'About', right: 'iOS Rebuilt 4.0 ›', onclick: () => uiAlert('iOS Rebuilt 4.0\nOpen source (MIT)\n\nApps: ' + Object.keys(APPS).length + '\nStorage used: ' + (store.bytes() / 1024).toFixed(1) + ' KB\n\nNot affiliated with Apple.') },
+      { title: 'Software Update', right: '›', onclick: () => { toast('Checking…'); if (navigator.serviceWorker?.controller) navigator.serviceWorker.getRegistration().then(r => r && r.update()); setTimeout(() => uiAlert('iOS Rebuilt is up to date.\n\nNew versions install automatically when you open the app online.'), 900); } },
       { title: 'Storage', right: (store.bytes() / 1024).toFixed(0) + ' KB ›', onclick: () => openApp('cloud') },
     ]));
-    b.appendChild(list([{ title: 'Reset Home Screen Layout', onclick: () => { layout = JSON.parse(JSON.stringify(DEFAULT_LAYOUT)); removed = []; store.set('layout', layout); store.set('removed', []); toast('Layout reset'); } }, { title: '<span style="color:#ff3b30">Erase All Content and Settings</span>', onclick: () => { if (confirm('Erase everything on this device?')) { store.clear(); location.reload(); } } }]));
+    b.appendChild(list([{ title: 'Reset Home Screen Layout', onclick: async () => { layout = JSON.parse(JSON.stringify(DEFAULT_LAYOUT)); removed = []; store.set('layout', layout); store.set('removed', []); toast('Layout reset'); } }, { title: '<span style="color:#ff3b30">Erase All Content and Settings</span>', onclick: async () => { if (await uiConfirm('Erase everything on this device?')) { store.clear(); location.reload(); } } }]));
     b.querySelector('.list:last-child .cell:last-child div div').innerHTML = '<span style="color:#ff3b30">Erase All Content and Settings</span>';
   };
   main();
@@ -767,7 +814,7 @@ defineApp('cloud', { name: 'Cloud', icon: '☁️', bg: 'linear-gradient(#fff,#d
     ]));
     b.appendChild(h('<div class="label">Apps Using Cloud</div>'));
     b.appendChild(list(['notes', 'photos', 'messages', 'reminders', 'contacts', 'calendar'].map(id => ({ icon: APPS[id].icon, bg: APPS[id].bg, title: APPS[id].name, right: '✓' }))));
-    b.appendChild(list([{ title: 'Sign Out', onclick: () => { if (confirm('Sign out? Your data stays on this device.')) { settings.name = ''; settings.email = ''; settings.cloud = false; saveSettings(); draw(); } } }]));
+    b.appendChild(list([{ title: 'Sign Out', onclick: async () => { if (await uiConfirm('Sign out? Your data stays on this device.')) { settings.name = ''; settings.email = ''; settings.cloud = false; saveSettings(); draw(); } } }]));
     b.lastChild.querySelector('.cell div div').style.color = '#ff3b30';
   };
   draw();
@@ -829,7 +876,7 @@ defineApp('contacts', { name: 'Contacts', icon: '👤', bg: 'linear-gradient(#d8
     const save = h('<button class="pbtn">Done</button>');
     save.onclick = () => { if (!n.value.trim()) return toast('Name required'); const cs = store.get('contacts', []); if (c) Object.assign(cs.find(x => x.id === c.id), { name: n.value.trim(), phone: p.value.trim(), email: e.value.trim() }); else cs.push({ id: uid(), name: n.value.trim(), phone: p.value.trim(), email: e.value.trim() }); store.set('contacts', cs); cloudSync(); draw(); };
     b.append(n, p, e, save);
-    if (c) { const d = h('<button class="pbtn gray" style="color:#ff3b30">Delete Contact</button>'); d.onclick = () => { if (confirm('Delete contact?')) { store.set('contacts', store.get('contacts', []).filter(x => x.id !== c.id)); draw(); } }; b.appendChild(d); }
+    if (c) { const d = h('<button class="pbtn gray" style="color:#ff3b30">Delete Contact</button>'); d.onclick = async () => { if (await uiConfirm('Delete contact?')) { store.set('contacts', store.get('contacts', []).filter(x => x.id !== c.id)); draw(); } }; b.appendChild(d); }
   };
   draw();
 } });
@@ -855,7 +902,7 @@ defineApp('messages', { name: 'Messages', icon: '💬', bg: 'linear-gradient(#5c
   const chats = () => { const c = store.get('chats', {}); if (!c[BOT]) { c[BOT] = { msgs: [{ me: false, text: `Hi! I'm ${BOT}. Say hello 👋`, t: Date.now() }], unread: 0 }; store.set('chats', c); } return c; };
   const listView = () => {
     const c = chats();
-    const b = page(win, 'Messages', { actions: [[I('square-pen', 24), () => { const n = ask('To: (name)'); if (n) openChat(n); }]] });
+    const b = page(win, 'Messages', { actions: [[I('square-pen', 24), async () => { const n = await uiAsk('To: (name)'); if (n) openChat(n); }]] });
     b.appendChild(list(Object.entries(c).sort((a, z) => (z[1].msgs.at(-1)?.t || 0) - (a[1].msgs.at(-1)?.t || 0)).map(([name, ch]) => ({ left: `<div class="avatar">${esc(name[0].toUpperCase())}</div>`, title: name, sub: ch.msgs.at(-1)?.text || '', right: (ch.unread ? '🔵 ' : '') + (ch.msgs.at(-1) ? fmtTime(ch.msgs.at(-1).t) : ''), onclick: () => openChat(name) }))));
   };
   const openChat = name => {
@@ -878,17 +925,155 @@ defineApp('messages', { name: 'Messages', icon: '💬', bg: 'linear-gradient(#5c
   listView();
 } });
 
-/* ---------- Safari ---------- */
-defineApp('safari', { name: 'Safari', icon: '🧭', bg: 'linear-gradient(#fff,#d1e8ff)', render(win) {
-  const b = page(win, 'Start Page');
-  const go = q => { q = q.trim(); if (!q) return; const url = /^https?:\/\//.test(q) ? q : /^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(q) ? 'https://' + q : 'https://duckduckgo.com/?q=' + encodeURIComponent(q); const hist = store.get('history', []); hist.unshift({ q, url, t: Date.now() }); store.set('history', hist.slice(0, 30)); window.open(url, '_blank'); };
-  const bar = h('<input class="search" placeholder="Search or enter website name" enterkeyhint="go" style="font-size:17px;padding:12px">'); bar.onkeydown = e => { if (e.key === 'Enter') go(bar.value); }; b.appendChild(bar);
-  b.appendChild(h('<div class="label">Favorites</div>'));
-  const g = h('<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;text-align:center;font-size:12px"></div>');
-  [['Wikipedia', '📚', 'wikipedia.org'], ['YouTube', '▶️', 'youtube.com'], ['GitHub', '🐙', 'github.com/mrcodelover1211/IOS-rebuilt-'], ['News', '📰', 'news.google.com'], ['Maps', '🗺️', 'openstreetmap.org'], ['Reddit', '👽', 'reddit.com'], ['Translate', '🌐', 'translate.google.com'], ['Weather', '⛅', 'weather.com']].forEach(([n, i, u]) => { const x = h(`<div style="cursor:pointer"><div style="width:60px;height:60px;border-radius:14px;background:var(--card);display:grid;place-items:center;font-size:28px;margin:0 auto 4px">${i}</div>${n}</div>`); x.onclick = () => go('https://' + u); g.appendChild(x); });
-  b.appendChild(g);
-  const hist = store.get('history', []);
-  if (hist.length) { b.appendChild(h('<div class="label">Recently Visited</div>')); b.appendChild(list(hist.slice(0, 8).map(x => ({ title: x.q, sub: x.url, onclick: () => go(x.url) })))); }
+/* ---------- Safari: in-app browser + Wikipedia-powered search ---------- */
+function openURL(url) { closeAll(true); openApp('safari'); setTimeout(() => window._safariGo && window._safariGo(url), 60); }
+defineApp('safari', { name: 'Safari', icon: '🧭', render(win) {
+  const content = h('<div style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0"></div>');
+  const bar = h(`<div class="browser-bar"><button data-a="back">${I('chevron-left', 26)}</button><input placeholder="Search or enter website" enterkeyhint="go" autocapitalize="off" autocorrect="off"><button data-a="ext">${I('share', 22)}</button><button data-a="home">${I('layout-grid', 22)}</button></div>`);
+  win.append(content, bar);
+  const inp = bar.querySelector('input'); let hist = [], curUrl = '';
+  const addHist = (q, url) => { const hh = store.get('history', []).filter(x => x.url !== url); hh.unshift({ q, url, t: Date.now() }); store.set('history', hh.slice(0, 30)); };
+  const startPage = () => {
+    curUrl = ''; inp.value = ''; content.innerHTML = '';
+    const b = h('<div class="wbody" style="padding-top:calc(var(--sat) + 50px)"></div>'); content.appendChild(b);
+    b.appendChild(h('<div style="font-size:22px;font-weight:700;margin-bottom:12px">Favorites</div>'));
+    const g = h('<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;text-align:center;font-size:12px"></div>');
+    [['Wikipedia', 'W', '#000', 'https://en.m.wikipedia.org'], ['YouTube', '▶', '#ff0000', 'https://m.youtube.com'], ['GitHub', 'G', '#24292f', 'https://github.com/mrcodelover1211/IOS-rebuilt-'], ['Maps', 'M', '#34c759', 'https://www.openstreetmap.org'], ['Reddit', 'R', '#ff4500', 'https://www.reddit.com'], ['Google', 'G', '#4285f4', 'https://www.google.com'], ['Archive', 'A', '#666', 'https://archive.org'], ['MDN', 'M', '#000', 'https://developer.mozilla.org']].forEach(([n, l, c, u]) => { const x = h(`<div style="cursor:pointer"><div style="width:60px;height:60px;border-radius:14px;background:var(--card);display:grid;place-items:center;font-size:26px;font-weight:700;color:${c};margin:0 auto 4px;box-shadow:0 1px 3px rgba(0,0,0,.1)">${l}</div>${n}</div>`); x.onclick = () => go(u); g.appendChild(x); });
+    b.appendChild(g);
+    const hh = store.get('history', []);
+    if (hh.length) { b.appendChild(h('<div style="font-size:22px;font-weight:700;margin-bottom:12px">Recently Visited</div>')); b.appendChild(list(hh.slice(0, 8).map(x => ({ title: x.q, sub: x.url, onclick: () => go(x.url) })))); }
+  };
+  const load = url => {
+    curUrl = url; inp.value = url.replace(/^https?:\/\/(www\.)?/, '');
+    content.innerHTML = '';
+    const note = h(`<div style="padding:calc(var(--sat) + 44px) 12px 6px;font-size:12px;color:var(--sub);display:flex;justify-content:space-between;align-items:center;background:var(--card)"><span>Page blank? Some sites block in-app viewing.</span><button class="link" style="font-size:13px">Open in Safari ↗</button></div>`);
+    note.querySelector('button').onclick = () => window.open(url, '_blank');
+    const f = h('<iframe class="web" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>'); f.src = url;
+    content.append(note, f);
+  };
+  const searchPage = async q => {
+    curUrl = 'search:' + q; inp.value = q; content.innerHTML = '';
+    const b = h('<div class="wbody" style="padding-top:calc(var(--sat) + 50px)"><div class="empty">Searching…</div></div>'); content.appendChild(b);
+    const web = h(`<button class="pbtn">Search the web for “${esc(q)}” ↗</button>`); web.onclick = () => window.open('https://duckduckgo.com/?q=' + encodeURIComponent(q), '_blank');
+    try {
+      const r = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=10`).then(r => r.json());
+      b.innerHTML = ''; b.appendChild(web);
+      const res = r.query?.search || [];
+      if (!res.length) b.appendChild(h('<div class="empty">No results</div>'));
+      res.forEach(x => { const c = h(`<div class="list" style="padding:12px 14px;cursor:pointer"><div style="color:var(--sub);font-size:12px">en.wikipedia.org</div><div style="color:var(--blue);font-size:17px;margin:2px 0">${esc(x.title)}</div><div style="font-size:14px">${x.snippet.replace(/<(?!\/?span)[^>]*>/g, '')}…</div></div>`); c.onclick = () => go('https://en.m.wikipedia.org/wiki/' + encodeURIComponent(x.title.replace(/ /g, '_'))); b.appendChild(c); });
+    } catch { b.innerHTML = '<div class="empty">No connection</div>'; b.appendChild(web); }
+  };
+  const go = (q, push = true) => {
+    q = String(q).trim(); if (!q) return;
+    if (push && curUrl) hist.push(curUrl);
+    if (/^https?:\/\//.test(q)) { addHist(q.replace(/^https?:\/\//, ''), q); load(q); }
+    else if (/^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(q)) { addHist(q, 'https://' + q); load('https://' + q); }
+    else if (q.startsWith('search:')) searchPage(q.slice(7));
+    else { addHist(q, 'search:' + q); searchPage(q); }
+    inp.blur();
+  };
+  window._safariGo = go;
+  inp.onfocus = () => inp.select();
+  inp.onkeydown = e => { if (e.key === 'Enter') go(inp.value); };
+  bar.querySelector('[data-a=back]').onclick = () => { const p = hist.pop(); if (p) go(p, false); else startPage(); };
+  bar.querySelector('[data-a=home]').onclick = () => { if (curUrl) hist.push(curUrl); startPage(); };
+  bar.querySelector('[data-a=ext]').onclick = async () => { if (!curUrl || curUrl.startsWith('search:')) return toast('Nothing to share'); const v = await sheet(curUrl, [['Open in Safari', 'o'], ['Copy Link', 'c'], ['Share…', 's']]); if (v === 'o') window.open(curUrl, '_blank'); if (v === 'c') { navigator.clipboard?.writeText(curUrl).then(() => toast('Copied')).catch(() => toast('Copy not allowed')); } if (v === 's' && navigator.share) navigator.share({ url: curUrl }).catch(() => {}); };
+  startPage();
+} });
+
+/* ---------- Translate (MyMemory free API) ---------- */
+defineApp('translate', { name: 'Translate', icon: '🌐', render(win) {
+  const LANGS = [['en', 'English'], ['es', 'Spanish'], ['fr', 'French'], ['de', 'German'], ['it', 'Italian'], ['pt', 'Portuguese'], ['ar', 'Arabic'], ['zh', 'Chinese'], ['ja', 'Japanese'], ['ko', 'Korean'], ['ru', 'Russian'], ['hi', 'Hindi'], ['tr', 'Turkish'], ['nl', 'Dutch']];
+  const b = page(win, 'Translate');
+  const sel = v => { const s = h('<select class="field" style="margin:0;flex:1"></select>'); LANGS.forEach(([c, n]) => s.add(new Option(n, c))); s.value = v; return s; };
+  const st = store.get('tr', { from: 'en', to: 'es' });
+  const from = sel(st.from), to = sel(st.to);
+  const sw = h(`<button class="link">${I('refresh-cw', 20)}</button>`);
+  const row = h('<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"></div>'); row.append(from, sw, to);
+  const src = h('<textarea class="field" style="height:120px;resize:none;font-size:20px" placeholder="Enter text"></textarea>');
+  const out = h('<div class="list" style="padding:16px;min-height:110px;font-size:20px;color:var(--blue);user-select:text;-webkit-user-select:text"></div>');
+  const btns = h(`<div style="display:flex;gap:8px"><button class="pbtn">Translate</button><button class="pbtn gray" style="width:70px">${I('volume-2', 22)}</button></div>`);
+  const run = async () => { const q = src.value.trim(); if (!q) return; store.set('tr', { from: from.value, to: to.value }); out.textContent = '…'; try { const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=${from.value}|${to.value}`).then(r => r.json()); out.textContent = r.responseData?.translatedText || 'No translation'; } catch { out.textContent = 'No connection'; } };
+  btns.children[0].onclick = run; src.onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); run(); } };
+  btns.children[1].onclick = () => { if (!speechSynthesis) return; const u = new SpeechSynthesisUtterance(out.textContent); u.lang = to.value; speechSynthesis.speak(u); };
+  sw.onclick = () => { [from.value, to.value] = [to.value, from.value]; [src.value, out.textContent] = [out.textContent, src.value]; };
+  b.append(row, src, btns, out);
+} });
+
+/* ---------- Stocks (crypto prices via CoinGecko, free) ---------- */
+defineApp('stocks', { name: 'Stocks', icon: '📈', dark: true, render(win) {
+  win.style.background = '#000';
+  const b = page(win, 'Stocks'); b.appendChild(h('<div style="color:#8e8e93;margin-top:-6px;margin-bottom:12px">Crypto Markets · Live</div>'));
+  const box = h('<div><div class="empty">Loading…</div></div>'); b.appendChild(box);
+  const ids = ['bitcoin', 'ethereum', 'solana', 'dogecoin', 'cardano', 'ripple', 'litecoin', 'polkadot'];
+  const spark = pts => { if (!pts?.length) return ''; const mn = Math.min(...pts), mx = Math.max(...pts), up = pts.at(-1) >= pts[0]; return `<svg width="70" height="30" viewBox="0 0 70 30"><polyline fill="none" stroke="${up ? '#30d158' : '#ff453a'}" stroke-width="1.6" points="${pts.map((p, i) => `${i / (pts.length - 1) * 70},${28 - (p - mn) / (mx - mn || 1) * 26}`).join(' ')}"/></svg>`; };
+  const load = async () => {
+    try {
+      const r = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids.join(',')}&sparkline=true&price_change_percentage=24h`).then(r => { if (!r.ok) throw 0; return r.json(); });
+      store.set('stocks', r); draw(r);
+    } catch { const c = store.get('stocks'); if (c) { draw(c); toast('Showing saved prices'); } else box.innerHTML = '<div class="empty">Couldn\'t load prices. Try again in a minute.</div>'; }
+  };
+  const draw = r => {
+    box.innerHTML = '';
+    r.forEach(c => { const ch = c.price_change_percentage_24h || 0; const pts = (c.sparkline_in_7d?.price || []).filter((_, i) => i % 6 === 0);
+      box.appendChild(h(`<div style="display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:.5px solid #38383a"><div style="flex:1"><div style="font-weight:700;font-size:17px">${esc(c.symbol.toUpperCase())}</div><div style="color:#8e8e93;font-size:13px">${esc(c.name)}</div></div>${spark(pts)}<div style="text-align:right;min-width:96px"><div style="font-weight:600">$${c.current_price.toLocaleString(undefined, { maximumFractionDigits: c.current_price < 1 ? 4 : 2 })}</div><div style="display:inline-block;margin-top:3px;padding:2px 6px;border-radius:5px;font-size:13px;font-weight:600;background:${ch >= 0 ? '#30d158' : '#ff453a'}">${ch >= 0 ? '+' : ''}${ch.toFixed(2)}%</div></div></div>`)); });
+  };
+  load(); const iv = setInterval(load, 60000); win._cleanup = () => clearInterval(iv);
+} });
+
+/* ---------- Game: 2048-style tile merging ---------- */
+defineApp('game', { name: 'Tiles', icon: '🎮', render(win) {
+  const b = page(win, 'Tiles');
+  const COL = { 2: '#eee4da', 4: '#ede0c8', 8: '#f2b179', 16: '#f59563', 32: '#f67c5f', 64: '#f65e3b', 128: '#edcf72', 256: '#edcc61', 512: '#edc850', 1024: '#edc53f', 2048: '#edc22e' };
+  let g = store.get('g2048', null), best = store.get('g2048best', 0), score = 0;
+  const blank = () => Array(16).fill(0);
+  const add = () => { const e = g.map((v, i) => v ? -1 : i).filter(i => i >= 0); if (e.length) g[e[Math.floor(Math.random() * e.length)]] = Math.random() < .9 ? 2 : 4; };
+  const reset = () => { g = blank(); score = 0; add(); add(); draw(); };
+  const head = h('<div style="display:flex;gap:8px;margin-bottom:14px"><div class="list" style="flex:1;padding:8px;text-align:center;margin:0"><small style="color:var(--sub)">SCORE</small><div class="sc" style="font-size:22px;font-weight:700">0</div></div><div class="list" style="flex:1;padding:8px;text-align:center;margin:0"><small style="color:var(--sub)">BEST</small><div class="bs" style="font-size:22px;font-weight:700">0</div></div><button class="pbtn" style="width:auto;margin:0;padding:0 18px">New</button></div>');
+  head.querySelector('button').onclick = reset;
+  const board = h('<div class="tile2048"></div>');
+  b.append(head, board, h('<p style="text-align:center;color:var(--sub);margin-top:14px">Swipe to merge tiles. Reach 2048!</p>'));
+  const draw = () => { board.innerHTML = g.map(v => `<div style="${v ? `background:${COL[v] || '#3c3a32'};color:${v > 4 ? '#fff' : '#776e65'};font-size:${v > 512 ? 20 : 26}px` : ''}">${v || ''}</div>`).join(''); head.querySelector('.sc').textContent = score; head.querySelector('.bs').textContent = best; store.set('g2048', g); };
+  const move = dir => {
+    const before = g.join(); const lines = [];
+    for (let i = 0; i < 4; i++) { const idx = [0, 1, 2, 3].map(j => dir === 'L' ? i * 4 + j : dir === 'R' ? i * 4 + 3 - j : dir === 'U' ? j * 4 + i : (3 - j) * 4 + i); lines.push(idx); }
+    lines.forEach(idx => { let v = idx.map(k => g[k]).filter(Boolean); for (let k = 0; k < v.length - 1; k++) if (v[k] === v[k + 1]) { v[k] *= 2; score += v[k]; v.splice(k + 1, 1); } while (v.length < 4) v.push(0); idx.forEach((k, j) => g[k] = v[j]); });
+    if (g.join() !== before) { add(); buzz(); if (score > best) { best = score; store.set('g2048best', best); } draw(); if (g.includes(2048) && !win._won) { win._won = true; uiAlert('You made 2048! 🏆\nKeep going for a higher score.'); } }
+    if (!g.includes(0) && ![0, 1, 2, 3].some(i => [0, 1, 2].some(j => g[i * 4 + j] === g[i * 4 + j + 1] || g[j * 4 + i] === g[(j + 1) * 4 + i]))) uiAlert('Game Over\nScore: ' + score).then(reset);
+  };
+  let sx, sy;
+  board.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  board.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+  board.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; if (Math.max(Math.abs(dx), Math.abs(dy)) < 25) return; move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'R' : 'L') : (dy > 0 ? 'D' : 'U')); });
+  const key = e => { const m = { ArrowLeft: 'L', ArrowRight: 'R', ArrowUp: 'U', ArrowDown: 'D' }[e.key]; if (m) { e.preventDefault(); move(m); } };
+  window.addEventListener('keydown', key); win._cleanup = () => window.removeEventListener('keydown', key);
+  if (!g) reset(); else draw();
+} });
+
+/* ---------- FaceTime (front camera mirror) ---------- */
+defineApp('facetime', { name: 'FaceTime', icon: '📹', dark: true, fullbleed: true, render(win) {
+  win.style.background = '#000';
+  const v = h('<video autoplay playsinline muted style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)"></video>');
+  const ui = h(`<div style="position:absolute;left:0;right:0;bottom:calc(var(--sab) + 40px);display:flex;justify-content:center;gap:24px"><button class="tog" style="width:64px;height:64px;color:#fff">${I('mic', 26)}</button><button class="tog" style="width:64px;height:64px;color:#fff">${I('refresh-cw', 26)}</button><button class="tog" style="width:64px;height:64px;background:#ff3b30;color:#fff">${I('phone', 26)}</button></div>`);
+  const msg = h('<div style="position:absolute;top:40%;left:0;right:0;text-align:center;color:#aaa;padding:20px">Starting camera…</div>');
+  win.append(v, msg, ui);
+  let stream, facing = 'user';
+  const start = async () => { stream && stream.getTracks().forEach(t => t.stop()); try { stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facing } }); v.srcObject = stream; v.style.transform = facing === 'user' ? 'scaleX(-1)' : ''; msg.textContent = ''; } catch { msg.textContent = 'Camera not available. Allow camera access in your browser settings.'; } };
+  const btns = ui.children; btns[0].onclick = () => { btns[0].classList.toggle('on'); toast(btns[0].classList.contains('on') ? 'Muted' : 'Unmuted'); };
+  btns[1].onclick = () => { facing = facing === 'user' ? 'environment' : 'user'; start(); };
+  btns[2].onclick = () => closeAll();
+  start(); win._cleanup = () => stream && stream.getTracks().forEach(t => t.stop());
+} });
+
+/* ---------- Magnifier ---------- */
+defineApp('magnifier', { name: 'Magnifier', icon: '🔍', dark: true, fullbleed: true, render(win) {
+  win.style.background = '#000';
+  const v = h('<video autoplay playsinline muted style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(2)"></video>');
+  const s = h('<input type="range" min="1" max="5" step=".1" value="2" style="position:absolute;left:30px;right:30px;bottom:calc(var(--sab) + 50px);width:calc(100% - 60px)">');
+  s.oninput = () => v.style.transform = `scale(${s.value})`;
+  win.append(v, s); let stream;
+  navigator.mediaDevices?.getUserMedia({ video: { facingMode: 'environment' } }).then(st => { stream = st; v.srcObject = st; }).catch(() => toast('Camera not available'));
+  win._cleanup = () => stream && stream.getTracks().forEach(t => t.stop());
 } });
 
 /* ---------- Music (built-in synth songs + your own files) ---------- */
@@ -985,7 +1170,7 @@ defineApp('photos', { name: 'Photos', icon: '🌸', bg: 'linear-gradient(135deg,
     btns[0].onclick = () => v.remove();
     btns[1].onclick = async () => { try { const blob = await (await fetch(p.src)).blob(); const f = new File([blob], 'photo.jpg', { type: 'image/jpeg' }); if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ files: [f] }); else { const a = document.createElement('a'); a.href = p.src; a.download = 'photo.jpg'; a.click(); } } catch {} };
     btns[2].onclick = () => { settings.wall = `url(${p.src}) center/cover`; saveSettings(); applyAppearance(); toast('Wallpaper set'); };
-    btns[3].onclick = () => { if (!confirm('Delete photo?')) return; store.set('photos', store.get('photos', []).filter(x => x.id !== p.id)); v.remove(); draw(); };
+    btns[3].onclick = async () => { if (!await uiConfirm('Delete photo?')) return; store.set('photos', store.get('photos', []).filter(x => x.id !== p.id)); v.remove(); draw(); };
     win.appendChild(v);
   };
   draw();
@@ -1005,7 +1190,7 @@ defineApp('notes', { name: 'Notes', icon: '📝', bg: 'linear-gradient(#fff 30%,
     b.appendChild(h(`<div style="text-align:center;color:var(--sub);font-size:13px">${notes.length} Notes</div>`));
   };
   const edit = n => {
-    const b = page(win, '', { back: () => listView(), backLabel: 'Notes', actions: [[I('pin', 22), () => { n.pin = !n.pin; save(); toast(n.pin ? 'Pinned' : 'Unpinned'); }], [I('share', 22), () => navigator.share ? navigator.share({ text: n.text }).catch(() => {}) : navigator.clipboard?.writeText(n.text).then(() => toast('Copied'))], [I('trash-2', 22), () => { notes = notes.filter(x => x !== n); save(); listView(); }]] });
+    const b = page(win, '', { back: () => listView(), backLabel: 'Notes', actions: [[I('pin', 22), () => { n.pin = !n.pin; save(); toast(n.pin ? 'Pinned' : 'Unpinned'); }], [I('share', 22), () => navigator.share ? navigator.share({ text: n.text }).catch(() => {}) : navigator.clipboard?.writeText(n.text).then(() => toast('Copied')).catch(() => toast('Copy not allowed'))], [I('trash-2', 22), () => { notes = notes.filter(x => x !== n); save(); listView(); }]] });
     b.previousSibling.querySelector('h1').remove();
     const ta = h('<textarea class="note" placeholder="Start typing…"></textarea>'); ta.value = n.text;
     ta.oninput = () => { n.text = ta.value; n.t = Date.now(); save(); };
@@ -1025,7 +1210,7 @@ defineApp('reminders', { name: 'Reminders', icon: '☑️', bg: '#fff', badge: (
     rs.filter(r => showDone || !r.done).forEach(r => {
       const c = h(`<div class="cell"><div class="l"><div class="chk ${r.done ? 'on' : ''}"></div><div><div style="${r.done ? 'color:var(--sub)' : ''}">${esc(r.text)}</div>${r.due ? `<small>⏰ ${esc(new Date(r.due).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }))}</small>` : ''}</div></div><div class="r">⋯</div></div>`);
       c.querySelector('.chk').onclick = e => { e.stopPropagation(); r.done = !r.done; buzz(); save(); setTimeout(draw, r.done ? 400 : 0); c.querySelector('.chk').classList.toggle('on', r.done); };
-      c.querySelector('.r').onclick = e => { e.stopPropagation(); const a = ask('Edit reminder (empty = delete)', r.text); if (a === null) return; if (!a) rs = rs.filter(x => x !== r); else r.text = a; save(); draw(); };
+      c.querySelector('.r').onclick = async e => { e.stopPropagation(); const a = await uiAsk('Edit reminder (empty = delete)', r.text); if (a === null) return; if (!a) rs = rs.filter(x => x !== r); else r.text = a; save(); draw(); };
       l.appendChild(c);
     });
     if (!l.children.length) l.appendChild(h('<div class="empty">All done! 🎉</div>'));
@@ -1057,9 +1242,9 @@ defineApp('calendar', { name: 'Calendar', icon: '📅', bg: '#fff', render(win) 
     b.appendChild(m);
     b.appendChild(h(`<div class="label" style="margin-top:20px">${sel.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}</div>`));
     const de = evs.filter(e => e.date === dayKey(sel)).sort((a, z) => (a.time || '').localeCompare(z.time || ''));
-    b.appendChild(list(de.length ? de.map(e => ({ left: '<div style="width:4px;height:36px;border-radius:2px;background:#ff3b30"></div>', title: e.title, sub: e.time || 'All-day', right: '🗑️', onclick: () => { if (confirm('Delete event?')) { store.set('events', evs.filter(x => x.id !== e.id)); draw(); } } })) : [{ title: 'No Events', sub: '' }]));
+    b.appendChild(list(de.length ? de.map(e => ({ left: '<div style="width:4px;height:36px;border-radius:2px;background:#ff3b30"></div>', title: e.title, sub: e.time || 'All-day', right: '🗑️', onclick: async () => { if (await uiConfirm('Delete event?')) { store.set('events', evs.filter(x => x.id !== e.id)); draw(); } } })) : [{ title: 'No Events', sub: '' }]));
     const add = h('<button class="pbtn">＋ Add Event</button>');
-    add.onclick = () => { const t = ask('Event title'); if (!t) return; const tm = ask('Time (e.g. 14:30) — leave empty for all-day', ''); evs.push({ id: uid(), date: dayKey(sel), title: t, time: tm || '' }); store.set('events', evs); cloudSync(); draw(); };
+    add.onclick = async () => { const t = await uiAsk('Event title'); if (!t) return; const tm = await uiAsk('Time (e.g. 14:30) — leave empty for all-day', ''); evs.push({ id: uid(), date: dayKey(sel), title: t, time: tm || '' }); store.set('events', evs); cloudSync(); draw(); };
     b.appendChild(add);
   };
   draw();
@@ -1092,13 +1277,13 @@ defineApp('clock', { name: 'Clock', icon: '⏰', bg: '#000', dark: true, render(
     win.appendChild(tabs);
     if (tab === 'World Clock') {
       const zones = store.get('zones', ['America/New_York', 'Europe/London', 'Asia/Tokyo', 'Australia/Sydney']);
-      const b = page(content, 'World Clock', { actions: [[I('plus', 26), () => { const z = ask('Time zone (e.g. Europe/Paris, Asia/Dubai)'); if (!z) return; try { new Intl.DateTimeFormat([], { timeZone: z }); zones.push(z); store.set('zones', zones); draw(); } catch { toast('Unknown time zone'); } }]] });
-      const l = list(zones.map(z => ({ title: z.split('/').pop().replace(/_/g, ' '), sub: z.split('/')[0], right: `<span style="font-size:36px;font-weight:300;color:var(--text)">${new Date().toLocaleTimeString([], { timeZone: z, hour: 'numeric', minute: '2-digit' })}</span>`, onclick: () => { if (confirm('Remove ' + z + '?')) { store.set('zones', zones.filter(x => x !== z)); draw(); } } })));
+      const b = page(content, 'World Clock', { actions: [[I('plus', 26), async () => { const z = await uiAsk('Time zone (e.g. Europe/Paris, Asia/Dubai)'); if (!z) return; try { new Intl.DateTimeFormat([], { timeZone: z }); zones.push(z); store.set('zones', zones); draw(); } catch { toast('Unknown time zone'); } }]] });
+      const l = list(zones.map(z => ({ title: z.split('/').pop().replace(/_/g, ' '), sub: z.split('/')[0], right: `<span style="font-size:36px;font-weight:300;color:var(--text)">${new Date().toLocaleTimeString([], { timeZone: z, hour: 'numeric', minute: '2-digit' })}</span>`, onclick: async () => { if (await uiConfirm('Remove ' + z + '?')) { store.set('zones', zones.filter(x => x !== z)); draw(); } } })));
       b.appendChild(l);
     } else if (tab === 'Alarm') {
-      const b = page(content, 'Alarm', { actions: [[I('plus', 26), () => { const t = ask('Alarm time (24h, e.g. 07:30)'); if (!t || !/^\d{1,2}:\d{2}$/.test(t)) return t && toast('Use HH:MM'); const lb = ask('Label', 'Alarm'); alarms.push({ id: uid(), time: t.padStart(5, '0'), label: lb || 'Alarm', on: true }); store.set('alarms', alarms); draw(); }]] });
+      const b = page(content, 'Alarm', { actions: [[I('plus', 26), async () => { const t = await uiAsk('Alarm time (24h, e.g. 07:30)'); if (!t || !/^\d{1,2}:\d{2}$/.test(t)) return t && toast('Use HH:MM'); const lb = await uiAsk('Label', 'Alarm'); alarms.push({ id: uid(), time: t.padStart(5, '0'), label: lb || 'Alarm', on: true }); store.set('alarms', alarms); draw(); }]] });
       if (!alarms.length) b.appendChild(h('<div class="empty">No Alarms</div>'));
-      else b.appendChild(list(alarms.map(a => ({ title: '', right: '', onEl: c => { c.querySelector('.l').innerHTML = `<div><div style="font-size:48px;font-weight:300;${a.on ? '' : 'color:var(--sub)'}">${a.time}</div><small>${esc(a.label)}</small></div>`; c.querySelector('.r').appendChild(switchEl(a.on, v => { a.on = v; store.set('alarms', alarms); })); c.onclick = () => { if (confirm('Delete alarm?')) { alarms = alarms.filter(x => x !== a); store.set('alarms', alarms); draw(); } }; } }))));
+      else b.appendChild(list(alarms.map(a => ({ title: '', right: '', onEl: async c => { c.querySelector('.l').innerHTML = `<div><div style="font-size:48px;font-weight:300;${a.on ? '' : 'color:var(--sub)'}">${a.time}</div><small>${esc(a.label)}</small></div>`; c.querySelector('.r').appendChild(switchEl(a.on, async v => { a.on = v; store.set('alarms', alarms); })); c.onclick = async () => { if (await uiConfirm('Delete alarm?')) { alarms = alarms.filter(x => x !== a); store.set('alarms', alarms); draw(); } }; } }))));
       b.appendChild(h('<p style="color:var(--sub);font-size:13px">Alarms ring while iOS Rebuilt is open.</p>'));
     } else if (tab === 'Stopwatch') {
       const b = page(content, ''); b.previousSibling.remove(); b.style.paddingTop = 'calc(var(--sat) + 60px)';
@@ -1278,7 +1463,7 @@ defineApp('health', { name: 'Health', icon: '❤️', bg: '#fff', render(win) {
 defineApp('news', { name: 'News', icon: '📰', bg: 'linear-gradient(#ff5a5f,#fa233b)', render(win) {
   const b = page(win, 'Top Stories'); b.appendChild(h('<div class="empty">Loading…</div>'));
   fetch('https://hacker-news.firebaseio.com/v0/topstories.json').then(r => r.json()).then(ids => Promise.all(ids.slice(0, 20).map(id => fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(r => r.json())))).then(items => {
-    b.innerHTML = ''; b.appendChild(list(items.filter(Boolean).map(it => ({ title: it.title, sub: `▲ ${it.score} · ${it.by} · ${it.url ? new URL(it.url).hostname : 'news.ycombinator.com'}`, onclick: () => window.open(it.url || `https://news.ycombinator.com/item?id=${it.id}`, '_blank') }))));
+    b.innerHTML = ''; b.appendChild(list(items.filter(Boolean).map(it => ({ title: it.title, sub: `▲ ${it.score} · ${it.by} · ${it.url ? new URL(it.url).hostname : 'news.ycombinator.com'}`, onclick: () => openURL(it.url || `https://news.ycombinator.com/item?id=${it.id}`) }))));
   }).catch(() => { b.innerHTML = '<div class="empty">No connection</div>'; });
 } });
 

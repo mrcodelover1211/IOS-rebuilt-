@@ -17,7 +17,7 @@ One HTML file. No frameworks, no build step, no App Store, and no Mac required.
 - 🌗 Light and dark mode, plus wallpapers (including your own photos)
 - ☁️ **Cloud**: an iCloud-style account with automatic backups, a storage breakdown, and backup files you can download or restore to move to another device
 
-**23 apps**
+**28 apps** (incl. Translate, Stocks, Tiles game, FaceTime, Magnifier, in-app Safari)
 | | | | |
 |---|---|---|---|
 | 📞 Phone (real calls) | 💬 Messages + Siri bot | 🧭 Safari | 🎵 Music (synth + your files) |
